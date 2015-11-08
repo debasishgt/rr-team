@@ -14,7 +14,7 @@ from panda3d.core import CollisionHandlerQueue, CollisionRay, CollisionHandlerPu
 from direct.interval.IntervalGlobal import Sequence
 from direct.task import Task
 from Character import Character
-from Chat import Chat
+# afrom Chat import Chat
 import time
 
 """ Custom Imports """
@@ -60,7 +60,7 @@ class World(DirectObject):
         self.cManager = ConnectionManager(self)
         self.startConnection()
         # chat box
-        self.chatbox = Chat(self.cManager, self)
+        # self.chatbox = Chat(self.cManager, self)
 
         # taskMgr.add(self.message, 'message')
 
@@ -227,18 +227,29 @@ class World(DirectObject):
 
         # If a move-key is pressed, move ralph in the specified direction.
 
-        if (self.keyMap["left"] != 0):
+        if self.keyMap["left"] != 0:
             self.mainChar.setH(self.mainChar.getH() + 300 * globalClock.getDt())
-        if (self.keyMap["right"] != 0):
+        if self.keyMap["right"] != 0:
             self.mainChar.setH(self.mainChar.getH() - 300 * globalClock.getDt())
-        if (self.keyMap["forward"] != 0):
-            self.mainChar.setY(self.mainChar, -25 * globalClock.getDt())
-        if (self.keyMap["backward"] != 0):
-            # self.mainChar.setH(self.mainChar.getH() - 600)
-            self.mainChar.setY(self.mainChar, 25 * globalClock.getDt())
+        if self.keyMap["forward"] != 0:
+            self.mainCharRef.accelerate()
+
+        if self.keyMap["backward"] != 0:
+            if self.mainCharRef.get_speed() > 0:
+                self.mainCharRef.brake()
+            else:
+                self.mainCharRef.reverse()
+                # self.mainChar.setH(self.mainChar.getH() - 600)
+                # self.mainChar.setY(self.mainChar, -speed * globalClock.getDt())
+
+        # car moving
+        self.mainChar.setY(self.mainChar, -self.mainCharRef.get_speed() * globalClock.getDt())
+        # Friction to slow down
+        self.mainCharRef.friction(1)
+        print("speed:", self.mainCharRef.get_speed())
+
         # If ralph is moving, loop the run animation.
         # If he is standing still, stop the animation.
-
         if (self.keyMap["forward"] != 0) or (self.keyMap["backward"] != 0) or (self.keyMap["left"] != 0) or (
                     self.keyMap["right"] != 0):
             if self.isMoving is False:
@@ -349,6 +360,7 @@ class World(DirectObject):
 
             # self.cManager.sendRequest(Constants.RAND_FLOAT, 1.0)
             self.previousPos = self.mainChar.getPos()
+
         return task.again
 
 
