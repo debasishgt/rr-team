@@ -86,7 +86,7 @@ class World(DirectObject):
         self.environ = loader.loadModel("models/square")
         self.environ.reparentTo(render)
         self.environ.setPos(0, 0, 0)
-        self.environ.setScale(100, 100, 1)
+        self.environ.setScale(500, 500, 1)
         self.moon_tex = loader.loadTexture("models/moon_1k_tex.jpg")
         self.environ.setTexture(self.moon_tex, 1)
 
@@ -246,7 +246,7 @@ class World(DirectObject):
         self.mainChar.setY(self.mainChar, -self.mainCharRef.get_speed() * globalClock.getDt())
         # Friction to slow down
         self.mainCharRef.friction(1)
-        print("speed:", self.mainCharRef.get_speed())
+        # print("speed:", self.mainCharRef.get_speed())
 
         # If ralph is moving, loop the run animation.
         # If he is standing still, stop the animation.

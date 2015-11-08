@@ -35,19 +35,17 @@ class Character:
         self.a_timer_end = time.time()
 
         if type == 0:
-            self.actor = Actor("models/ralph",
-                               {"run": "models/ralph-run",
-                                "walk": "models/ralph-walk"})
-        elif type == 1:
-            self.actor = Actor("models/panda-model",
-                               {"walk": "models/panda-walk4"})
-        elif type == 2:
-            self.actor = loader.loadModel("knucklehead.egg")
-            self.tex = loader.loadTexture("knucklehead.jpg")
-            self.actor.setTexture(self.car_tex, 1)
+            self.actor = Actor("models/batcar")
+        # elif type == 1:
+        #     self.actor = Actor("models/panda-model",
+        #                        {"walk": "models/panda-walk4"})
+        # elif type == 2:
+        #     self.actor = loader.loadModel("knucklehead.egg")
+        #     self.tex = loader.loadTexture("knucklehead.jpg")
+        #     self.actor.setTexture(self.car_tex, 1)
 
         self.actor.reparentTo(render)
-        self.actor.setScale(.2)
+        self.actor.setScale(.5)
         self.actor.setPos(50 * random.random(), 50 * random.random(), 0)
 
         # Create a collsion node for this object.
@@ -74,7 +72,7 @@ class Character:
 
         if self.speed < self.max_speed:
             self.speed += self.acceleration * (time.time() - self.a_timer_start)
-            print(time_elapsed)
+            # print(time_elapsed)
         else:
             self.speed = self.max_speed
         # reset timer
