@@ -25,6 +25,17 @@ public class GameRequestTable {
         add(Constants.CMSG_CHAT, "RequestChat");
         //add(Constants.REQ_HEARTBEAT, "RequestHeartbeat");
         add(Constants.CMSG_PRIVATE_CHAT, "RequestPrivateChat");
+        add(Constants.CMSG_MOVE, "RequestMove");
+        add(Constants.CMSG_POWER_UP, "RequestPowerUpUse");
+        add(Constants.CMSG_POWER_UP_PICK_UP, "RequestPowerPickUp"); //Not Done
+        add(Constants.CMSG_HEALTH, "RequestChangeHealth");
+        add(Constants.CMSG_RESULTS, "RequestResults"); //Not Done
+        add(Constants.CMSG_RANKINGS, "RequestRankings"); //Not Done
+        add(Constants.CMSG_PRIZES, "RequestPrizes"); //Not Done
+        add(Constants.CMSG_COLLISION, "RequestCollision"); //Not Done
+        add(Constants.CMSG_DEAD, "RequestDead"); //Not Done
+        add(Constants.CMSG_READY, "RequestReady"); //Not Done
+
 
     }
 

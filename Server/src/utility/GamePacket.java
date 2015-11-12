@@ -57,6 +57,10 @@ public class GamePacket {
     public void addFloat(float float_val) {
         addInt32(Float.floatToIntBits(float_val));
     }
+    
+    public void addDouble(Double double_val) {
+        addLong(Double.doubleToLongBits(double_val));
+    }
 
     public int size() {
         return buf.size();

@@ -86,4 +86,20 @@ public class DataReader {
 
         return -1;
     }
+    
+    /**
+     * Read a single double from the input stream. Used for Python client
+     * PyDatagram decoding.
+     * 
+     * @param in references the input stream
+     * @return the value read from the input stream
+     * @throws IOException 
+     */
+    public static Double readDouble(DataInputStream in) throws IOException {
+        if (in.available() > 0) {
+            return Double.longBitsToDouble(Long.reverseBytes(in.readLong()));
+        }
+
+        return -1.0;
+    }
 }

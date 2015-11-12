@@ -14,7 +14,7 @@ public class Constants {
 	public final static short CMSG_CHAT = 106;
 	public final static short CMSG_MOVE = 107;
 	public final static short CMSG_POWER_UP = 108;
-	public final static short CMSG_POWER_PICKUP = 109;
+	public final static short CMSG_POWER_UP_PICK_UP = 109;
 	public final static short CMSG_HEALTH = 110;
 	public final static short CMSG_ENTER_LOBBY = 111;
 	public final static short CMSG_ENTER_GAME_LOBBY = 112;
@@ -41,7 +41,7 @@ public class Constants {
 	public final static short SMSG_CHAT = 206;
 	public final static short SMSG_MOVE = 207;
 	public final static short SMSG_POWER_UP = 208;
-	public final static short SMSG_POWER_PICKUP = 209;
+	public final static short SMSG_POWER_UP_PICK_UP = 209;
 	public final static short SMSG_HEALTH = 210;
 	public final static short SMSG_ENTER_LOBBY = 211;
 	public final static short SMSG_ENTER_GAME_LOBBY = 212;
