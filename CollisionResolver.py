@@ -1,84 +1,67 @@
-from direct.actor.Actor import Actor
-from panda3d.core import CollisionSphere, CollisionBox, CollisionNode
-from panda3d.core import Point3
+__author__ = 'dthakurta'
 
-class CarActor(Actor):
-    def __init__(self, carType, playerID):
-        if carType == 'ralph':
-            Actor.__init__(self, "models/ralph", {"run":"models/ralph-run","walk":"models/ralph-walk"})
-            self.maxLinearSpeed = 3
-            self.linearSpeed = 0
-            self.angularSpeed = 1
-            self.setScale(0.2)
-        elif carType == 'bike':
-            self.maxSpeed = 20
-            self.currentSpeed = 0
-            print "It's a bike"
-        Actor.setPythonTag(self, "subclass", self)
-        if playerID == "Me":
-            self.setPos(30,0,0)
-            self.mass = 1
-        else:
-            self.setPos(10,0,0)
-            self.mass = 500
-
-        self.showBounds()
-        self.isMoving = False
-        self.playerID = playerID
-        self.collisionNodeNames = []
-        self.collisionNodePaths = []
-        self.addCollisionNodes()
-
-    def addCollisionNodes(self):
-        carRadius = 3.22886
-        # minPt, maxPt = Point3(), Point3()
-        # self.calcTightBounds(minPt, maxPt)
-        # xDim = abs(maxPt.getX() - minPt.getX())
-        # yDim = abs(maxPt.getY() - minPt.getY())
-        # zDim = abs(maxPt.getZ() - minPt.getZ())
-        # bounds = self.getBounds()
-        # radius = bounds.getRadius()
-        radius = carRadius/2.0
-        self.addCollisionNode('r', Point3(-radius-1.5, 0, carRadius), radius, radius, carRadius)
-        self.addCollisionNode('l', Point3(radius+1.5, 0, carRadius), radius, radius, carRadius)
-        self.addCollisionNode('b', Point3(0, radius+1.5, carRadius), radius, radius, carRadius)
-        self.addCollisionNode('f', Point3(0, -radius-1.5, carRadius), radius, radius, carRadius)
+import math
 
 
+class CollisionResolver:
+    def __init__(self):
+        print "Resolver Init"
+        self.rearResultAngle = 0
+        self.fromAngle = 0
+        self.toAngle = 0
+        self.fromMagnitude = 0
+        self.fromMagnitude = 0
+        self.fromX = 0
+        self.fromY = 0
+        self.toX = 0
+        self.toY = 0
+        self.resultX = 0
+        self.resultY = 0
+        self.resultAngle = 0
+        self.fromResultlinearSpeed = 0
+        self.toResultlinearSpeed = 0
 
+    def resolve(self, fromActor, toActor, isRearEnd=False):
+        self.fromAngle = math.degrees(math.atan(fromActor.getY()/fromActor.getX()))
+        self.toAngle = math.degrees(math.atan(toActor.getY()/toActor.getX()))
+        if isRearEnd:
+            self.toAngle += 180
+            self.toAngle %= 360
 
-    def addCollisionNode(self, sideTitle, center, dx, dy, dz):
-        nodeName = sideTitle+self.playerID
-        self.collisionNodeNames.append(nodeName)
-        self.cNodePath = self.attachNewNode(CollisionNode(nodeName))
-        if sideTitle == 'f':
-            sphere = CollisionSphere(center.x, center.y, center.z, dy)
-            self.cNodePath.node().addSolid(sphere)
-        else:
-            box = CollisionBox(center, dx, dy, dz)
-            self.cNodePath.node().addSolid(box)
-        self.cNodePath.show()
-        self.collisionNodePaths.append(self.cNodePath)
+        self.fromMagnitude = fromActor.mass * fromActor.linearSpeed
+        self.toMagnitude = toActor.mass * toActor.linearSpeed
 
-    def updateLinearSpeed(self, linearSpeed):
-        self.linearSpeed += linearSpeed
-        self.clampLinearSpeed()
-        self.setY(self, -25 * self.linearSpeed * globalClock.getDt())
+        self.fromX = self.fromMagnitude * math.cos(self.fromAngle)
+        self.fromY = self.fromMagnitude * math.sin(self.fromAngle)
 
-    def clampLinearSpeed(self):
-        self.linearSpeed =  max(min(self.maxLinearSpeed, self.linearSpeed), 0)
+        self.toX = self.toMagnitude * math.cos(self.toAngle)
+        self.toY = self.toMagnitude * math.sin(self.toAngle)
 
-    def steerLeft(self):
-        self.setH(self.getH() + 300 * globalClock.getDt())
+        self.resultX = self.fromX + self.toX
+        self.resultY = self.fromY + self.toY
 
-    def steerRight(self):
-        self.setH(self.getH() - 300 * globalClock.getDt())
+        self.resultAngle = math.degrees(math.atan(self.resultY/self.resultX))
 
-    def walk(self):
-        self.stop()
-        self.pose("walk",5)
-        self.isMoving = False
+        if self.resultAngle < 0:
+            self.resultAngle += 360
 
-    def run(self):
-        self.loop("run")
-        self.isMoving = True
+        self.resultAngle %= 360
+        print "Result angle: ", self.resultAngle
+
+        self.fromResultlinearSpeed = (fromActor.mass * fromActor.linearSpeed) / (fromActor.mass + toActor.mass)
+        print "From linearSpeed: ", self.fromResultlinearSpeed
+        self.toResultlinearSpeed = (toActor.mass * toActor.linearSpeed) / (fromActor.mass + toActor.mass)
+        print "To linearSpeed: ", self.toResultlinearSpeed
+
+        fromCarNewAngle = self.resultAngle
+        intoCarNewAngle = self.resultAngle
+        if isRearEnd:
+            self.resultAngle += 180
+            self.resultAngle %= 360
+            intoCarNewAngle = self.resultAngle
+            print "To Car angle: ", self.rearResultAngle
+
+        fromActor.setH(fromCarNewAngle)
+        toActor.setH(intoCarNewAngle)
+        fromActor.linearSpeed = self.fromResultlinearSpeed
+        toActor.linearSpeed = self.toResultlinearSpeed
