@@ -13,6 +13,7 @@ import random, sys, os, math
 from panda3d.core import CollisionSphere, CollisionNode
 from panda3d.core import CollisionTraverser, CollisionHandlerEvent
 from CarActor import CarActor
+from CollisionResolver import CollisionResolver
 
 path = ['f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', '', 'f', '', '', 'f', 'f', 'f', '', 'f', 'f', 'f',
         'f', '', 'f', '', 'f', 'f', 'f', 'f', 'f', '', 'f', 'f', '', 'f', '', 'f', 'f', 'f', 'f', 'f',
