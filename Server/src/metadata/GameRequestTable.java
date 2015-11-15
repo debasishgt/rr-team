@@ -23,8 +23,12 @@ public class GameRequestTable {
         // Populate the hash map using request codes and class names
         add(Constants.CMSG_AUTH, "RequestAuth");
         add(Constants.CMSG_CHAT, "RequestChat");
-        //add(Constants.REQ_HEARTBEAT, "RequestHeartbeat");
+        add(Constants.REQ_HEARTBEAT, "RequestHeartbeat");
         add(Constants.CMSG_PRIVATE_CHAT, "RequestPrivateChat");
+        add(Constants.CMSG_MOVE,"RequestMove");
+        add(Constants.CMSG_POWER_UP,"RequestPowerUp");
+        add(Constants.CMSG_POWER_PICKUP,"RequestPowerUpPickUp");
+        add(Constants.CMSG_HEALTH,"RequestHealth");
 
     }
 
