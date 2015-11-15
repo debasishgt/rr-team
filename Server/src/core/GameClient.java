@@ -99,8 +99,6 @@ public class GameClient extends Thread {
 					}
 					// Preventing response to be sent if user not authenticated
 					if (requestCode == Constants.CMSG_AUTH ||requestCode == Constants.CMSG_REGISTER || player != null) {  
-						
-						
 						// Determine the type of request
 						GameRequest request = GameRequestTable.get(requestCode);
 						// If the request exists, process like following:
@@ -116,18 +114,16 @@ public class GameClient extends Thread {
 							// object
 							for (GameResponse response : request.getResponses()) {
 								// Transform the response into bytes and pass it
-								// into the output stream
-							
-								
+								// into the output stream	
 								outputStream.write(response.constructResponseInBytes());
 							}
 						}
 					}
 				} else {
-					// If there was no activity for the last moments, exit loop
-					if ((System.currentTimeMillis() - lastActivity) / 1000 >= Constants.TIMEOUT_SECONDS) {
-						isPlaying = false;
-					}
+						// If there was no activity for the last moments, exit loop
+						if ((System.currentTimeMillis() - lastActivity) / 1000 >= Constants.TIMEOUT_SECONDS) {
+							isPlaying = false;
+						}
 				}
 			} catch (Exception e) {
 				System.err.println("Request [" + requestCode + "] Error:");

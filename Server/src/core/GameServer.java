@@ -26,7 +26,6 @@ import utility.Player;
  * stored here to perform other specific needs.
  */
 public class GameServer {
-
     private static GameServer gameServer; // References GameServer instance
     private GameServerConf configuration; // Stores server config. variables
     private boolean ready = false; // Used to keep server looping
