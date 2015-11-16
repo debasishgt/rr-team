@@ -22,7 +22,7 @@ public class RequestDead extends GameRequest {
 	@Override
 	public void doBusiness() throws Exception {
 		//do the rankings business here
-		
+		responseDead.setUsername(client.getPlayer().getUsername());
 		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseDead);
 	}
 

@@ -14,24 +14,22 @@ public class RequestPowerUp extends GameRequest {
     private int powerId;
  
     // Responses
-        private ResponsePowerUp responsePowerUp;
- 
-        
-          
+    private ResponsePowerUp responsePowerUp;
+                 
     public RequestPowerUp() {
        
       responses.add(responsePowerUp = new ResponsePowerUp());
     }
 
     @Override
-    public void parse() throws IOException {
+    public void parse() throws IOException{
         powerId = DataReader.readInt(dataInput);
     }
 
     @Override
-    public void doBusiness() throws Exception {
-         	System.out.println("powerId=="+powerId);
-     //responsePowerUpUse.setUsername("powerupuse");
-  
+    public void doBusiness() {
+    	//do the prizes business here
+    	responsePowerUp.setUsername(client.getPlayer().getUsername());
+    	client.getServer().addResponseForAllOnlinePlayers(client.getId(), responsePowerUp);
     }
 }

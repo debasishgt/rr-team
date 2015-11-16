@@ -21,13 +21,13 @@ public class RequestResults extends GameRequest {
 
 	@Override
 	public void doBusiness() throws Exception {
-
+		responseResults.setUsername(client.getPlayer().getUsername());
 		/*
 		 * When the client ends the race or dies they request the results to see
 		 * where the placed in the gamemode. This calls the response for the
 		 * user and all of the other users who have finished the race with
 		 * ResponseResults
 		 */
-
+		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseResults);
 	}
 }

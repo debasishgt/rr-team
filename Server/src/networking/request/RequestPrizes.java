@@ -22,8 +22,6 @@ public class RequestPrizes extends GameRequest {
 	@Override
 	public void doBusiness() throws Exception {
 		//do the prizes business here
-		
-		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responsePrizes);
 	}
 
 }

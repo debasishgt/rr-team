@@ -23,7 +23,7 @@ public class ResponseMove extends GameResponse {
 		this.isMoving = m;
 	}
 	
-	public void setSenderUsername(String username_that_moved) {
+	public void setUsername(String username_that_moved) {
         this.username = username_that_moved;
     }
 	
@@ -31,7 +31,7 @@ public class ResponseMove extends GameResponse {
 	public byte[] constructResponseInBytes() {
 		// TODO Auto-generated method stub
 		GamePacket packet = new GamePacket(responseCode);
-		//packet.addString(username);
+		packet.addString(username);
 		//add the positionss
 		return packet.getBytes();
 	}

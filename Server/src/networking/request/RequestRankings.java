@@ -22,7 +22,7 @@ public class RequestRankings extends GameRequest {
 	@Override
 	public void doBusiness() throws Exception {
 		//do the rankings business here
-		
+		responseRankings.setUsername(client.getPlayer().getUsername());
 		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseRankings);
 	}
 

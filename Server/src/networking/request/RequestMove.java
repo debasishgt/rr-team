@@ -29,7 +29,7 @@ public class RequestMove extends GameRequest {
 		// Create ResponseMove object
 		responseMove.setPosition(this.x, this.y, this.h);
 		responseMove.setIsMoving(isMoving);
-		responseMove.setSenderUsername(this.client.getPlayer().getUsername());
+		responseMove.setUsername(this.client.getPlayer().getUsername());
 		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseMove);
 	}
 }

@@ -27,7 +27,7 @@ public class GameRequestTable {
         add(Constants.CMSG_PRIVATE_CHAT, "RequestPrivateChat");
         add(Constants.CMSG_MOVE, "RequestMove");
         add(Constants.CMSG_POWER_UP, "RequestPowerUp");
-        add(Constants.CMSG_POWER_PICKUP, "RequestPowerPickup");
+        add(Constants.CMSG_POWER_PICKUP, "RequestPowerPickUp");
         add(Constants.CMSG_HEALTH, "RequestHealth");
         add(Constants.CMSG_RESULTS, "RequestResults");
         add(Constants.CMSG_RANKINGS, "RequestRankings");

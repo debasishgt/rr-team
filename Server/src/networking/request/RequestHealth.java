@@ -27,6 +27,7 @@ public class RequestHealth extends GameRequest {
 		 * being dealt to and how much. The server responds by updating all
 		 * health bars involved through ResponseChangeHealth.
 		 */
-
+		responseHealth.setUsername(client.getPlayer().getUsername());
+		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseHealth);
 	}
 }

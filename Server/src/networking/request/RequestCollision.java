@@ -22,7 +22,7 @@ public class RequestCollision extends GameRequest {
 	@Override
 	public void doBusiness() throws Exception {
 		//do the Collision business here
-		
+		responseCollision.setUsername(client.getPlayer().getUsername());
 		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseCollision);
 	}
 

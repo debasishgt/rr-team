@@ -22,7 +22,7 @@ public class RequestReady extends GameRequest {
 	@Override
 	public void doBusiness() throws Exception {
 		//do the Ready business here
-		
+		responseReady.setUsername(client.getPlayer().getUsername());
 		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseReady);
 	}
 
