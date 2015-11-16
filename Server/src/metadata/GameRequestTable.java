@@ -35,6 +35,7 @@ public class GameRequestTable {
         add(Constants.CMSG_COLLISION, "RequestCollision"); //Not Done
         add(Constants.CMSG_DEAD, "RequestDead"); //Not Done
         add(Constants.CMSG_READY, "RequestReady"); //Not Done
+        add(Constants.CMSG_SET_POSITION, "RequestSetPosition"); //Not Done
 
 
     }
