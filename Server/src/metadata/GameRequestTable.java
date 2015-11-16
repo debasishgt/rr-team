@@ -32,8 +32,8 @@ public class GameRequestTable {
         add(Constants.CMSG_RESULTS, "RequestResults"); //Not Done
         add(Constants.CMSG_RANKINGS, "RequestRankings"); //Not Done
         add(Constants.CMSG_PRIZES, "RequestPrizes"); //Not Done
-        add(Constants.CMSG_COLLISION, "RequestCollision"); //Not Done
-        add(Constants.CMSG_DEAD, "RequestDead"); //Not Done
+        add(Constants.CMSG_COLLISION, "RequestCollision");
+        add(Constants.CMSG_DEAD, "RequestDead");
         add(Constants.CMSG_READY, "RequestReady"); //Not Done
         add(Constants.CMSG_SET_POSITION, "RequestSetPosition"); //Not Done
 
