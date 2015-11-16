@@ -32,5 +32,4 @@ public class RequestMove extends GameRequest {
 		responseMove.setSenderUsername(this.client.getPlayer().getUsername());
 		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseMove);
 	}
-
 }

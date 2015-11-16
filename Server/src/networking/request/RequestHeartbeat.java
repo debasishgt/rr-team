@@ -2,14 +2,14 @@ package networking.request;
 
 import java.io.IOException;
 import java.util.Queue;
-
 import networking.response.GameResponse;
 
 public class RequestHeartbeat extends GameRequest {
-	
+	public RequestHeartbeat() {}
+
 	@Override
 	public void parse() throws IOException {
-
+		
 	}
 
 	@Override

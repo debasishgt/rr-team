@@ -31,12 +31,9 @@ public class ResponseMove extends GameResponse {
 	public byte[] constructResponseInBytes() {
 		// TODO Auto-generated method stub
 		GamePacket packet = new GamePacket(responseCode);
-		packet.addString(username);
-		packet.addString( Float.toString(x));
-		packet.addString( Float.toString(y));
-		packet.addString( Float.toString(h));
-        packet.addString(isMoving ? "1" : "0");
-        return packet.getBytes();
+		//packet.addString(username);
+		//add the positionss
+		return packet.getBytes();
 	}
 
 }
