@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `cs454` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `cs454`;
 -- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
 --
 -- Host: superlunchvote.com    Database: cs454
@@ -18,140 +16,94 @@ USE `cs454`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `dd_games`
+-- Dumping data for table `base_vehicles`
 --
 
-DROP TABLE IF EXISTS `dd_games`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dd_games` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `map_name` varchar(255) DEFAULT NULL,
-  `winner_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `base_vehicles` WRITE;
+/*!40000 ALTER TABLE `base_vehicles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `base_vehicles` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `friendships`
+-- Dumping data for table `dd_game_rankings`
 --
 
-DROP TABLE IF EXISTS `friendships`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `friendships` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid1` int(11) DEFAULT NULL,
-  `uid2` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `uid1` (`uid1`),
-  KEY `uid2` (`uid2`),
-  CONSTRAINT `friendships_ibfk_1` FOREIGN KEY (`uid1`) REFERENCES `players` (`id`),
-  CONSTRAINT `friendships_ibfk_2` FOREIGN KEY (`uid2`) REFERENCES `players` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `dd_game_rankings` WRITE;
+/*!40000 ALTER TABLE `dd_game_rankings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dd_game_rankings` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `players`
+-- Dumping data for table `friends_relationship`
 --
 
-DROP TABLE IF EXISTS `players`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `players` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) DEFAULT NULL,
-  `user_password` varchar(255) DEFAULT NULL,
-  `isConnected` tinyint(1) DEFAULT NULL,
-  `parts` tinyint(4) DEFAULT NULL,
-  `vehicle_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `friends_relationship` WRITE;
+/*!40000 ALTER TABLE `friends_relationship` DISABLE KEYS */;
+/*!40000 ALTER TABLE `friends_relationship` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `powerups`
+-- Dumping data for table `games`
 --
 
-DROP TABLE IF EXISTS `powerups`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `powerups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type_name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `duration` double DEFAULT NULL,
-  `power` double DEFAULT NULL,
-  `armor` double DEFAULT NULL,
-  `health` double DEFAULT NULL,
-  `is_invincible` tinyint(1) DEFAULT NULL,
-  `is_blinded` tinyint(1) DEFAULT NULL,
-  `acceleration` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `games` WRITE;
+/*!40000 ALTER TABLE `games` DISABLE KEYS */;
+/*!40000 ALTER TABLE `games` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `rr_games`
+-- Dumping data for table `player_powerups`
 --
 
-DROP TABLE IF EXISTS `rr_games`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `rr_games` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `map_name` varchar(255) DEFAULT NULL,
-  `winner_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `player_powerups` WRITE;
+/*!40000 ALTER TABLE `player_powerups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `player_powerups` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `vehicle_types`
+-- Dumping data for table `player_vehicles`
 --
 
-DROP TABLE IF EXISTS `vehicle_types`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vehicle_types` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type_name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `power` double DEFAULT NULL,
-  `weight` double DEFAULT NULL,
-  `armor` double DEFAULT NULL,
-  `control` double DEFAULT NULL,
-  `speed` double DEFAULT NULL,
-  `health` double DEFAULT NULL,
-  `acceleration` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `player_vehicles` WRITE;
+/*!40000 ALTER TABLE `player_vehicles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `player_vehicles` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `vehicles`
+-- Dumping data for table `players`
 --
 
-DROP TABLE IF EXISTS `vehicles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vehicles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type_id` int(11) DEFAULT NULL,
-  `player_id` int(11) DEFAULT NULL,
-  `vehicle_power` double DEFAULT NULL,
-  `vehicle_weight` double DEFAULT NULL,
-  `vehicle_armor` double DEFAULT NULL,
-  `vehicle_control` double DEFAULT NULL,
-  `vehicle_speed` double DEFAULT NULL,
-  `vehicle_acceleration` double DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `type_id` (`type_id`),
-  KEY `player_id` (`player_id`),
-  CONSTRAINT `vehicles_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `vehicle_types` (`id`),
-  CONSTRAINT `vehicles_ibfk_2` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `players` WRITE;
+/*!40000 ALTER TABLE `players` DISABLE KEYS */;
+/*!40000 ALTER TABLE `players` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `powerups`
+--
+
+LOCK TABLES `powerups` WRITE;
+/*!40000 ALTER TABLE `powerups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `powerups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `rr_game_rankings`
+--
+
+LOCK TABLES `rr_game_rankings` WRITE;
+/*!40000 ALTER TABLE `rr_game_rankings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rr_game_rankings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `upgrades`
+--
+
+LOCK TABLES `upgrades` WRITE;
+/*!40000 ALTER TABLE `upgrades` DISABLE KEYS */;
+/*!40000 ALTER TABLE `upgrades` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -162,4 +114,4 @@ CREATE TABLE `vehicles` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-16 21:08:34
+-- Dump completed on 2015-11-16 22:27:29
