@@ -46,7 +46,7 @@ public class GameServer {
         GameRequestTable.init();
         
         try{
-        DAO = new DatabaseDriver();
+        DAO = DatabaseDriver.getInstance();
         }
         catch (Exception e)
         {

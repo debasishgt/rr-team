@@ -4,24 +4,29 @@ import java.sql.*;
 import java.util.*;
 
 import utility.ConfFileParser;
+import utility.Player;
 import configuration.GameServerConf;
 
+//Singleton
 public class DatabaseDriver {
-
+	private static DatabaseDriver Instance = null;
 	protected Connection conn;
-	protected Statement stmt;
-	protected ResultSet rset;
-	protected ResultSetMetaData rsetMeta;
-	protected PreparedStatement pstmt;
 	protected GameServerConf configuration;
 
 	public String userName = "";
 	public String password = "";
 	public String serverName = "";
+	public String databaseName = "";
 	public int portNumber = 3306;
 
-	// Connection to Database
-	public DatabaseDriver() {
+	public static DatabaseDriver getInstance() {
+		if(Instance == null) {
+			Instance = new DatabaseDriver();
+		}
+		
+		return Instance;
+	}
+	protected DatabaseDriver() {
 		configuration = new GameServerConf();
 		ConfFileParser confFileParser = new ConfFileParser("gameServer.conf");
        	configuration.setConfRecords(confFileParser.parse());
@@ -30,12 +35,26 @@ public class DatabaseDriver {
 		password = configuration.getDatabasePassword();
 		serverName = configuration.getDatabaseHost();
 		portNumber = configuration.getDatabasePort();
+		databaseName = configuration.getDatabaseName();
 		
 		System.out.println("username: " + userName);
 		System.out.println("password: " + password);
 		System.out.println("server: " + serverName);
 		System.out.println("port: " + portNumber);
 		
+		connect();
+	}
+
+	// close the connection
+	public void close() {
+		try {
+			conn.close();
+		} catch (Exception e) {
+			System.out.println("exception in close :" + e);
+		}
+	}
+	
+	protected void connect() {
 		try {
 			Properties connectionProps = new Properties();
 
@@ -44,7 +63,7 @@ public class DatabaseDriver {
 			connectionProps.setProperty("user", this.userName);
 			connectionProps.setProperty("password", this.password);
 
-			conn = DriverManager.getConnection("jdbc:mysql://" + this.serverName + ":" + this.portNumber + "/panda",connectionProps);
+			conn = DriverManager.getConnection("jdbc:mysql://" + this.serverName + ":" + this.portNumber + "/"+databaseName,connectionProps);
 
 		} catch (Exception e) {
 			System.out.println("Connection failure with the database :" + e);
@@ -52,110 +71,30 @@ public class DatabaseDriver {
 			System.exit(1);
 		}
 	}
-
-	// close the connection
-	public void close() {
+	
+	protected void checkConnection() {
 		try {
-			stmt.close();
-			conn.close();
-		} catch (Exception e) {
-			System.out.println("exception in close :" + e);
-		}
-	}
-
-	public Connection getInstance() {
-		return conn;
-	}
-
-	// get character ID from a name
-	public int characterIDFromName(String name) throws SQLException {
-		try {
-			String selectSQL = "SELECT * FROM CharacterList WHERE name = ?";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			System.out.println("Name : " + name);
-			preparedStatement.setObject(1, name);
-			ResultSet rs = preparedStatement.executeQuery();
-			while (rs.next()) {
-				System.out.println("id_character : "+ rs.getInt("idCharacter"));
-				return rs.getInt("idCharacter");
+			if(conn.isClosed()) {
+				connect();
 			}
-
-		} catch (Exception e) {
-			System.out.println("Exception in connect :" + e);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return -1;
-
-	}
-
-	//Saving last position of character on exit
-	public void UpdateIsPlaying(int player_id, int characterID, String position) throws SQLException {
-		//Boolean to know if it's the first time this player disconnect with this character
-		boolean result = false; 
-		System.out.println(position);
-		try {
-			//Finding the row to update
-			String selectSQL = "SELECT * FROM isPlaying WHERE Character_idCharacter = ? AND Player_idPlayer = ?";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL, rset.TYPE_SCROLL_INSENSITIVE,rset.CONCUR_UPDATABLE);
-			preparedStatement.setObject(1, characterID);
-			preparedStatement.setObject(2, player_id);
-			rset = preparedStatement.executeQuery();
-			while (rset.next()) {
-				//Updating the row
-				String selectSQL2 = "UPDATE isPlaying SET lastPosition  = ? WHERE Character_idCharacter = ? AND Player_idPlayer = ?";
-				PreparedStatement preparedStatement2 = conn.prepareStatement(selectSQL2);
-				preparedStatement2.setObject(1, position);
-				preparedStatement2.setObject(2, characterID);
-				preparedStatement2.setObject(3, player_id);
-				preparedStatement2.executeUpdate();
-				result = true; 
-				System.out.println("Hey");
-			}
-			if (result == false) //If the row doesn't exixt (first time) creating it
-			{
-				String requete = "INSERT INTO isPlaying (Character_idCharacter, Player_idPlayer, lastPosition) VALUES (?, ?, ?)";
-				pstmt = conn.prepareStatement(requete);
-
-				pstmt.setObject(1, characterID);
-				pstmt.setObject(2, player_id);
-				pstmt.setObject(3, position);
-			
-				pstmt.executeUpdate();
-			}
-		} catch (Exception e) {
-			System.out.println("Exception in connect :" + e);
-			e.printStackTrace();
-		}
-
-	}
-
-	//Getting the data and saving the last position
-	public void saveAndExit(String position, int player_id, String character)
-			throws SQLException, ClassNotFoundException {
-
-		// Getting chracterID from charactername
-		int characterID = characterIDFromName(character);
-
-		UpdateIsPlaying(player_id, characterID, position);
-
 	}
 
 	//Creating a new player in the database
-	public int create(String username, String password) throws SQLException {
+	public int createPlayer(String username, String password) {
 		try {
-
-			stmt = conn.createStatement();
-			String requete = "INSERT INTO Player (username, password) VALUES (?, ?)";
-			pstmt = conn.prepareStatement(requete);
-
-			pstmt.setObject(1, username);
-			pstmt.setObject(2, password);
-			pstmt.executeUpdate();
-			System.out.println("Created a new player");
+			checkConnection();			
+			String selectSQL = "INSERT INTO players (user_name, user_password) VALUES (?, ?)";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, password);
+			preparedStatement.executeUpdate();
 			return getPlayerID(username);
 
 		} catch (Exception e) {
-			System.out.println("User is already created :" + e);
 			e.printStackTrace();
 			return 0;
 		}
@@ -163,53 +102,93 @@ public class DatabaseDriver {
 	}
 
 	// Player authentication
-	public int checkAuth(String username, String password) throws SQLException {
-		String selectSQL = "SELECT * FROM Player WHERE username=? AND password =?";
-		PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-		preparedStatement.setObject(1, username);
-		preparedStatement.setObject(2, password);
-		ResultSet rs = preparedStatement.executeQuery();
-		while (rs.next()) {
-			return rs.getInt("idPlayer");
+	public int checkPlayerAuth(String username, String password) {
+		try {
+			checkConnection();
+			String selectSQL = "SELECT id FROM players WHERE user_name=? AND user_password =?";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, password);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				return rs.getInt("id");
+			}
+			return -1;
+		} catch(SQLException e) {
+			return -1;
 		}
-		return -1;
 
 	}
 
 	//Get player ID from username (on creating)
 	public int getPlayerID(String username) {
 		try {
-			String selectSQL = "SELECT idPlayer FROM Player WHERE username = ?";
+			checkConnection();
+			String selectSQL = "SELECT id FROM players WHERE user_name = ?";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setObject(1, username);
+			preparedStatement.setString(1, username);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				return rs.getInt("idPlayer");
+				return rs.getInt("id");
 			}
 		} catch (Exception e) {
-			System.out.println("Exception in connect :" + e);
 			e.printStackTrace();
 		}
 		return 0;
-
 	}
-
-	//Get the last position for the character - on login
-	public String lastPostion(String charactername, int player_idPlayer) {
-		String lastPosition = null;
-		try {		
-			String selectSQL = "SELECT lastPosition FROM isPlaying WHERE Character_idCharacter = ? AND Player_idPlayer = ?";
+	
+	//Get friend ids for player
+	public List<Integer> getFriendIdsForPlayer(int playerId) {
+		try {
+			checkConnection();
+			ArrayList<Integer> list = new ArrayList<Integer>();			
+			String selectSQL = "SELECT friend_id FROM friend_relationships WHERE player_id = ?";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setObject(1, characterIDFromName(charactername));
-			preparedStatement.setObject(2, player_idPlayer);
+			preparedStatement.setInt(1, playerId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				lastPosition = rs.getString("lastPosition");
+				list.add(rs.getInt("friend_id"));
 			}
-		} catch (Exception ae) {
-			ae.printStackTrace();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		return lastPosition;
+		return new ArrayList<Integer>();
+	}
+	
+	//Get friends for player
+	public List<Player> getFriendsForPlayer(int playerId) {
+		try {
+			checkConnection();
+			ArrayList<Player> list = new ArrayList<Player>();
+			String selectSQL = "(SELECT p.id,p.user_name FROM players p LEFT JOIN friends_relationships f ON (p.id = f.player_id) WHERE p.player_id = ?) UNION ALL (SELECT p.id,p.user_name FROM players p LEFT JOIN friends_relationships f ON (p.id = f.friend_id) WHERE p.player_id = ?)";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, playerId);
+			preparedStatement.setInt(2, playerId);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				list.add(new Player(rs.getString("p.user_name"),rs.getInt("p.id")));
+			}
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<Player>();
+		
+	}
+	
+	//Get friends for player
+	public int addFriends(int playerId, int friendId) {
+		try {
+			checkConnection();
+			String selectSQL = "INSERT INTO friend_relationship VALUES(?,?)";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, playerId);
+			preparedStatement.setInt(2, friendId);
+			return preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 }
