@@ -1,6 +1,6 @@
 package model;
 
-public class Vehicle {
+public class PlayerVehicle {
 	private int id;
 	private String name;
 	private int baseVehicleId;
@@ -11,11 +11,11 @@ public class Vehicle {
 	private double acceleration;
 	private double control;
 	
-	public Vehicle(int id, String name, int baseVehicleId) {
+	public PlayerVehicle(int id, String name, int baseVehicleId) {
 		this(id,name,0,0.0,0.0,0.0,0.0,0.0,0.0);
 	}
 	
-	public Vehicle(int id, String name, int baseVehicleId, double health, double armor, double weight, double speed, double acceleration, double control) {
+	public PlayerVehicle(int id, String name, int baseVehicleId, double health, double armor, double weight, double speed, double acceleration, double control) {
 		this.id = id;
 		this.name = name;
 		this.baseVehicleId = baseVehicleId;
