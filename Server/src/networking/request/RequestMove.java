@@ -14,10 +14,10 @@ import utility.Player;
 public class RequestMove extends GameRequest {
 
 	// Data
-	private Double x;
-	private Double y;
-	private Double z;
-	private Double h;
+	private Float x;
+	private Float y;
+	private Float z;
+	private Float h;
 	private String keys;
 	// Responses
 	private ResponseMove responseMove;
@@ -28,10 +28,10 @@ public class RequestMove extends GameRequest {
 
 	@Override
 	public void parse() throws IOException {
-		x = DataReader.readDouble(dataInput);
-		y = DataReader.readDouble(dataInput);
-		z = DataReader.readDouble(dataInput);
-		h = DataReader.readDouble(dataInput);
+		x = DataReader.readFloat(dataInput);
+		y = DataReader.readFloat(dataInput);
+		z = DataReader.readFloat(dataInput);
+		h = DataReader.readFloat(dataInput);
 		keys = DataReader.readString(dataInput);
 	}
 

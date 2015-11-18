@@ -6,10 +6,10 @@ import utility.GamePacket;
 
 public class ResponseMove extends GameResponse {
 
-	private Double x;
-	private Double y;
-	private Double z;
-	private Double h;
+	private Float x;
+	private Float y;
+	private Float z;
+	private Float h;
     private String keys;
     private String username;
 
@@ -21,43 +21,43 @@ public class ResponseMove extends GameResponse {
     public byte[] constructResponseInBytes() {
         GamePacket packet = new GamePacket(responseCode);
         packet.addString(username);
-        packet.addDouble(x);
-        packet.addDouble(y);
-        packet.addDouble(z);
-        packet.addDouble(h);
+        packet.addFloat(x);
+        packet.addFloat(y);
+        packet.addFloat(z);
+        packet.addFloat(h);
         packet.addString(keys);
         return packet.getBytes();
     }
     
-    public Double getX() {
+    public Float getX() {
 		return x;
 	}
 
-	public void setX(Double x) {
+	public void setX(Float x) {
 		this.x = x;
 	}
 
-	public Double getY() {
+	public Float getY() {
 		return y;
 	}
 
-	public void setY(Double y) {
+	public void setY(Float y) {
 		this.y = y;
 	}
 
-	public Double getZ() {
+	public Float getZ() {
 		return z;
 	}
 
-	public void setZ(Double z) {
+	public void setZ(Float z) {
 		this.z = z;
 	}
 
-	public Double getH() {
+	public Float getH() {
 		return h;
 	}
 
-	public void setH(Double h) {
+	public void setH(Float h) {
 		this.h = h;
 	}
 
