@@ -6,7 +6,8 @@ import java.util.*;
 import utility.ConfFileParser;
 import utility.Player;
 import configuration.GameServerConf;
-import model.Game;
+import model.GameRoom;
+import model.Vehicle;
 
 //Singleton
 public class DatabaseDriver {
@@ -269,7 +270,7 @@ public class DatabaseDriver {
 		return 0;
 	}
 	
-	public int updateGame(Game game) {
+	public int updateGame(GameRoom game) {
 		try {
 			checkConnection();
 			String selectSQL = "UPDATE "+GAMES+" SET type = ?, time_started = ?, map_name = ?";
@@ -328,8 +329,8 @@ public class DatabaseDriver {
 		return list;
 	}
 	
-	public Game getGameByName(String name) {
-		Game ret = null;
+	public GameRoom getGameByName(String name) {
+		GameRoom ret = null;
 		try {
 			checkConnection();
 			String selectSQL = "SELECT * FROM " +GAMES+" WHERE map_name = ? LIMIT 0,1";
@@ -337,7 +338,7 @@ public class DatabaseDriver {
 			preparedStatement.setString(1, name);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				ret = new Game(rs.getInt("id"),rs.getInt("type"), rs.getLong("time_started"), rs.getString("map_name"));
+				ret = new GameRoom(rs.getInt("id"),rs.getInt("type"), rs.getLong("time_started"), rs.getString("map_name"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -345,8 +346,8 @@ public class DatabaseDriver {
 		return ret;
 	}
 	
-	public Game getGameById(int id) {
-		Game ret = null;
+	public GameRoom getGameById(int id) {
+		GameRoom ret = null;
 		try {
 			checkConnection();
 			String selectSQL = "SELECT * FROM " +GAMES+" WHERE id = ? LIMIT 0,1";
@@ -354,7 +355,7 @@ public class DatabaseDriver {
 			preparedStatement.setInt(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				ret = new Game(rs.getInt("id"),rs.getInt("type"), rs.getLong("time_started"), rs.getString("map_name"));
+				ret = new GameRoom(rs.getInt("id"),rs.getInt("type"), rs.getLong("time_started"), rs.getString("map_name"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -415,12 +416,63 @@ public class DatabaseDriver {
 			checkConnection();
 			String selectSQL = "INSERT INTO " +RR_GAME_RANKINGS+" (game_id,player_id) VALUES (?,?)";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(3, playerId);
-			preparedStatement.setInt(2, gameId);
+			preparedStatement.setInt(2, playerId);
+			preparedStatement.setInt(1, gameId);
 			ret = preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ret;
+	}
+	
+	public List<Player> getPlayersInDGame(int gameId) {
+		List<Player> list = new ArrayList<Player>();
+		try {
+			checkConnection();
+			String selectSQL = "SELECT p.id, p.user_name FROM " +PLAYERS+" LEFT JOIN " + DD_GAME_RANKINGS + " d ON (p.id = d.player_id) WHERE d.game_id = ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, gameId);
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next()) {
+				list.add(new Player(rs.getString("user_name"),rs.getInt("id")));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public List<Player> getPlayersInRGame(int gameId) {
+		List<Player> list = new ArrayList<Player>();
+		try {
+			checkConnection();
+			String selectSQL = "SELECT p.id, p.user_name FROM " +PLAYERS+" LEFT JOIN " + RR_GAME_RANKINGS + " d ON (p.id = d.player_id) WHERE d.game_id = ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, gameId);
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next()) {
+				list.add(new Player(rs.getString("user_name"),rs.getInt("id")));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public List<Vehicle> getPlayerVehicles(int player_id) {
+		List<Vehicle> list = new ArrayList<Vehicle>();
+		try {
+			checkConnection();
+			String selectSQL = "SELECT * FROM " +PLAYER_VEHICLES+" WHERE player_id = ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, player_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next()) {
+				list.add(new Vehicle(rs.getInt("id"),rs.getString("name"),rs.getDouble("health"),rs.getDouble("armor"),rs.getDouble("weight"),rs.getDouble("speed"),rs.getDouble("acceleration"),rs.getDouble("control")));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

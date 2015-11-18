@@ -178,6 +178,17 @@ public class GameServer {
     	return this.activeThreads;
     }
     
+    public List<GameClient> getGameClientsForRoom(int room_id) {
+    	List<GameClient> list = new ArrayList<GameClient>();
+    	for (GameClient client : activeThreads.values()) {
+            if (client.getPlayer().getRoom() != null && client.getPlayer().getRoom().getId() == room_id) {
+                list.add(client);
+            }
+        }
+    	
+    	return list;
+    }
+    
     public List<Player> getActivePlayers() {
     	System.out.println(activePlayers.values());
         return new ArrayList<Player>(activePlayers.values());
@@ -243,6 +254,12 @@ public class GameServer {
             if (client.getId() != player_id) {
                 client.addResponseForUpdate(response);
             }
+        }
+    }
+    
+    public void addResponseForRoom(int room_id, GameResponse response) {    	 
+        for (GameClient client : getGameClientsForRoom(room_id)) {
+        	client.addResponseForUpdate(response);
         }
     }
 

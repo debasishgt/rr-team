@@ -2,13 +2,13 @@ package model;
 
 import driver.DatabaseDriver;
 
-public class Game {
+public class GameRoom {
 	private int id;
 	private int type;
 	private long time_started;
 	private String map_name;
 	
-	public Game(int id, int type, long time_started, String map_name) {
+	public GameRoom(int id, int type, long time_started, String map_name) {
 		this.id = id;
 		this.time_started = time_started;
 		this.map_name = map_name;
