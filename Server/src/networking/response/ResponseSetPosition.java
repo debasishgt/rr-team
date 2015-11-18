@@ -14,6 +14,7 @@ public class ResponseSetPosition extends GameResponse {
     public byte[] constructResponseInBytes() {
         GamePacket packet = new GamePacket(responseCode);
         
+        //Gets all users from session and returns their usernames and positions
         
         return packet.getBytes();
     }
