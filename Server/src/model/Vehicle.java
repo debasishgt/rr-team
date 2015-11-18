@@ -3,6 +3,7 @@ package model;
 public class Vehicle {
 	private int id;
 	private String name;
+	private int baseVehicleId;
 	private double health;
 	private double armor;
 	private double weight;
@@ -10,13 +11,14 @@ public class Vehicle {
 	private double acceleration;
 	private double control;
 	
-	public Vehicle(int id, String name) {
-		this(id,name,0.0,0.0,0.0,0.0,0.0,0.0);
+	public Vehicle(int id, String name, int baseVehicleId) {
+		this(id,name,0,0.0,0.0,0.0,0.0,0.0,0.0);
 	}
 	
-	public Vehicle(int id, String name, double health, double armor, double weight, double speed, double acceleration, double control) {
+	public Vehicle(int id, String name, int baseVehicleId, double health, double armor, double weight, double speed, double acceleration, double control) {
 		this.id = id;
 		this.name = name;
+		this.baseVehicleId = baseVehicleId;
 		this.health = health;
 		this.armor = armor;
 		this.weight = weight;
@@ -31,6 +33,14 @@ public class Vehicle {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getBaseVehicleId() {
+		return this.baseVehicleId;
+	}
+	
+	public void setBaseVehicleId(int baseVehicleId) {
+		this.baseVehicleId = baseVehicleId;
 	}
 
 	public double getHealth() {
