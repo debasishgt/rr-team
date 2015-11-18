@@ -3,24 +3,19 @@ from traceback import print_exc
 from common.Constants import Constants
 from net.response.ServerResponse import ServerResponse
 
-class ResponseMove(ServerResponse):
+class ResponseHealth(ServerResponse):
 
     def execute(self, data):
 
         try:
             self.playerId = data.getInt32()
-            self.x = data.getFloat32()
-            self.y = data.getFloat32()
-            self.z = data.getFloat32()
-            self.h = data.getFloat32()
-            self.keys = data.getString()
+            self.healthChange = data.getInt32()
 
 
             # Need to set Heading and use keys
             for character in self.world.characters :
               if character.playerId == self.playerId :
-                moving_vector = character.actor.getPos()
-                character.actor.setPos( moving_vector.getX() + self.x, moving_vector.getY() + self.y, moving_vector.getZ() + self.z)
+                # character.setHealth(self.healthChange)
                 break
 
             print "ResponseMove - ",self.playerId," moved ", self.x, " ", self.y, " ", self.z, " ", self.h

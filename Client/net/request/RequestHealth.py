@@ -2,7 +2,7 @@ from direct.distributed.PyDatagram import PyDatagram
 from common.Constants import Constants
 from net.request.ServerRequest import ServerRequest
 
-class RequestMove(ServerRequest):
+class RequestHealth(ServerRequest):
 
   #args stores the x y z components of the moving
     def send(self, args = []):

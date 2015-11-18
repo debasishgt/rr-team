@@ -3,7 +3,7 @@ from traceback import print_exc
 from common.Constants import Constants
 from net.response.ServerResponse import ServerResponse
 
-class ResponseMove(ServerResponse):
+class ResponseDead(ServerResponse):
 
     def execute(self, data):
 
@@ -15,6 +15,7 @@ class ResponseMove(ServerResponse):
             for character in self.world.characters :
               if character.playerId == self.playerId :
                 #character.dead = True
+                break
 
             print "ResponseMove - ",self.playerId
             #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
