@@ -17,7 +17,6 @@ public class RequestAuth extends GameRequest {
 	private String password;
 	// Responses
 	private ResponseAuth responseAuth;
-	private int player_id;
 
 	public RequestAuth() {
 		responses.add(responseAuth = new ResponseAuth());
@@ -38,7 +37,7 @@ public class RequestAuth extends GameRequest {
 
 		} else {
 			DatabaseDriver db = client.getServer().getDAO();
-			player_id = db.checkPlayerAuth(username, password);
+			int player_id = db.checkAuth(username, password);
 
 			if (player_id != -1) {
 				System.out.println("Connected !");

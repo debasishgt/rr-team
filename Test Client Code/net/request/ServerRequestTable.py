@@ -36,7 +36,6 @@ class ServerRequestTable:
         self.add(Constants.RAND_STRING, 'RequestRandomString')
         self.add(Constants.RAND_SHORT, 'RequestRandomShort')
         self.add(Constants.RAND_FLOAT, 'RequestRandomFloat')
-        
         self.add(Constants.CMSG_AUTH, 'RequestLogin')
         self.add(Constants.CMSG_DISCONNECT,'RequestLogout')
         self.add(Constants.CMSG_REGISTER,'RequestRegistration')
