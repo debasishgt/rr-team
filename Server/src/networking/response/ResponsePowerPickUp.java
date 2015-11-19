@@ -8,7 +8,7 @@ public class ResponsePowerPickUp extends GameResponse {
 	private String username;
 	
     public ResponsePowerPickUp() {
-        responseCode = Constants.SMSG_POWER_PICKUP;
+        //responseCode = Constants.SMSG_POWER_PICKUP;
     }
 
     @Override

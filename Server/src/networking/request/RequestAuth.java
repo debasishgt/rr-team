@@ -36,7 +36,7 @@ public class RequestAuth extends GameRequest {
 			responseAuth.setAnswer((short) 2);
 
 		} else {
-			DatabaseDriver db = client.getServer().getDAO();
+			DatabaseDriver db = DatabaseDriver.getInstance();
 			int player_id = db.checkAuth(username, password);
 
 			if (player_id != -1) {
@@ -48,6 +48,6 @@ public class RequestAuth extends GameRequest {
 				responseAuth.setAnswer((short) 0);
 			}
 		}
-
+		//responses.add(responseAuth);
 	}
 }

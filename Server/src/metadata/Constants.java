@@ -42,7 +42,7 @@ public class Constants {
 	public final static short SMSG_CHAT = 206;
 	public final static short SMSG_MOVE = 207;
 	public final static short SMSG_POWER_UP = 208;
-	public final static short SMSG_POWER_PICKUP = 209;
+	public final static short SMSG_POWER_UP_PICK_UP = 209;
 	public final static short SMSG_HEALTH = 210;
 	public final static short SMSG_ENTER_LOBBY = 211;
 	public final static short SMSG_ENTER_GAME_LOBBY = 212;
@@ -69,5 +69,5 @@ public class Constants {
 	// Other
 	public static final int SAVE_INTERVAL = 60000;
 	public static final String CLIENT_VERSION = "1.00";
-	public static final int TIMEOUT_SECONDS = 10;
+	public static final int TIMEOUT_SECONDS = 60;
 }

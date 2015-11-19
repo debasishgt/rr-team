@@ -12,71 +12,75 @@ import networking.request.GameRequest;
  */
 public class GameRequestTable {
 
-    private static HashMap<Short, Class> requestNames; // Stores request classes by request codes
+	private static HashMap<Short, Class> requestNames; // Stores request classes by request codes
 
-    /**
-     * Initialize the hash map by populating it with request codes and classes.
-     */
-    public static void init() {
-        requestNames = new HashMap<Short, Class>();
+	/**
+	 * Initialize the hash map by populating it with request codes and classes.
+	 */
+	public static void init() {
+		requestNames = new HashMap<Short, Class>();
+		
+		// Populate the hash map using request codes and class names
+		add(Constants.CMSG_AUTH, "RequestAuth");
+		//add(Constants.CMSG_DISCONNECT, "RequestAuth");
+		//add(Constants.CMSG_REGISTER, "RequestAuth");
+		//add(Constants.CMSG_FORGOT_PASSWORD, "RequestAuth");
+		add(Constants.CMSG_CREATE_CHARACTER, "RequestCharacterCreation");
+		add(Constants.CMSG_CHAT, "RequestChat");
+		add(Constants.REQ_HEARTBEAT, "RequestHeartbeat");
+		add(Constants.CMSG_PRIVATE_CHAT, "RequestPrivateChat");
+		add(Constants.CMSG_MOVE, "RequestMove");
+		add(Constants.CMSG_POWER_UP, "RequestPowerUp");
+		add(Constants.CMSG_POWER_UP_PICK_UP, "RequestPowerPickUp");
+		add(Constants.CMSG_HEALTH, "RequestChangeHealth");
+		add(Constants.CMSG_RESULTS, "RequestResults");
+		add(Constants.CMSG_RANKINGS, "RequestRankings");
+		add(Constants.CMSG_PRIZES, "RequestPrizes");
+		add(Constants.CMSG_COLLISION, "RequestCollision");
+		add(Constants.CMSG_DEAD, "RequestDead");
+		add(Constants.CMSG_READY, "RequestReady");
+		add(Constants.CMSG_SET_POSITION, "RequestSetPosition");
+		
+	}
 
-        // Populate the hash map using request codes and class names
-        add(Constants.CMSG_AUTH, "RequestAuth");
-        add(Constants.CMSG_CHAT, "RequestChat");
-        add(Constants.REQ_HEARTBEAT, "RequestHeartbeat");
-        add(Constants.CMSG_PRIVATE_CHAT, "RequestPrivateChat");
-        add(Constants.CMSG_MOVE, "RequestMove");
-        add(Constants.CMSG_POWER_UP, "RequestPowerUp");
-        add(Constants.CMSG_POWER_UP_PICK_UP, "RequestPowerPickUp");
-        add(Constants.CMSG_HEALTH, "RequestChangeHealth");
-        add(Constants.CMSG_RESULTS, "RequestResults");
-        add(Constants.CMSG_RANKINGS, "RequestRankings");
-        add(Constants.CMSG_PRIZES, "RequestPrizes");
-        add(Constants.CMSG_COLLISION, "RequestCollision");
-        add(Constants.CMSG_DEAD, "RequestDead");
-        add(Constants.CMSG_READY, "RequestReady");
-        add(Constants.CMSG_REGISTER, "RequestRegister");
+	/**
+	 * Map the request code number with its corresponding request class,
+	 * derived from its class name using reflection, by inserting the pair into
+	 * the hash map.
+	 * 
+	 * @param code a value that uniquely identifies the request type
+	 * @param name a string value that holds the name of the request class
+	 */
+	public static void add(short code, String name) {
+		try {
+			requestNames.put(code, Class.forName("networking.request." + name));
+		} catch (ClassNotFoundException e) {
+			System.err.println(e.getMessage());
+		}
+	}
 
-    }
+	/**
+	 * Get the instance of the request class by the given request code.
+	 * 
+	 * @param requestID a value that uniquely identifies the request type
+	 * @return the instance of the request class
+	 */
+	public static GameRequest get(short requestID) {
+		GameRequest request = null;
 
-    /**
-     * Map the request code number with its corresponding request class,
-     * derived from its class name using reflection, by inserting the pair into
-     * the hash map.
-     * 
-     * @param code a value that uniquely identifies the request type
-     * @param name a string value that holds the name of the request class
-     */
-    public static void add(short code, String name) {
-        try {
-            requestNames.put(code, Class.forName("networking.request." + name));
-        } catch (ClassNotFoundException e) {
-            System.err.println(e.getMessage());
-        }
-    }
+		try {
+			Class name = requestNames.get(requestID);
 
-    /**
-     * Get the instance of the request class by the given request code.
-     * 
-     * @param requestID a value that uniquely identifies the request type
-     * @return the instance of the request class
-     */
-    public static GameRequest get(short requestID) {
-        GameRequest request = null;
+			if (name != null) {
+				request = (GameRequest) name.newInstance();
+				request.setID(requestID);
+			} else {
+				System.err.println("Invalid Request Code: " + requestID);
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 
-        try {
-            Class name = requestNames.get(requestID);
-
-            if (name != null) {
-                request = (GameRequest) name.newInstance();
-                request.setID(requestID);
-            } else {
-                System.err.println("Invalid Request Code: " + requestID);
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-
-        return request;
-    }
+		return request;
+	}
 }

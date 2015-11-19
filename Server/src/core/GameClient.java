@@ -135,10 +135,12 @@ public class GameClient extends Thread {
 
 		System.out.println(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()));
 		System.out.println("The client stops playing.");
-		ResponseDisconnected response = new ResponseDisconnected();
-		response.setUsername(player.getUsername());
-		getServer().addResponseForAllOnlinePlayers(getId(), (GameResponse) response);
-		getServer().removeActivePlayer(player.getID());
+		if(player != null) {
+			ResponseDisconnected response = new ResponseDisconnected();
+			response.setUsername(player.getUsername());
+			getServer().addResponseForAllOnlinePlayers(getId(), (GameResponse) response);
+			getServer().removeActivePlayer(player.getID());
+		}
 		
 
 		/*
