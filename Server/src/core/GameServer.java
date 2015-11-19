@@ -26,116 +26,115 @@ import utility.Player;
  * stored here to perform other specific needs.
  */
 public class GameServer {
-    private static GameServer gameServer; // References GameServer instance
-    private GameServerConf configuration; // Stores server config. variables
-    private boolean ready = false; // Used to keep server looping
-    private HashMap<Long, GameClient> activeThreads = new HashMap<Long, GameClient>(); // Stores active threads by thread ID
-    private DatabaseDriver DAO; 
-    private HashMap<Integer, Player> activePlayers = new HashMap<Integer, Player>(); // Stores active players by player ID
+	private static GameServer gameServer; // References GameServer instance
+	private GameServerConf configuration; // Stores server config. variables
+	private boolean ready = false; // Used to keep server looping
+	private HashMap<Long, GameClient> activeThreads = new HashMap<Long, GameClient>(); // Stores active threads by thread ID
+	private DatabaseDriver DAO; 
+	private HashMap<Integer, Player> activePlayers = new HashMap<Integer, Player>(); // Stores active players by player ID
 
-    /**
-     * Initialize the GameServer by setting up the request types and creating a
-     * connection with the database.
-     * @throws SQLException 
-     * @throws ClassNotFoundException 
-     */
-    public GameServer() throws ClassNotFoundException, SQLException {
-        configuration = new GameServerConf();
+	/**
+	 * Initialize the GameServer by setting up the request types and creating a
+	 * connection with the database.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	public GameServer() throws ClassNotFoundException, SQLException {
+		configuration = new GameServerConf();
 
-        // Initialize the table with request codes and classes for static retrieval
-        GameRequestTable.init();
-        
-        try{
-        DAO = DatabaseDriver.getInstance();
-        }
-        catch (Exception e)
-        {
-        	System.out.println(e + ": Error connecting to the database");
-        	e.printStackTrace();
-        }
-        // Initialize database connection
-        if (DAO.getInstance() == null) {
-            System.err.println("Failed to connect to database.");
-            System.exit(-1);
-        }
-    }
-    
-    public DatabaseDriver getDAO() 
-    {
-    	return this.DAO; 
-    }
+		// Initialize the table with request codes and classes for static retrieval
+		GameRequestTable.init();
 
-    /**
-     * Configure the game server by reading values from the configuration file.
-     */
-    private void configure() {
-        ConfFileParser confFileParser = new ConfFileParser("gameServer.conf");
-       	configuration.setConfRecords(confFileParser.parse());
-    }
-    
+		try{
+			DAO = DatabaseDriver.getInstance();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e + ": Error connecting to the database");
+			e.printStackTrace();
+		}
+		// Initialize database connection
+		if (DAO.getInstance() == null) {
+			System.err.println("Failed to connect to database.");
+			System.exit(-1);
+		}
+	}
 
-    /**
-     * Search for any other possible configuration variables and mark the server
-     * ready to start.
-     */
-    private void getReady() {
-        configure();
-        ready = true;
-    }
+	public DatabaseDriver getDAO() {
+		return this.DAO; 
+	}
 
-    /**
-     * Check whether the server is prepared to run.
-     * 
-     * @return the ready status
-     */
-    private boolean isReady() {
-        return ready;
-    }
+	/**
+	 * Configure the game server by reading values from the configuration file.
+	 */
+	private void configure() {
+		ConfFileParser confFileParser = new ConfFileParser("gameServer.conf");
+		configuration.setConfRecords(confFileParser.parse());
+	}
 
-    /**
-     * Run the game server by waiting for incoming connection requests.
-     * Establishes each connection and stores it into a GameClient thread to
-     * manage incoming and outgoing activity.
-     */
-    private void run() {
-        ServerSocket listenSocket;
-        int serverPort = configuration.getPortNumber();
 
-        try {
-            // Start to listen on the given port for incoming connections
-            listenSocket = new ServerSocket(serverPort);
-            System.out.println("Server has started on port: " + listenSocket.getLocalPort());
-            System.out.println("Waiting for clients...");
-            // Loop indefinitely to establish multiple connections
-            while (true) {
-                try {
-                    // A client socket will represent a connection between the client and this server
-                    Socket clientSocket = listenSocket.accept();
-                    System.out.println("A Connection Established!");
+	/**
+	 * Search for any other possible configuration variables and mark the server
+	 * ready to start.
+	 */
+	private void getReady() {
+		configure();
+		ready = true;
+	}
 
-                    // Create a thread to represent a client that holds the client socket
-                    GameClient client = new GameClient(clientSocket, this);
-                    addToActiveThreads(client);
-                    // Run the thread
-                    client.start();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
+	/**
+	 * Check whether the server is prepared to run.
+	 * 
+	 * @return the ready status
+	 */
+	private boolean isReady() {
+		return ready;
+	}
 
-    /**
-     * Get the GameClient thread for the player using the player ID.
-     *
-     * @param playerID holds the player ID
-     * @return the GameClient thread
-     */
-    /*public GameClient getThreadByPlayerID(int playerID) {
+	/**
+	 * Run the game server by waiting for incoming connection requests.
+	 * Establishes each connection and stores it into a GameClient thread to
+	 * manage incoming and outgoing activity.
+	 */
+	private void run() {
+		ServerSocket listenSocket;
+		int serverPort = configuration.getPortNumber();
+
+		try {
+			// Start to listen on the given port for incoming connections
+			listenSocket = new ServerSocket(serverPort);
+			System.out.println("Server has started on port: " + listenSocket.getLocalPort());
+			System.out.println("Waiting for clients...");
+			// Loop indefinitely to establish multiple connections
+			while (true) {
+				try {
+					// A client socket will represent a connection between the client and this server
+					Socket clientSocket = listenSocket.accept();
+					System.out.println("A Connection Established!");
+
+					// Create a thread to represent a client that holds the client socket
+					GameClient client = new GameClient(clientSocket, this);
+					addToActiveThreads(client);
+					// Run the thread
+					client.start();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	/**
+	 * Get the GameClient thread for the player using the player ID.
+	 *
+	 * @param playerID holds the player ID
+	 * @return the GameClient thread
+	 */
+	/*public GameClient getThreadByPlayerID(int playerID) {
         for (GameClient aClient : activeThreads.values()) {
             if (aClient.getPlayer().getID() == playerID) {
                 return aClient;
@@ -145,67 +144,78 @@ public class GameServer {
         return null;
     }*/
 
-    /**
-     * Get the GameClient thread for the player using the username.
-     *
-     * @param username holds the username
-     * @return the GameClient thread
-     */
-    public GameClient getThreadByPlayerUserName(String userName) {
-        for (GameClient aClient : activeThreads.values()) {
-        	if(aClient.getPlayer() == null)
-        	{
-        		continue;
-        	}
-            if (aClient.getPlayer().getUsername().equals(userName)) {
-                return aClient;
-            }
-        }
+	/**
+	 * Get the GameClient thread for the player using the username.
+	 *
+	 * @param username holds the username
+	 * @return the GameClient thread
+	 */
+	public GameClient getThreadByPlayerUserName(String userName) {
+		for (GameClient aClient : activeThreads.values()) {
+			if(aClient.getPlayer() == null)
+			{
+				continue;
+			}
+			if (aClient.getPlayer().getUsername().equals(userName)) {
+				return aClient;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public int getNumberOfCurrentThreads() {
-        return activeThreads.size();
-    }
+	public int getNumberOfCurrentThreads() {
+		return activeThreads.size();
+	}
 
-    public void addToActiveThreads(GameClient client) {
-        activeThreads.put(client.getId(), client);
-    }
-    
-    public HashMap<Long, GameClient> getActiveThreads()
-    {
-    	return this.activeThreads;
-    }
-    
-    public List<Player> getActivePlayers() {
-    	System.out.println(activePlayers.values());
-        return new ArrayList<Player>(activePlayers.values());
-    }
+	public void addToActiveThreads(GameClient client) {
+		activeThreads.put(client.getId(), client);
+	}
 
-    public Player getActivePlayer(int player_id) {
-        return activePlayers.get(player_id);
-    }
+	public HashMap<Long, GameClient> getActiveThreads()
+	{
+		return this.activeThreads;
+	}
 
-    public void setActivePlayer(Player player) {
-        activePlayers.put(player.getID(), player);
-    }
-    
-    public void removeActivePlayer(int player_id) {
-        activePlayers.remove(player_id);
-    }
+	public List<GameClient> getGameClientsForRoom(int room_id) {
+		List<GameClient> list = new ArrayList<GameClient>();
+		for (GameClient client : activeThreads.values()) {
+			if (client.getPlayer().getRoom() != null && client.getPlayer().getRoom().getId() == room_id) {
+				list.add(client);
+			}
+		}
 
-    public void deletePlayerThreadOutOfActiveThreads(Long threadID) {
-        activeThreads.remove(threadID);
-    }
+		return list;
+	}
 
-    /**
-     * Push a pending response to a user's queue.
-     * 
-     * @param player_id holds the player ID
-     * @param response is the instance containing the response information
-     */
-    /*public void addResponseForUser(int player_id, GameResponse response) {
+	public List<Player> getActivePlayers() {
+		System.out.println(activePlayers.values());
+		return new ArrayList<Player>(activePlayers.values());
+	}
+
+	public Player getActivePlayer(int player_id) {
+		return activePlayers.get(player_id);
+	}
+
+	public void setActivePlayer(Player player) {
+		activePlayers.put(player.getID(), player);
+	}
+
+	public void removeActivePlayer(int player_id) {
+		activePlayers.remove(player_id);
+	}
+
+	public void deletePlayerThreadOutOfActiveThreads(Long threadID) {
+		activeThreads.remove(threadID);
+	}
+
+	/**
+	 * Push a pending response to a user's queue.
+	 * 
+	 * @param player_id holds the player ID
+	 * @param response is the instance containing the response information
+	 */
+	/*public void addResponseForUser(int player_id, GameResponse response) {
         GameClient client = getThreadByPlayerID(player_id);
 
         if (client != null) {
@@ -215,48 +225,54 @@ public class GameServer {
         }
     }*/
 
-    /**
-     * Push a pending response to a user's queue.
-     *
-     * @param username holds the username
-     * @param response is the instance containing the response information
-     */
-    public void addResponseForUser(String username, GameResponse response) {
-        GameClient client = getThreadByPlayerUserName(username);
+	/**
+	 * Push a pending response to a user's queue.
+	 *
+	 * @param username holds the username
+	 * @param response is the instance containing the response information
+	 */
+	public void addResponseForUser(String username, GameResponse response) {
+		GameClient client = getThreadByPlayerUserName(username);
 
-        if (client != null) {
-            client.addResponseForUpdate(response);
-        } else {
-            System.out.println("In addResponseForUser--client is null");
-        }
-    }
+		if (client != null) {
+			client.addResponseForUpdate(response);
+		} else {
+			System.out.println("In addResponseForUser--client is null");
+		}
+	}
 
-    /**
-     * Push a pending response to all users' queue except one user.
-     * 
-     * @param player_id holds the excluding player ID
-     * @param response is the instance containing the response information
-     */
-    public void addResponseForAllOnlinePlayers(long player_id, GameResponse response) {
- 
-        for (GameClient client : activeThreads.values()) {
-            if (client.getId() != player_id) {
-                client.addResponseForUpdate(response);
-            }
-        }
-    }
+	/**
+	 * Push a pending response to all users' queue except one user.
+	 * 
+	 * @param player_id holds the excluding player ID
+	 * @param response is the instance containing the response information
+	 */
+	public void addResponseForAllOnlinePlayers(long player_id, GameResponse response) {
 
-    public static GameServer getInstance() {
-        return gameServer;
-    }
+		for (GameClient client : activeThreads.values()) {
+			if (client.getId() != player_id) {
+				client.addResponseForUpdate(response);
+			}
+		}
+	}
 
-    public static void main(String args[]) throws SQLException, ClassNotFoundException {
-        gameServer = new GameServer();
+	public void addResponseForRoom(int room_id, GameResponse response) {    	 
+		for (GameClient client : getGameClientsForRoom(room_id)) {
+			client.addResponseForUpdate(response);
+		}
+	}
 
-        gameServer.getReady();
+	public static GameServer getInstance() {
+		return gameServer;
+	}
 
-        if (gameServer.isReady()) {
-            gameServer.run();
-        }
-    }
+	public static void main(String args[]) throws SQLException, ClassNotFoundException {
+		gameServer = new GameServer();
+
+		gameServer.getReady();
+
+		if (gameServer.isReady()) {
+			gameServer.run();
+		}
+	}
 }
