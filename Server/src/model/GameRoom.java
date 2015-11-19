@@ -3,10 +3,15 @@ package model;
 import driver.DatabaseDriver;
 
 public class GameRoom {
+	private static int gameid = 0;
 	private int id;
 	private int type;
 	private long time_started;
 	private String map_name;
+	
+	public GameRoom(){
+		this.id = gameid++;
+	}
 	
 	public GameRoom(int id, int type, long time_started, String map_name) {
 		this.id = id;
