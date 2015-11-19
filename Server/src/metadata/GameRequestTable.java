@@ -31,9 +31,9 @@ public class GameRequestTable {
 		add(Constants.CMSG_POWER_UP, "RequestPowerUp");
 		add(Constants.CMSG_POWER_UP_PICK_UP, "RequestPowerPickUp");
 		add(Constants.CMSG_HEALTH, "RequestChangeHealth");
-		//add(Constants.CMSG_ENTER_LOBBY,"RequestEnterLobby");
-		//add(Constants.CMSG_ENTER_GAME_LOBBY,"RequestEnterGameLobby");
-		//add(Constants.CMSG_ENTER_GAME_NAME,"RequestEnterGameName");
+		add(Constants.CMSG_ENTER_LOBBY,"RequestEnterLobby");
+		add(Constants.CMSG_ENTER_GAME_LOBBY,"RequestEnterGameLobby");
+		add(Constants.CMSG_ENTER_GAME_NAME,"RequestEnterGameName");
 		//add(Constants.CMSG_CREATE_LOBBY,"RequestCreateLobby");
 		add(Constants.CMSG_PRIVATE_CHAT, "RequestPrivateChat");		
 		//add(Constants.CMSG_INVITE,"RequestInvite");

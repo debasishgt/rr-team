@@ -243,6 +243,13 @@ public class GameServer {
 			client.addResponseForUpdate(response);
 		}
 	}
+	
+	public void addResponseForRoomExcludingPlayer(int room_id, int player_id, GameResponse response) {    	 
+		for (GameClient client : getGameClientsForRoom(room_id)) {
+			if(client.getPlayer().getID() != player_id)
+				client.addResponseForUpdate(response);
+		}
+	}
 
 	public static GameServer getInstance() {
 		return gameServer;
