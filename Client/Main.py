@@ -14,6 +14,10 @@ from panda3d.core import CollisionHandlerQueue, CollisionRay, CollisionHandlerPu
 from direct.interval.IntervalGlobal import Sequence
 from direct.task import Task
 from Character import Character
+
+from panda3d.bullet import BulletVehicle
+from panda3d.bullet import BulletWorld, BulletTriangleMesh,BulletTriangleMeshShape,BulletDebugNode,BulletPlaneShape, BulletRigidBodyNode
+
 # afrom Chat import Chat
 import time
 
@@ -79,16 +83,12 @@ class World(DirectObject):
         self.inst9 = addInstructions(0.55, "[0]: Toggle Chat Broadcast")
         self.inst10 = addInstructions(0.50, "[1]: Toggle Private Chat")
 
-
-
         # Set up the environment
         #
-        self.environ = loader.loadModel("models/square")
-        self.environ.reparentTo(render)
-        self.environ.setPos(0, 0, 0)
-        self.environ.setScale(500, 500, 1)
-        self.moon_tex = loader.loadTexture("models/moon_1k_tex.jpg")
-        self.environ.setTexture(self.moon_tex, 1)
+        self.initializeBulletWorld(False)
+
+        self.createEnvironment()
+
 
         # Collision Code
         # Initialize the collision traverser.
@@ -97,8 +97,8 @@ class World(DirectObject):
         self.pusher = CollisionHandlerPusher()
 
         # Create the main character, Ralph
-        self.mainCharRef = Character(self, 0)
-        self.mainChar = self.mainCharRef.getActor()
+        self.mainCharRef = Character(self,self.bulletWorld, 0,"Me")
+        self.mainChar = self.mainCharRef.chassisNP
 
         self.cManager.sendRequest(Constants.CMSG_CREATE_CHARACTER, [self.mainCharRef.type,
                                                                     self.mainChar.getX(),
@@ -143,7 +143,7 @@ class World(DirectObject):
         floorCollisionNP = self.makeCollisionNodePath(floorNode, collPlane)
 
         # Accept the control keys for movement and rotation
-        self.accept("escape", sys.exit)
+        self.accept("escape", self.doExit)
         self.accept("a", self.setKey, ["left", 1])
         self.accept("d", self.setKey, ["right", 1])
         self.accept("w", self.setKey, ["forward", 1])
@@ -184,6 +184,47 @@ class World(DirectObject):
         render.setLight(render.attachNewNode(ambientLight))
         render.setLight(render.attachNewNode(directionalLight))
 
+    def doExit(self):
+      self.cleanup()
+      sys.exit(1)
+
+    def cleanup(self):
+      self.cManager.closeConnection()
+      self.world = None
+      self.outsideWorldRender.removeNode()
+
+    def createEnvironment(self):
+        self.environ = loader.loadModel("models/square")
+        self.environ.reparentTo(render)
+        self.environ.setPos(0, 0, 0)
+        self.environ.setScale(500, 500, 1)
+        self.moon_tex = loader.loadTexture("models/moon_1k_tex.jpg")
+        self.environ.setTexture(self.moon_tex, 1)
+
+        shape = BulletPlaneShape(Vec3(0, 0, 1), 0)
+        node = BulletRigidBodyNode('Ground')
+        node.addShape(shape)
+        np = render.attachNewNode(node)
+        np.setPos(0, 0, 0)
+
+        self.bulletWorld.attachRigidBody(node)
+
+
+    def initializeBulletWorld(self, debug= False):
+        self.outsideWorldRender = render.attachNewNode('world')
+
+        self.bulletWorld = BulletWorld()
+        self.bulletWorld.setGravity(Vec3(0, 0, -9.81))
+        if debug:
+            self.debugNP = self.outsideWorldRender.attachNewNode(BulletDebugNode('Debug'))
+            self.debugNP.show()
+            self.debugNP.node().showWireframe(True)
+            self.debugNP.node().showConstraints(True)
+            self.debugNP.node().showBoundingBoxes(True)
+            self.debugNP.node().showNormals(True)
+            self.bulletWorld.setDebugNode(self.debugNP.node())
+
+
     def makeCollisionNodePath(self, nodepath, solid):
         '''
         Creates a collision node and attaches the collision solid to the
@@ -214,6 +255,8 @@ class World(DirectObject):
         # If the camera-left key is pressed, move camera left.
         # If the camera-right key is pressed, move camera right.
 
+        dt =globalClock.getDt()
+
         base.camera.lookAt(self.mainChar)
         if (self.keyMap["cam-left"] != 0):
             base.camera.setX(base.camera, -20 * globalClock.getDt())
@@ -226,40 +269,56 @@ class World(DirectObject):
         startpos = self.mainChar.getPos()
 
         # If a move-key is pressed, move ralph in the specified direction.
+        # If a move-key is pressed, move ralph in the specified direction.
+        # Steering info
+        steering = 0.0            # degree
+        steeringClamp = 90.0      # degree
+        steeringIncrement = 180.0 # degree per second
 
-        if self.keyMap["left"] != 0:
-            self.mainChar.setH(self.mainChar.getH() + 300 * globalClock.getDt())
-        if self.keyMap["right"] != 0:
-            self.mainChar.setH(self.mainChar.getH() - 300 * globalClock.getDt())
-        if self.keyMap["forward"] != 0:
-            self.mainCharRef.accelerate()
+        # Process input
+        engineForce = 0.0
+        brakeForce = 0.0
+        if (self.keyMap["forward"]!=0):
+            engineForce = 2000.0
+            brakeForce = 0.0
 
-        if self.keyMap["backward"] != 0:
-            if self.mainCharRef.get_speed() > 0:
-                self.mainCharRef.brake()
-            else:
-                self.mainCharRef.reverse()
-                # self.mainChar.setH(self.mainChar.getH() - 600)
-                # self.mainChar.setY(self.mainChar, -speed * globalClock.getDt())
+        if (self.keyMap["backward"]!=0):
+          if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= 0:
+              engineForce = -500.0
+              brakeForce = 0.0
+          else:
+              engineForce = 0.0
+              brakeForce = 100.0
 
-        # car moving
-        self.mainChar.setY(self.mainChar, -self.mainCharRef.get_speed() * globalClock.getDt())
-        # Friction to slow down
-        self.mainCharRef.friction(1)
-        # print("speed:", self.mainCharRef.get_speed())
+        if (self.keyMap["left"]!=0):
+          steering += dt * steeringIncrement
+          steering = min(steering, steeringClamp)
+
+        if (self.keyMap["right"]!=0):
+          steering -= dt * steeringIncrement
+          steering = max(steering, -steeringClamp)
+
+        # Apply steering to front wheels
+        self.mainCharRef.vehicle.setSteeringValue(steering, 0)
+        self.mainCharRef.vehicle.setSteeringValue(steering, 1)
+
+        # Apply engine and brake to rear wheels
+        self.mainCharRef.vehicle.applyEngineForce(engineForce, 2)
+        self.mainCharRef.vehicle.applyEngineForce(engineForce, 3)
+        self.mainCharRef.vehicle.setBrake(brakeForce, 2)
+        self.mainCharRef.vehicle.setBrake(brakeForce, 3)
 
         # If ralph is moving, loop the run animation.
         # If he is standing still, stop the animation.
         if (self.keyMap["forward"] != 0) or (self.keyMap["backward"] != 0) or (self.keyMap["left"] != 0) or (
                     self.keyMap["right"] != 0):
             if self.isMoving is False:
-                self.mainChar.loop("run")
+                self.mainCharRef.run()
                 self.isMoving = True
 
         else:
             if self.isMoving:
-                self.mainChar.stop()
-                self.mainChar.pose("walk", 5)
+                self.mainCharRef.walk()
                 self.isMoving = False
 
         # If the camera is too far from ralph, move it closer.
@@ -283,6 +342,9 @@ class World(DirectObject):
         self.floater.setPos(self.mainChar.getPos())
         self.floater.setZ(self.mainChar.getZ() + 2.0)
         base.camera.lookAt(self.floater)
+
+
+        self.bulletWorld.doPhysics(dt)
 
         return task.cont
 
