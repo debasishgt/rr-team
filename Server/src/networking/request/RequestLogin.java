@@ -4,13 +4,13 @@ package networking.request;
 import java.io.IOException;
 
 import driver.DatabaseDriver;
+import model.Player;
 import networking.response.ResponseAuth;
 // Custom Imports
 //import core.GameServer;
 import utility.DataReader;
-import utility.Player;
 
-public class RequestAuth extends GameRequest {
+public class RequestLogin extends GameRequest {
 
 	// Data
 	private String username;
@@ -18,7 +18,7 @@ public class RequestAuth extends GameRequest {
 	// Responses
 	private ResponseAuth responseAuth;
 
-	public RequestAuth() {
+	public RequestLogin() {
 		responses.add(responseAuth = new ResponseAuth());
 
 	}
@@ -31,23 +31,16 @@ public class RequestAuth extends GameRequest {
 
 	@Override
 	public void doBusiness() throws Exception {
+		DatabaseDriver db = DatabaseDriver.getInstance();
+		int player_id = db.checkAuth(username, password);
 
-		if (client.getServer().getThreadByPlayerUserName(username) != null) {
-			responseAuth.setAnswer((short) 2);
-
+		if (player_id != -1) {
+			System.out.println("Connected !");
+			client.setPlayer(db.getPlayerById(player_id));
+			responseAuth.setAnswer((short) 1);
 		} else {
-			DatabaseDriver db = DatabaseDriver.getInstance();
-			int player_id = db.checkAuth(username, password);
-
-			if (player_id != -1) {
-				System.out.println("Connected !");
-				client.setPlayer(new Player(username, player_id));
-				responseAuth.setAnswer((short) 1);
-			} else {
-				System.out.println("Wrong credentials");
-				responseAuth.setAnswer((short) 0);
-			}
+			System.out.println("Wrong credentials");
+			responseAuth.setAnswer((short) 0);
 		}
-		//responses.add(responseAuth);
 	}
 }

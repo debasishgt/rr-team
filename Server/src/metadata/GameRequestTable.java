@@ -21,26 +21,35 @@ public class GameRequestTable {
 		requestNames = new HashMap<Short, Class>();
 		
 		// Populate the hash map using request codes and class names
-		add(Constants.CMSG_AUTH, "RequestAuth");
-		//add(Constants.CMSG_DISCONNECT, "RequestAuth");
-		//add(Constants.CMSG_REGISTER, "RequestAuth");
-		//add(Constants.CMSG_FORGOT_PASSWORD, "RequestAuth");
+		add(Constants.CMSG_AUTH, "RequestLogin");
+		add(Constants.CMSG_DISCONNECT, "RequestLogout");
+		add(Constants.CMSG_REGISTER, "RequestRegister");
+		add(Constants.CMSG_FORGOT_PASSWORD, "RequestAccountInformation");
 		add(Constants.CMSG_CREATE_CHARACTER, "RequestCharacterCreation");
 		add(Constants.CMSG_CHAT, "RequestChat");
-		add(Constants.REQ_HEARTBEAT, "RequestHeartbeat");
-		add(Constants.CMSG_PRIVATE_CHAT, "RequestPrivateChat");
 		add(Constants.CMSG_MOVE, "RequestMove");
 		add(Constants.CMSG_POWER_UP, "RequestPowerUp");
 		add(Constants.CMSG_POWER_UP_PICK_UP, "RequestPowerPickUp");
 		add(Constants.CMSG_HEALTH, "RequestChangeHealth");
+		//add(Constants.CMSG_ENTER_LOBBY,"RequestEnterLobby");
+		//add(Constants.CMSG_ENTER_GAME_LOBBY,"RequestEnterGameLobby");
+		//add(Constants.CMSG_ENTER_GAME_NAME,"RequestEnterGameName");
+		//add(Constants.CMSG_CREATE_LOBBY,"RequestCreateLobby");
+		add(Constants.CMSG_PRIVATE_CHAT, "RequestPrivateChat");		
+		//add(Constants.CMSG_INVITE,"RequestInvite");
+		//add(Constants.CMSG_CAR_CHOICE,"RequestCarChoice");
+		//add(Constants.CMSG_CAR_PAINT,"RequestCarPaint");
+		//add(Constants.CMSG_CAR_TIRES,"RequestCarTires");
+		//add(Constants.CMSG_GARAGE_PURCHASE,"RequestGaragePurchase");
 		add(Constants.CMSG_RESULTS, "RequestResults");
 		add(Constants.CMSG_RANKINGS, "RequestRankings");
 		add(Constants.CMSG_PRIZES, "RequestPrizes");
-		add(Constants.CMSG_COLLISION, "RequestCollision");
 		add(Constants.CMSG_DEAD, "RequestDead");
+		add(Constants.CMSG_COLLISION, "RequestCollision");		
 		add(Constants.CMSG_READY, "RequestReady");
 		add(Constants.CMSG_SET_POSITION, "RequestSetPosition");
 		
+		add(Constants.REQ_HEARTBEAT, "RequestHeartbeat");
 	}
 
 	/**

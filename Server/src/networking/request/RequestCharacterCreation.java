@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import driver.DatabaseDriver;
 import model.BaseVehicle;
+import model.Player;
 import networking.response.ResponseCharacterCreation;
 import utility.DataReader;
-import utility.Player;
 
 public class RequestCharacterCreation extends GameRequest {
 	// Data
@@ -38,6 +38,5 @@ public class RequestCharacterCreation extends GameRequest {
 			} else {
 				response.setFlag(0);
 			}
-			responses.add(response);
 		}
 }
