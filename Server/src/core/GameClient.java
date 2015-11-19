@@ -84,7 +84,6 @@ public class GameClient extends Thread {
 			try {
 				// Extract the size of the package from the data stream
 				short requestLength = DataReader.readShort(dataInputStream);
-
 				if (requestLength > 0) {
 					lastActivity = System.currentTimeMillis();
 					// Separate the remaining package from the data stream

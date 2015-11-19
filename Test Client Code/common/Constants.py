@@ -28,7 +28,8 @@ class Constants:
     CMSG_COLLISION = 125 
     CMSG_DEAD = 126
     CMSG_READY = 127
-
+    REQ_HEARTBEAT = 301
+	
     SMSG_AUTH = 201
     SMSG_DISCONNECT = 202
     SMSG_REGISTER = 203

@@ -13,15 +13,12 @@ class RequestRegistration(ServerRequest):
             user_data = username.split()
             username = user_data[0]
             password = user_data[1]
-            email = user_data[2]
             print username
             print password
-            print email
             pkg = PyDatagram()
-            pkg.addUint16(Constants.CMSG_AUTH)
+            pkg.addUint16(Constants.CMSG_REGISTER)
             pkg.addString(username)
             pkg.addString(password)
-            pkg.addString(email)
             self.cWriter.send(pkg, self.connection)
 
         except:

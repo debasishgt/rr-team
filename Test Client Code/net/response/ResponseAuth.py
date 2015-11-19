@@ -8,7 +8,7 @@ class ResponseAuth(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
+            self.msg = data.getUint16()
 
             print "ResponseAuth - ", self.msg
 

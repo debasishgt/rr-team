@@ -42,8 +42,8 @@ public class RequestAuth extends GameRequest {
 
 			if (player_id != -1) {
 				System.out.println("Connected !");
-				responseAuth.setAnswer((short) 1);
 				client.setPlayer(new Player(username, player_id));
+				responseAuth.setAnswer((short) 1);
 			} else {
 				System.out.println("Wrong credentials");
 				responseAuth.setAnswer((short) 0);

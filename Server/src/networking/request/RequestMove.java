@@ -7,8 +7,7 @@ import networking.response.ResponseMove;
 
 public class RequestMove extends GameRequest {
 	
-	float x, y, h;
-	boolean isMoving;
+	float x, y, z, h;
 	private ResponseMove responseMove;
 	
 	public RequestMove() {
@@ -19,16 +18,15 @@ public class RequestMove extends GameRequest {
 	public void parse() throws IOException {
 		x = DataReader.readFloat(dataInput);
 		y = DataReader.readFloat(dataInput);
+		z = DataReader.readFloat(dataInput);
 		h = DataReader.readFloat(dataInput);
-		isMoving = DataReader.readBoolean(dataInput);
 	}
 
 	@Override
 	public void doBusiness() throws Exception {
 		
 		// Create ResponseMove object
-		responseMove.setPosition(this.x, this.y, this.h);
-		responseMove.setIsMoving(isMoving);
+		responseMove.setPosition(this.x, this.y, this.z, this.h);
 		responseMove.setUsername(this.client.getPlayer().getUsername());
 		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseMove);
 	}

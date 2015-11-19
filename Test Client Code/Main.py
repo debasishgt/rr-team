@@ -53,6 +53,8 @@ class Main(DirectObject):
         elif choice is 2: msg = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for x in range(7))
         elif choice is 3: msg = random.randint(0, 2**16 - 1)
         elif choice is 4: msg = 100 * random.random()
+        elif choice is 100:
+            self.cManager.sendRequest(101, "username password")
         elif choice is 101:
             username = "vatsal"
             password = "sevak"
@@ -60,10 +62,10 @@ class Main(DirectObject):
         elif choice is 102:
             self.cManager.sendRequest(choice, msg)
         elif choice is 103:
-            username = "vatsal"
-            password = "sevak"
-            email = "vatsalsevak@gmail.com"
-            self.cManager.sendRequest(choice, username+" "+password+" "+email)
+            username = "username"
+            password = "password"
+            #email = "vatsalsevak@gmail.com"
+            self.cManager.sendRequest(choice, username+" "+password)
         elif choice is 104:
             username = "vatsal"
             email = "vatsalsevak@gmail.com"
@@ -80,8 +82,7 @@ class Main(DirectObject):
             y = 0
             z = 0
             h = 0
-            keys = "keys"
-            self.cManager.sendRequest(choice, ""+str(x)+" "+str(y)+" "+str(z)+" "+str(h)+" "+keys)
+            self.cManager.sendRequest(choice, ""+str(x)+" "+str(y)+" "+str(z)+" "+str(h))
         elif choice is 108: 
             x = 5
             self.cManager.sendRequest(choice, x)
@@ -111,9 +112,12 @@ class Main(DirectObject):
         elif choice is 127:
             ready = 1
             self.cManager.sendRequest(choice, ready)
-        elif choice is 6: 
+        elif choice is 128:
+            self.cManager.sendRequest(301)
+        elif choice is 6:
             sys.exit()
-        else: print "Invalid input"
+        else:
+            print "Invalid input"
 
         #if choice is 101:
         #else:

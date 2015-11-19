@@ -17,6 +17,7 @@ public class RequestHeartbeat extends GameRequest {
 		Queue<GameResponse> response_queue = this.client.getUpdates();
 		
 		while(!response_queue.isEmpty()){
+			System.out.println("heartbeat");
 			responses.add(response_queue.poll());
 		}
 	}
