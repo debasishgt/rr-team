@@ -11,8 +11,8 @@ class ResponseReady(ServerResponse):
             self.playerCount = data.getInt32()
             self.readyPlayers = {data.getString() : data.getInt32()}
 
-            for x in range(0, self.playerCount-1)
-                self.readyPlayers[data.getString()] = data.getInt32()
+            # for x in range(0, self.playerCount-1)
+            #     self.readyPlayers[data.getString()] = data.getInt32()
 
             print "ResponseMove - ",self.playerCount
             #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')

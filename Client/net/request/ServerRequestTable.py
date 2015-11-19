@@ -43,7 +43,7 @@ class ServerRequestTable:
 
         self.add(Constants.CMSG_MOVE, 'RequestMove')
         self.add(Constants.CMSG_POWER_UP, 'RequestPowerUp')
-        self.add(Constants.CMSG_POWER_PICKUP, 'RequestPowerPickUp')
+        self.add(Constants.CMSG_POWER_UP_PICK_UP, 'RequestPowerPickUp')
         self.add(Constants.CMSG_HEALTH, 'RequestHealth')
         self.add(Constants.CMSG_RESULTS, 'RequestResults')
         self.add(Constants.CMSG_RANKINGS, 'RequestRankings')

@@ -43,7 +43,7 @@ class ServerResponseTable:
 
         self.add(Constants.SMSG_MOVE, 'ResponseMove')
         self.add(Constants.SMSG_POWER_UP, 'ResponsePowerUp')
-        self.add(Constants.SMSG_POWER_PICKUP, 'ResponsePowerPickUp')
+        self.add(Constants.SMSG_POWER_UP_PICK_UP, 'ResponsePowerPickUp')
         self.add(Constants.SMSG_HEALTH, 'ResponseHealth')
         self.add(Constants.SMSG_RESULTS, 'ResponseResults')
         self.add(Constants.SMSG_RANKINGS, 'ResponseRankings')

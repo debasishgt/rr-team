@@ -11,8 +11,8 @@ class ResponseRankings(ServerResponse):
             self.playerCount = data.getInt32()
             self.rankings = {data.getString() : data.getInt32()}
 
-            for x in range(0, self.playerCount-1)
-                self.rankings[data.getString()] = data.getInt32()
+            # for x in range(0, self.playerCount-1)
+            #     self.rankings[data.getString()] = data.getInt32()
 
             print "ResponseMove - ",self.playerCount
 

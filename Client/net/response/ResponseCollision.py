@@ -3,7 +3,7 @@ from traceback import print_exc
 from common.Constants import Constants
 from net.response.ServerResponse import ServerResponse
 
-class ResponseMove(ServerResponse):
+class ResponseCollision(ServerResponse):
 
     def execute(self, data):
 
