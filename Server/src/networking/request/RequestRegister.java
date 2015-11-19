@@ -4,11 +4,11 @@ package networking.request;
 import java.io.IOException;
 
 import driver.DatabaseDriver;
+import model.Player;
 // Custom Imports
 //import core.GameServer;
 import networking.response.ResponseRegister;
 import utility.DataReader;
-import utility.Player;
 
 public class RequestRegister extends GameRequest {
 

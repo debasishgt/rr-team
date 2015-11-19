@@ -15,9 +15,9 @@ import java.util.List;
 import configuration.GameServerConf;
 import driver.DatabaseDriver;
 import metadata.GameRequestTable;
+import model.Player;
 import networking.response.GameResponse;
 import utility.ConfFileParser;
-import utility.Player;
 
 /**
  * The GameServer class serves as the main module that runs the server.

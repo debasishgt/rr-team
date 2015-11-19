@@ -4,11 +4,11 @@ package networking.request;
 import java.io.IOException;
 
 import driver.DatabaseDriver;
+import model.Player;
 import networking.response.ResponseAuth;
 // Custom Imports
 //import core.GameServer;
 import utility.DataReader;
-import utility.Player;
 
 public class RequestAuth extends GameRequest {
 

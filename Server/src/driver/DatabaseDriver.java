@@ -4,10 +4,10 @@ import java.sql.*;
 import java.util.*;
 
 import utility.ConfFileParser;
-import utility.Player;
 import configuration.GameServerConf;
 import model.BaseVehicle;
 import model.GameRoom;
+import model.Player;
 import model.Powerup;
 import model.Upgrade;
 import model.PlayerVehicle;

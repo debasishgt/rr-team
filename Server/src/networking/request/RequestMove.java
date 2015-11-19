@@ -26,8 +26,8 @@ public class RequestMove extends GameRequest {
 	public void doBusiness() throws Exception {
 		
 		// Create ResponseMove object
-		responseMove.setPosition(this.x, this.y, this.z, this.h);
-		responseMove.setUsername(this.client.getPlayer().getUsername());
+		client.getPlayer().setPosition(this.x, this.y, this.z, this.h);
+		responseMove.setPlayer(this.client.getPlayer());
 		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseMove);
 	}
 }

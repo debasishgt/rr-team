@@ -17,11 +17,11 @@ import java.util.Queue;
 // Custom Imports
 import metadata.Constants;
 import metadata.GameRequestTable;
+import model.Player;
 import networking.request.GameRequest;
 import networking.response.GameResponse;
 import networking.response.ResponseDisconnected;
 import utility.DataReader;
-import utility.Player;
 
 /**
  * The GameClient class is an extension of the Thread class that represents an
