@@ -3,7 +3,7 @@
 import direct.directbase.DirectStart
 from panda3d.core import Filename, AmbientLight, DirectionalLight
 from panda3d.core import PandaNode, NodePath, Camera, TextNode
-from panda3d.core import Vec3, Vec4, BitMask32
+from panda3d.core import Vec3, Vec4, BitMask32, TransformState
 from direct.gui.OnscreenText import OnscreenText
 from direct.actor.Actor import Actor
 from direct.showbase.DirectObject import DirectObject
@@ -13,6 +13,16 @@ from panda3d.core import CollisionTraverser, CollisionNode, CollisionSphere
 from panda3d.core import CollisionHandlerQueue, CollisionRay, CollisionHandlerPusher, CollisionPlane
 from direct.interval.IntervalGlobal import Sequence
 from direct.task import Task
+
+from panda3d.bullet import (
+        BulletPlaneShape, BulletCylinderShape,
+        BulletBoxShape, BulletHeightfieldShape)
+from panda3d.bullet import BulletRigidBodyNode, BulletDebugNode
+from panda3d.bullet import BulletVehicle, BulletSphereShape
+
+from panda3d.bullet import BulletTriangleMeshShape, BulletTriangleMesh
+from panda3d.bullet import XUp, YUp, ZUp
+
 import time
 
 
@@ -20,7 +30,7 @@ class Character:
     playerId = 1
     type = 0
 
-    def __init__(self, tempworld, type):
+    def __init__(self, tempworld, bulletWorld, type, playerId):
         self.world = tempworld
         self.speed = 0
         self.acceleration = 1.5
@@ -36,27 +46,60 @@ class Character:
 
         if type == 0:
             self.actor = Actor("models/batcar")
-        # elif type == 1:
-        #     self.actor = Actor("models/panda-model",
-        #                        {"walk": "models/panda-walk4"})
-        # elif type == 2:
+            self.actor.setScale(0.7)
+            carRadius = 3
+        elif type == 1:
+            self.actor = Actor("models/policecarpainted", {})
+            self.actor.setScale(0.30)
+            self.actor.setH(180)# elif type == 2:
         #     self.actor = loader.loadModel("knucklehead.egg")
         #     self.tex = loader.loadTexture("knucklehead.jpg")
         #     self.actor.setTexture(self.car_tex, 1)
 
-        self.actor.reparentTo(render)
-        self.actor.setScale(.5)
-        self.actor.setPos(50 * random.random(), 50 * random.random(), 0)
 
-        # Create a collsion node for this object.
-        self.cNode = CollisionNode('char')
-        # Attach a collision sphere solid to the collision node.
-        self.cNode.addSolid(CollisionSphere(0, 0, 3, 3))
-        # Attach the collision node to the object's model.
-        self.smileyC = self.actor.attachNewNode(self.cNode)
-        # self.frowneyC.show()
-        # base.cTrav.addCollider(self.smileyC, self.world.pusher)
-        # self.world.pusher.addCollider(self.smileyC, self.actor, base.drive.node())
+        shape = BulletBoxShape(Vec3(1.0, 1.5,0.4))
+        ts = TransformState.makePos(Point3(0, 0, 0.6))
+
+        self.chassisNP = render.attachNewNode(BulletRigidBodyNode('Vehicle'))
+        self.chassisNP.node().addShape(shape, ts)
+        self.chassisNP.setPos(50 * random.random(), 50 * random.random(), 1)
+        self.chassisNP.setH(180)
+        self.chassisNP.node().setMass(800.0)
+        self.chassisNP.node().setDeactivationEnabled(False)
+
+        bulletWorld.attachRigidBody(self.chassisNP.node())
+
+        self.actor.reparentTo(self.chassisNP)
+        self.actor.setH(180)
+
+        # Vehicle
+        self.vehicle = BulletVehicle(bulletWorld, self.chassisNP.node())
+        self.vehicle.setCoordinateSystem(ZUp)
+        bulletWorld.attachVehicle(self.vehicle)
+
+        for fb, y in (("F", 0.8), ("B", -0.8)):
+            for side, x in (("R", 0.8), ("L", -0.8)):
+                np = loader.loadModel("models/tire%s.egg" % side)
+                np.reparentTo(render)
+                isFront = fb == "F"
+                self.addWheel(Point3(x, y, 0.55), isFront, np)
+
+    def addWheel(self, position, isFront, np):
+        wheel = self.vehicle.createWheel()
+
+        wheel.setNode(np.node())
+        wheel.setChassisConnectionPointCs(position)
+        wheel.setFrontWheel(isFront)
+
+        wheel.setWheelDirectionCs(Vec3(0, 0, -1))
+        wheel.setWheelAxleCs(Vec3(1, 0, 0))
+        wheel.setWheelRadius(0.2)
+        wheel.setMaxSuspensionTravelCm(0.4 * 100.0)
+        wheel.setSuspensionStiffness(40.0)
+        wheel.setWheelsDampingRelaxation(2.3)
+        wheel.setWheelsDampingCompression(4.4)
+        wheel.setFrictionSlip(100)
+        wheel.setRollInfluence(0.1)
 
     def getActor(self):
         return self.actor
@@ -93,3 +136,12 @@ class Character:
     def reverse(self):
         if self.speed > self.reverse_limit:
             self.speed -= self.reverse_speed
+
+    def walk(self):
+        self.actor.stop()
+        self.actor.pose("walk",5)
+        self.isMoving = False
+
+    def run(self):
+        self.actor.loop("run")
+        self.isMoving = True
