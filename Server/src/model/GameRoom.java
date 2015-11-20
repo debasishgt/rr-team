@@ -3,21 +3,17 @@ package model;
 import driver.DatabaseDriver;
 
 public class GameRoom {
-	private static int gameid = 0;
 	private int id;
 	private int type;
 	private long time_started;
 	private String map_name;
-	private String game_name;
+	private String room_name;
 	
-	public GameRoom(){
-		this.id = gameid++;
-	}
-	
-	public GameRoom(int id, int type, long time_started, String map_name) {
+	public GameRoom(int id, int type, long time_started, String map_name, String room_name) {
 		this.id = id;
 		this.time_started = time_started;
 		this.map_name = map_name;
+		this.room_name = room_name;
 	}
 
 	public int getType() {
@@ -53,11 +49,11 @@ public class GameRoom {
 		dbDriver.updateGame(this);
 	}
 
-	public String getGame_name() {
-		return game_name;
+	public String getRoomName() {
+		return room_name;
 	}
 
-	public void setGame_name(String game_name) {
-		this.game_name = game_name;
+	public void setRoomName(String game_name) {
+		this.room_name = game_name;
 	}
 }

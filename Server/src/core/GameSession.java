@@ -1,6 +1,7 @@
 package core;
 
 import networking.response.ResponseReady;
+import driver.DatabaseDriver;
 import metadata.Constants;
 import model.GameRoom;
 
@@ -12,7 +13,23 @@ public class GameSession extends Thread{
 	private long[] powerups;
 	
 	public GameSession(GameServer server){
-		this.gameroom = new GameRoom();
+		GameRoom gameRoom = null;
+		while(gameRoom == null) {
+			String roomName = "Room #" + ((int)(Math.random()*100000));
+			gameRoom = DatabaseDriver.getInstance().getGameByName(roomName);
+			if(gameRoom == null) {
+				DatabaseDriver.getInstance().createGame(0, System.currentTimeMillis()/1000, "", roomName, 0);
+				gameRoom = DatabaseDriver.getInstance().getGameByName(roomName);
+			} else {
+				gameRoom = null;
+			}
+		}
+		this.gameroom = gameRoom;
+		this.server = server;
+	}
+	
+	public GameSession(GameServer server, GameRoom gameRoom){
+		this.gameroom = gameRoom;
 		this.server = server;
 	}
 	

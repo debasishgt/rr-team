@@ -15,6 +15,7 @@ import java.util.List;
 import configuration.GameServerConf;
 import driver.DatabaseDriver;
 import metadata.GameRequestTable;
+import model.GameRoom;
 import model.Player;
 import networking.response.GameResponse;
 import utility.ConfFileParser;
@@ -162,7 +163,15 @@ public class GameServer {
 	}
 	
 	public void addToActiveSessions(GameSession gamesession){
+		if(!gamesession.isAlive()) {
+			gamesession.start();
+		}
 		activeSessions.put(gamesession.getId(), gamesession);
+	}
+	
+	public void createActiveSession(GameRoom gameRoom) {
+		GameSession session = new GameSession(this,gameRoom);
+		addToActiveSessions(session);
 	}
 	
 	public HashMap<Long, GameClient> getActiveThreads()

@@ -16,8 +16,8 @@ public class ResponseCreateLobby extends GameResponse {
 	public byte[] constructResponseInBytes() {
 		GamePacket packet = new GamePacket(responseCode);
 		packet.addString(gameName);
-		packet.addString(owner);
 		packet.addInt32(valid);
+		packet.addString(owner);	
 		return packet.getBytes();
 	}
 	

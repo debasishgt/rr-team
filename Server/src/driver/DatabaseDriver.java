@@ -298,15 +298,17 @@ public class DatabaseDriver {
 	}
 
 	//Create game
-	public int createGame(int gameType, long timestamp, String mapName) {
+	public int createGame(int gameType, long timestamp, String mapName, String roomName, int status) {
 		int ret = 0;
 		try {
 			checkConnection();
-			String selectSQL = "INSERT INTO "+GAMES+" (type,time_started,map_name) VALUES(?,?,?)";
+			String selectSQL = "INSERT INTO "+GAMES+" (type,time_started,map_name,room_name,status) VALUES(?,?,?,?,?)";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, gameType);
 			preparedStatement.setLong(2, timestamp);
-			preparedStatement.setString(2, mapName);
+			preparedStatement.setString(3, mapName);
+			preparedStatement.setString(4, roomName);
+			preparedStatement.setInt(5, status);
 			ret = preparedStatement.executeUpdate();
 			preparedStatement.close();
 			return ret;
@@ -380,12 +382,12 @@ public class DatabaseDriver {
 		GameRoom ret = null;
 		try {
 			checkConnection();
-			String selectSQL = "SELECT * FROM " +GAMES+" WHERE map_name = ? LIMIT 0,1";
+			String selectSQL = "SELECT * FROM " +GAMES+" WHERE room_name = ? LIMIT 0,1";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setString(1, name);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				ret = new GameRoom(rs.getInt("id"),rs.getInt("type"), rs.getLong("time_started"), rs.getString("map_name"));
+				ret = new GameRoom(rs.getInt("id"),rs.getInt("type"), rs.getLong("time_started"), rs.getString("map_name"),rs.getString("room_name"));
 			}
 			preparedStatement.close();
 		} catch (Exception e) {
@@ -403,7 +405,7 @@ public class DatabaseDriver {
 			preparedStatement.setInt(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				ret = new GameRoom(rs.getInt("id"),rs.getInt("type"), rs.getLong("time_started"), rs.getString("map_name"));
+				ret = new GameRoom(rs.getInt("id"),rs.getInt("type"), rs.getLong("time_started"), rs.getString("map_name"),rs.getString("room_name"));
 			}
 			preparedStatement.close();
 		} catch (Exception e) {
