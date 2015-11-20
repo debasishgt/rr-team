@@ -25,9 +25,10 @@ class Constants:
     CMSG_RESULTS = 122
     CMSG_RANKINGS = 123
     CMSG_PRIZES = 124
-    CMSG_COLLISION = 125 
+    CMSG_COLLISION = 125
     CMSG_DEAD = 126
     CMSG_READY = 127
+    CMSG_PLAYER = 128
 
     SMSG_AUTH = 201
     SMSG_DISCONNECT = 202
@@ -42,9 +43,11 @@ class Constants:
     SMSG_RESULTS = 222
     SMSG_RANKINGS = 223
     SMSG_PRIZES = 224
-    SMSG_COLLISION = 225 
+    SMSG_COLLISION = 225
     SMSG_DEAD = 226
     SMSG_READY = 227
+    SMSG_PLAYER = 228
+    SMSG_TIMER = 229
 
 #    CMSG_AUTH                           = 101
 #    CMSG_DISCONNECT                     = 102

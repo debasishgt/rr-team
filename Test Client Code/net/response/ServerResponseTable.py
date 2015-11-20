@@ -20,6 +20,7 @@ from net.response.ResponsePrizes import ResponsePrizes
 from net.response.ResponseCollision import ResponseCollision
 from net.response.ResponseDead import ResponseDead
 from net.response.ResponseReady import ResponseReady
+from net.response.ResponsePlayer import ResponsePlayer
 
 
 class ServerResponseTable:
@@ -52,6 +53,8 @@ class ServerResponseTable:
         self.add(Constants.SMSG_COLLISION,'ResponseCollision')
         self.add(Constants.SMSG_DEAD,'ResponseDead')
         self.add(Constants.SMSG_READY,'ResponseReady')
+        self.add(Constants.SMSG_PLAYER,'ResponsePlayer')
+        self.add(Constants.SMSG_TIMER, 'ResponseTimer')
 
     def add(self, constant, name):
         """Map a numeric response code with the name of an existing response module."""

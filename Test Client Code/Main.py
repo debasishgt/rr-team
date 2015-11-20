@@ -43,7 +43,7 @@ class Main(DirectObject):
     
     def menu(self, task):
         # Accept raw_input choice
-        choice = input("1 - Rand int\n2 - Rand string\n3 - Rand short\n4 - Rand float\n6 - Exit\n101 - login\n102 - Disconnect\n103 - Register\n104 - Forget Password\n105 - Create Character\n106 - Chat\n107 - Move\n108 - Power Up\n109 - Power Pick Up\n110 - Health\n122 - Results\n123 - Rankings\n124 - Prizes\n125 - Collistion\n126 - Dead\n127 - Ready\n")
+        choice = input("1 - Rand int\n2 - Rand string\n3 - Rand short\n4 - Rand float\n6 - Exit\n101 - login\n102 - Disconnect\n103 - Register\n104 - Forget Password\n105 - Create Character\n106 - Chat\n107 - Move\n108 - Power Up\n109 - Power Pick Up\n110 - Health\n122 - Results\n123 - Rankings\n124 - Prizes\n125 - Collistion\n126 - Dead\n127 - Ready\n128 - Player\n")
         
         msg = 0
         username = 0
@@ -111,6 +111,9 @@ class Main(DirectObject):
         elif choice is 127:
             ready = 1
             self.cManager.sendRequest(choice, ready)
+        elif choice is 128:
+            playerCount = 1
+            self.cManager.sendRequest(choice, playerCount)
         elif choice is 6: 
             sys.exit()
         else: print "Invalid input"

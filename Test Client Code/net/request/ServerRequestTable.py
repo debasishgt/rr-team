@@ -20,6 +20,7 @@ from net.request.RequestPrizes import RequestPrizes
 from net.request.RequestCollision import RequestCollision
 from net.request.RequestDead import RequestDead
 from net.request.RequestReady import RequestReady
+from net.request.RequestPlayer import RequestPlayer
 
 
 
@@ -53,6 +54,7 @@ class ServerRequestTable:
         self.add(Constants.CMSG_COLLISION,'RequestCollision')
         self.add(Constants.CMSG_DEAD,'RequestDead')
         self.add(Constants.CMSG_READY,'RequestReady')
+        self.add(Constants.CMSG_PLAYER,'RequestPlayer')
 
     def add(self, constant, name):
         """Map a numeric request code with the name of an existing request module."""
