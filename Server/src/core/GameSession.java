@@ -1,6 +1,7 @@
 package core;
 
 import networking.response.ResponseReady;
+import metadata.Constants;
 import model.GameRoom;
 
 public class GameSession extends Thread{
@@ -8,6 +9,7 @@ public class GameSession extends Thread{
 	private GameServer server;
 	private boolean isRunning;
 	private boolean gameStarted;
+	private long[] powerups;
 	
 	public GameSession(GameServer server){
 		this.gameroom = new GameRoom();
@@ -26,6 +28,8 @@ public class GameSession extends Thread{
 				//gameroom.getstart_time will have the correct start_time
 			}
 		}
+		System.out.println("Game Over : GameId - " + getId());
+		server.deleteSessionThreadOutOfActiveThreads(getId());
 	}
 
 	public GameRoom getGameroom() {
@@ -50,5 +54,31 @@ public class GameSession extends Thread{
 			gclient.addResponseForUpdate(responseReady);
 		}
 	}
+
+	public void gameStart() {
+		sendAllResponseReady();
+		getGameroom().setTimeStarted(System.currentTimeMillis());
+		initPowerUp(getGameroom().getTimeStarted());
+		setGameStarted(true);
+	}
+
+	private void initPowerUp(long l) {
+		this.powerups = new long[Constants.NUMBER_OF_POWERUPS];
+		for(int i=0; i<Constants.NUMBER_OF_POWERUPS; i++){
+			powerups[i] = l - Constants.RESPAWN_TIME;
+		}
+	}
+
+	public boolean getPowerups(int powerId) {
+		long cur = System.currentTimeMillis();
+		if(cur - powerups[powerId] >= Constants.RESPAWN_TIME){
+			powerups[powerId] = cur;
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	
 }
 

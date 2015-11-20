@@ -26,10 +26,7 @@ public class RequestReady extends GameRequest {
 			this.client.getPlayer().setReady();
 			int roomId = this.client.getPlayer().getRoom().getId();
 			if(allReady(roomId)){
-				GameSession gsession = this.client.getServer().getGameSessionByRoomId(roomId);
-				gsession.sendAllResponseReady();
-				gsession.getGameroom().setTimeStarted(System.currentTimeMillis());
-				gsession.setGameStarted(true);
+				this.client.getServer().getGameSessionByRoomId(roomId).gameStart();
 			}
 		}
 	}
