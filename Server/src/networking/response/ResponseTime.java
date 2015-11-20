@@ -8,7 +8,7 @@ public class ResponseTime extends GameResponse {
 	private long time;
 	
 	public ResponseTime() {
-        responseCode = Constants.SMSG_REQUEST_TIME;
+        responseCode = Constants.SMSG_TIME;
     }
 	
 	@Override
