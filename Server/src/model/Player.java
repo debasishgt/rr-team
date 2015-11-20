@@ -1,14 +1,13 @@
 package model;
 
 public class Player {
-
-	private String username;
 	private int player_id;
-	private String character;
+	private String username;	
+	private String email;
 	private GameRoom room = null;
 	private Position pos;
 	
-	public Player(String username, int player_id) {
+	public Player(int player_id,String username) {
 		this.username = username;
 		this.player_id = player_id;
 		this.pos = new Position();
@@ -25,17 +24,12 @@ public class Player {
 	public String getUsername() {
 		return this.username;
 	}
-
-	public String getCharacter() {
-		return this.character;
-	}
-
-	public void setCharacter(String character) {
-		this.character = character;
+	
+	public String getEmail() {
+		return this.email;
 	}
 	
-	public int getID()
-	{
+	public int getID() {
 		return this.player_id;
 	}
 	

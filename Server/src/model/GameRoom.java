@@ -8,6 +8,7 @@ public class GameRoom {
 	private int type;
 	private long time_started;
 	private String map_name;
+	private String game_name;
 	
 	public GameRoom(){
 		this.id = gameid++;

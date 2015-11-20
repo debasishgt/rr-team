@@ -169,7 +169,26 @@ public class DatabaseDriver {
 			preparedStatement.setString(1, name);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				ret = new Player(rs.getString("user_name"), rs.getInt("id"));
+				ret = new Player(rs.getInt("id"),rs.getString("user_name"));
+			}
+			rs.close();
+			preparedStatement.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+	
+	public Player getPlayerByEmail(String email) {
+		Player ret = null;
+		try {
+			checkConnection();
+			String selectSQL = "SELECT * FROM " +PLAYERS+" WHERE user_email = ? LIMIT 0,1";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setString(1, email);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				ret = new Player(rs.getInt("id"),rs.getString("user_name"));
 			}
 			rs.close();
 			preparedStatement.close();
@@ -188,7 +207,7 @@ public class DatabaseDriver {
 			preparedStatement.setInt(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				ret = new Player(rs.getString("user_name"), rs.getInt("id"));
+				ret = new Player(rs.getInt("id"),rs.getString("user_name"));
 			}
 			rs.close();
 			preparedStatement.close();
@@ -232,7 +251,7 @@ public class DatabaseDriver {
 			preparedStatement.setInt(2, playerId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				list.add(new Player(rs.getString("p.user_name"),rs.getInt("p.id")));
+				list.add(new Player(rs.getInt("p.id"),rs.getString("p.user_name")));
 			}
 			rs.close();
 			preparedStatement.close();
@@ -325,7 +344,7 @@ public class DatabaseDriver {
 			preparedStatement.setInt(2, gameId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
-				list.add(new Player(rs.getString("user_name"),rs.getInt("id")));
+				list.add(new Player(rs.getInt("id"),rs.getString("user_name")));
 			}
 			rs.close();
 			preparedStatement.close();
@@ -500,7 +519,7 @@ public class DatabaseDriver {
 			preparedStatement.setInt(1, gameId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while(rs.next()) {
-				list.add(new Player(rs.getString("user_name"),rs.getInt("id")));
+				list.add(new Player(rs.getInt("id"),rs.getString("user_name")));
 			}
 			rs.close();
 			preparedStatement.close();
@@ -519,7 +538,7 @@ public class DatabaseDriver {
 			preparedStatement.setInt(1, gameId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while(rs.next()) {
-				list.add(new Player(rs.getString("user_name"),rs.getInt("id")));
+				list.add(new Player(rs.getInt("id"),rs.getString("user_name")));
 			}
 			rs.close();
 			preparedStatement.close();
