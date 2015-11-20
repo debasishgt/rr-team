@@ -34,7 +34,7 @@ public class GameRequestTable {
 		add(Constants.CMSG_ENTER_LOBBY,"RequestEnterLobby");
 		add(Constants.CMSG_ENTER_GAME_LOBBY,"RequestEnterGameLobby");
 		add(Constants.CMSG_ENTER_GAME_NAME,"RequestEnterGameName");
-		//add(Constants.CMSG_CREATE_LOBBY,"RequestCreateLobby");
+		add(Constants.CMSG_CREATE_LOBBY,"RequestCreateLobby");
 		add(Constants.CMSG_PRIVATE_CHAT, "RequestPrivateChat");		
 		//add(Constants.CMSG_INVITE,"RequestInvite");
 		//add(Constants.CMSG_CAR_CHOICE,"RequestCarChoice");
@@ -48,7 +48,7 @@ public class GameRequestTable {
 		add(Constants.CMSG_COLLISION, "RequestCollision");		
 		add(Constants.CMSG_READY, "RequestReady");
 		add(Constants.CMSG_SET_POSITION, "RequestSetPosition");
-		
+		//add(Constants.CMSG_REQUEST_TIME, "RequestTime");
 		add(Constants.REQ_HEARTBEAT, "RequestHeartbeat");
 	}
 

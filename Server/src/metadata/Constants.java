@@ -33,7 +33,8 @@ public class Constants {
 	public final static short CMSG_DEAD = 126;
 	public final static short CMSG_READY = 127;
 	public final static short CMSG_SET_POSITION = 128;
-
+	public final static short CMSG_REQUEST_TIME = 129;
+	
 	public final static short SMSG_AUTH = 201;
 	public final static short SMSG_DISCONNECT = 202;
 	public final static short SMSG_REGISTER = 203;
@@ -61,7 +62,8 @@ public class Constants {
 	public final static short SMSG_DEAD = 226;
 	public final static short SMSG_READY = 227;
 	public final static short SMSG_SET_POSITION = 228;
-
+	public final static short SMSG_REQUEST_TIME = 229;
+	
 	public final static short SMSG_RENDER_CHARACTER = 310;
 	public final static short SMSG_REMOVE_CHARACTER =311;
 	public final static short REQ_HEARTBEAT = 301;
@@ -70,4 +72,6 @@ public class Constants {
 	public static final int SAVE_INTERVAL = 60000;
 	public static final String CLIENT_VERSION = "1.00";
 	public static final int TIMEOUT_SECONDS = 60;
+	public static final int NUMBER_OF_POWERUPS = 6;
+	public static final long RESPAWN_TIME = 30000;
 }
