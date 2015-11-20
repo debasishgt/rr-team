@@ -1,6 +1,7 @@
 package core;
 
 import networking.response.ResponseReady;
+import networking.response.ResponseTime;
 import driver.DatabaseDriver;
 import metadata.Constants;
 import model.GameRoom;
@@ -37,13 +38,17 @@ public class GameSession extends Thread{
 	public void run() {
 		isRunning = true;
 		gameStarted = false;
-		long currentTime, gameRunTime;
-		boolean eliminate = false;
+		long currentTime, gameRunTime, referTime;
+		referTime = 0L;
 		while(isRunning){
 			currentTime = System.currentTimeMillis();
 			if(gameStarted){
 				gameRunTime = currentTime - gameroom.getTimeStarted();
-				//everyone is ready and game started
+				//send responseTime approximately every 250 milseconds
+				if(gameRunTime - referTime >= Constants.SEND_TIME){
+					sendAllResponseTime(1, gameRunTime);
+					referTime += Constants.SEND_TIME;
+				}
 			}
 		}
 		System.out.println("Game Over : GameId - " + getId());
@@ -70,6 +75,14 @@ public class GameSession extends Thread{
 			ResponseReady responseReady = new ResponseReady();
 			responseReady.setUsername(gclient.getPlayer().getUsername());
 			gclient.addResponseForUpdate(responseReady);
+		}
+	}
+	
+	public void sendAllResponseTime(int type, long time) {
+		ResponseTime responseTime = new ResponseTime();
+		responseTime.setData(type, time);
+		for(GameClient gclient : server.getGameClientsForRoom(gameroom.getId())){
+			gclient.addResponseForUpdate(responseTime);
 		}
 	}
 
