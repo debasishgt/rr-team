@@ -38,6 +38,5 @@ public class RequestCharacterCreation extends GameRequest {
 			} else {
 				response.setFlag(0);
 			}
-			responses.add(response);
 		}
 }

@@ -30,7 +30,6 @@ public class GameServer {
 	private GameServerConf configuration; // Stores server config. variables
 	private boolean ready = false; // Used to keep server looping
 	private HashMap<Long, GameClient> activeThreads = new HashMap<Long, GameClient>(); // Stores active threads by thread ID
-	private DatabaseDriver DAO; 
 	private HashMap<Integer, Player> activePlayers = new HashMap<Integer, Player>(); // Stores active players by player ID
 
 	/**
@@ -44,25 +43,8 @@ public class GameServer {
 
 		// Initialize the table with request codes and classes for static retrieval
 		GameRequestTable.init();
-
-		try{
-			DAO = DatabaseDriver.getInstance();
-		}
-		catch (Exception e)
-		{
-			System.out.println(e + ": Error connecting to the database");
-			e.printStackTrace();
-		}
-		// Initialize database connection
-		if (DAO.getInstance() == null) {
-			System.err.println("Failed to connect to database.");
-			System.exit(-1);
-		}
 	}
 
-	public DatabaseDriver getDAO() {
-		return this.DAO; 
-	}
 
 	/**
 	 * Configure the game server by reading values from the configuration file.
@@ -259,6 +241,13 @@ public class GameServer {
 	public void addResponseForRoom(int room_id, GameResponse response) {    	 
 		for (GameClient client : getGameClientsForRoom(room_id)) {
 			client.addResponseForUpdate(response);
+		}
+	}
+	
+	public void addResponseForRoomExcludingPlayer(int room_id, int player_id, GameResponse response) {    	 
+		for (GameClient client : getGameClientsForRoom(room_id)) {
+			if(client.getPlayer().getID() != player_id)
+				client.addResponseForUpdate(response);
 		}
 	}
 
