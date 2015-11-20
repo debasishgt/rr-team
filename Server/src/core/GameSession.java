@@ -20,12 +20,13 @@ public class GameSession extends Thread{
 	public void run() {
 		isRunning = true;
 		gameStarted = false;
-		long currentTime;
+		long currentTime, gameRunTime;
+		boolean eliminate = false;
 		while(isRunning){
 			currentTime = System.currentTimeMillis();
 			if(gameStarted){
+				gameRunTime = currentTime - gameroom.getTimeStarted();
 				//everyone is ready and game started
-				//gameroom.getstart_time will have the correct start_time
 			}
 		}
 		System.out.println("Game Over : GameId - " + getId());
@@ -56,6 +57,8 @@ public class GameSession extends Thread{
 	}
 
 	public void gameStart() {
+		//send set_position response here
+		//remember to edit all gameclients.player.position
 		sendAllResponseReady();
 		getGameroom().setTimeStarted(System.currentTimeMillis());
 		initPowerUp(getGameroom().getTimeStarted());
