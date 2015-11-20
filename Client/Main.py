@@ -67,8 +67,7 @@ class World(DirectObject):
 
         # taskMgr.add(self.message, 'message')
 
-        # Set Dashboard
-        self.dashboard = Dashboard()
+
 
         # Post the instructions
 
@@ -107,6 +106,10 @@ class World(DirectObject):
 
         self.previousPos = self.mainChar.getPos()
         taskMgr.doMethodLater(.1, self.updateMove, 'updateMove')
+
+        # Set Dashboard
+        self.dashboard = Dashboard(self.mainCharRef, taskMgr)
+
 
         # Creating Pandas
         # self.pandas = []
