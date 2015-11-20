@@ -4,6 +4,7 @@ from panda3d.core import TextNode
 from Character import Character
 import datetime
 from direct.gui.OnscreenImage import OnscreenImage
+from panda3d.core import TransparencyAttrib
 
 
 class Dashboard(DirectObject):
@@ -24,10 +25,12 @@ class Dashboard(DirectObject):
                                           font=self.font_courier)
 
         # Mini-Map
-        OnscreenText(text="mini-map", style=1, fg=(1, 1, 1, 1),
-                     pos=(-1.3, .95), align=TextNode.ALeft,
-                     scale=.07)
+        self.mini_map = OnscreenImage(image="models/dashb/minimap.png", scale=.15, pos=(-1.15, 0, .8))
+        self.mini_map.setTransparency(TransparencyAttrib.MAlpha)
 
+        # Speedometer
+        self.speed_img = OnscreenImage(image="models/dashb/speedometer.png", scale=.5, pos=(1.1, 0, -.95))
+        self.speed_img.setTransparency(TransparencyAttrib.MAlpha)
         # Rank
         self.display_rank = OnscreenText(text=str(self.rank), style=1, fg=(1, 1, 1, 1),
                                          pos=(-.8, .85), align=TextNode.ALeft,
