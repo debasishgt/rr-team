@@ -22,13 +22,15 @@ public class RequestReady extends GameRequest {
 
 	@Override
 	public void doBusiness() throws Exception {
-		this.client.getPlayer().setReady();
-		int roomId = this.client.getPlayer().getRoom().getId();
-		if(allReady(roomId)){
-			GameSession gsession = this.client.getServer().getGameSessionByRoomId(roomId);
-			gsession.sendAllResponseReady();
-			gsession.getGameroom().setTimeStarted(System.currentTimeMillis());
-			gsession.setGameStarted(true);
+		if(!this.client.getPlayer().isReady()){
+			this.client.getPlayer().setReady();
+			int roomId = this.client.getPlayer().getRoom().getId();
+			if(allReady(roomId)){
+				GameSession gsession = this.client.getServer().getGameSessionByRoomId(roomId);
+				gsession.sendAllResponseReady();
+				gsession.getGameroom().setTimeStarted(System.currentTimeMillis());
+				gsession.setGameStarted(true);
+			}
 		}
 	}
 
