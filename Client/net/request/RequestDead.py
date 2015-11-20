@@ -2,19 +2,14 @@ from direct.distributed.PyDatagram import PyDatagram
 from common.Constants import Constants
 from net.request.ServerRequest import ServerRequest
 
-class RequestMove(ServerRequest):
+class RequestDead(ServerRequest):
 
   #args stores the x y z components of the moving
     def send(self, args = []):
 
         try:
             pkg = PyDatagram()
-            pkg.addUint16(Constants.CMSG_MOVE)
-            pkg.addFloat32(args[0])
-            pkg.addFloat32(args[1])
-            pkg.addFloat32(args[2])
-            pkg.addFloat32(args[3])
-            pkg.addString(args[4])
+            pkg.addUint16(Constants.CMSG_DEAD)
 
             self.cWriter.send(pkg, self.connection)
 

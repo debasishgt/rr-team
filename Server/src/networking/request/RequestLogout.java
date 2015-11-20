@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import driver.DatabaseDriver;
 import model.Player;
-import networking.response.ResponseAuth;
+import networking.response.ResponseLogin;
 import networking.response.ResponseLogout;
 import utility.DataReader;
 

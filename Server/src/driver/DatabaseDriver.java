@@ -25,7 +25,7 @@ public class DatabaseDriver {
 	protected final String POWERUPS = "powerups";
 	protected final String RR_GAME_RANKINGS = "rr_game_rankings";
 	protected final String UPGRADES = "upgrades";
-	
+
 	private static DatabaseDriver Instance = null;
 	protected Connection conn;
 	protected GameServerConf configuration;
@@ -159,7 +159,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public Player getPlayerByUsername(String name) {
 		Player ret = null;
 		try {
@@ -167,25 +167,6 @@ public class DatabaseDriver {
 			String selectSQL = "SELECT * FROM " +PLAYERS+" WHERE user_name = ? LIMIT 0,1";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setString(1, name);
-			ResultSet rs = preparedStatement.executeQuery();
-			while (rs.next()) {
-				ret = new Player(rs.getInt("id"),rs.getString("user_name"));
-			}
-			rs.close();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-	
-	public Player getPlayerByEmail(String email) {
-		Player ret = null;
-		try {
-			checkConnection();
-			String selectSQL = "SELECT * FROM " +PLAYERS+" WHERE user_email = ? LIMIT 0,1";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setString(1, email);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				ret = new Player(rs.getInt("id"),rs.getString("user_name"));
@@ -216,13 +197,29 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
+	
+	public int updatePlayer(Player player) {
+		int ret = 0;
+		try {
+			checkConnection();			
+			String selectSQL = "UPDATE "+PLAYERS+" SET currency = ? WHERE id = ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, player.getCurrency());
+			preparedStatement.setInt(2, player.getID());
+			ret = preparedStatement.executeUpdate();
+			preparedStatement.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
 
 	//Get friend ids for player
 	public List<Integer> getFriendIdsForPlayer(int playerId) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		try {
 			checkConnection();
-						
+
 			String selectSQL = "(SELECT player_id as 'id' FROM "+FRIEND_RELATIONSHIPS+" WHERE friend_id = ?) UNION ALL (SELECT friend_id as 'id' FROM "+FRIEND_RELATIONSHIPS+" WHERE player_id = ?) GROUP BY id";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, playerId);
@@ -244,7 +241,7 @@ public class DatabaseDriver {
 		ArrayList<Player> list = new ArrayList<Player>();
 		try {
 			checkConnection();
-			
+
 			String selectSQL = "SELECT p.id,p.user_name FROM "+PLAYERS+" p LEFT JOIN "+FRIEND_RELATIONSHIPS+" f1 ON (p.id = f1.player_id) LEFT JOIN "+FRIEND_RELATIONSHIPS+" f2 ON (p.id = f2.friend_id) WHERE f1.friend_id = ? OR f2.player_id = ? GROUP BY p.id";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, playerId);
@@ -277,7 +274,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int removeFriend(int playerId, int friendId) {
 		int ret = 0;
 		try {
@@ -317,7 +314,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int updateGame(GameRoom game) {
 		int ret = 0;
 		try {
@@ -356,7 +353,7 @@ public class DatabaseDriver {
 		}
 		return list;
 	}
-	
+
 	public List<Integer> getPlayerIdsForGameId(int gameId) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		try {
@@ -377,7 +374,7 @@ public class DatabaseDriver {
 		}
 		return list;
 	}
-	
+
 	public GameRoom getGameByName(String name) {
 		GameRoom ret = null;
 		try {
@@ -395,7 +392,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public GameRoom getGameById(int id) {
 		GameRoom ret = null;
 		try {
@@ -413,7 +410,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int updatePlayerDRank(int ranking, int gameId, int playerId) {
 		int ret = 0;
 		try {
@@ -430,7 +427,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int updatePlayerRRank(int ranking, int gameId, int playerId) {
 		int ret = 0;
 		try {
@@ -447,7 +444,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int addPlayerToDGame(int gameId, int playerId) {
 		int ret = 0;
 		try {
@@ -463,7 +460,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int removePlayerFromDGame(int gameId, int playerId) {
 		int ret = 0;
 		try {
@@ -479,7 +476,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int addPlayerToRGame(int gameId, int playerId) {
 		int ret = 0;
 		try {
@@ -495,7 +492,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int removePlayerFromRGame(int gameId, int playerId) {
 		int ret = 0;
 		try {
@@ -511,7 +508,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public List<Player> getPlayersInDGame(int gameId) {
 		List<Player> list = new ArrayList<Player>();
 		try {
@@ -530,7 +527,7 @@ public class DatabaseDriver {
 		}
 		return list;
 	}
-	
+
 	public List<Player> getPlayersInRGame(int gameId) {
 		List<Player> list = new ArrayList<Player>();
 		try {
@@ -549,7 +546,7 @@ public class DatabaseDriver {
 		}
 		return list;
 	}
-	
+
 	public List<BaseVehicle> getBaseVehicles() {
 		List<BaseVehicle> list = new ArrayList<BaseVehicle>();
 		try {
@@ -567,7 +564,7 @@ public class DatabaseDriver {
 		}
 		return list;
 	}
-	
+
 	public BaseVehicle getBaseVehicleById(int vehicle_id) {
 		BaseVehicle ret = null;
 		try {
@@ -586,7 +583,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public BaseVehicle getBaseVehicleByName(String vehicle_name) {
 		BaseVehicle ret = null;
 		try {
@@ -605,7 +602,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public List<PlayerVehicle> getPlayerVehicles(int player_id) {
 		List<PlayerVehicle> list = new ArrayList<PlayerVehicle>();
 		try {
@@ -624,7 +621,7 @@ public class DatabaseDriver {
 		}
 		return list;
 	}
-	
+
 	public int updatePlayerVehicles(PlayerVehicle vehicle) {
 		int ret = 0;
 		try {
@@ -641,7 +638,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public PlayerVehicle getPlayerVehicleById(int vehicle_id) {
 		PlayerVehicle ret = null;
 		try {
@@ -660,7 +657,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public PlayerVehicle getPlayerVehicleByName(String vehicle_name) {
 		PlayerVehicle ret = null;
 		try {
@@ -679,7 +676,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int createNewPlayerVehicle(BaseVehicle baseVehicle, String name) {
 		int ret = 0;
 		try {
@@ -695,7 +692,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int removePlayerVehicle(PlayerVehicle vehicle, int player_id) {
 		int ret = 0;
 		try {
@@ -711,7 +708,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public List<Upgrade> getUpgradesToVehicle(int vehicle_id) {
 		List<Upgrade> list = new ArrayList<Upgrade>();
 		try {
@@ -745,7 +742,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public int removeUpgradeToVehicle(int upgrade_id, int vehicle_id) {
 		int ret = 0;
 		try {
@@ -761,7 +758,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public Upgrade getUpgradeById(int upgrade_id) {
 		Upgrade ret = null;
 		try {
@@ -780,7 +777,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public Upgrade getUpgradeByName(int upgrade_name) {
 		Upgrade ret = null;
 		try {
@@ -799,7 +796,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public List<Upgrade> getUpgrades() {
 		List<Upgrade> list = new ArrayList<Upgrade>();
 		try {
@@ -817,7 +814,7 @@ public class DatabaseDriver {
 		}
 		return list;
 	}
-	
+
 	public List<Powerup> getPlayerPowerups(int player_id) {
 		List<Powerup> list = new ArrayList<Powerup>();
 		try {
@@ -836,7 +833,7 @@ public class DatabaseDriver {
 		}
 		return list;		
 	}
-	
+
 	public int updatePlayerPowerup(Powerup powerup,int player_id) {
 		int ret = 0;
 		try {
@@ -853,7 +850,7 @@ public class DatabaseDriver {
 		}
 		return ret;		
 	}
-	
+
 	public int removePlayerPowerup(int powerup_id,int player_id) {
 		int ret = 0;
 		try {
@@ -869,7 +866,7 @@ public class DatabaseDriver {
 		}
 		return ret;		
 	}
-	
+
 	public Powerup getPowerUpById(int powerup_id) {
 		Powerup ret = null;
 		try {
@@ -888,7 +885,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public Powerup getPowerupByName(String powerup_name) {
 		Powerup ret = null;
 		try {
@@ -907,7 +904,7 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	
+
 	public List<Powerup> getPowerups() {
 		List<Powerup> list = new ArrayList<Powerup>();
 		try {

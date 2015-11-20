@@ -6,7 +6,7 @@ package metadata;
 public class Constants {
 
 	// Request (1xx) + Response (2xx)
-	public final static short CMSG_AUTH = 101;
+	public final static short CMSG_LOGIN = 101;
 	public final static short CMSG_DISCONNECT = 102;
 	public final static short CMSG_REGISTER = 103;
 	public final static short CMSG_FORGOT_PASSWORD = 104;
@@ -33,9 +33,11 @@ public class Constants {
 	public final static short CMSG_DEAD = 126;
 	public final static short CMSG_READY = 127;
 	public final static short CMSG_SET_POSITION = 128;
+	//public final static short CMSG_TIME = 129;
 	public final static short CMSG_REQUEST_TIME = 129;
+	public final static short CMSG_CUSTOMIZE = 140;
 	
-	public final static short SMSG_AUTH = 201;
+	public final static short SMSG_LOGIN = 201;
 	public final static short SMSG_DISCONNECT = 202;
 	public final static short SMSG_REGISTER = 203;
 	public final static short SMSG_FORGOT_PASSWORD = 204;
@@ -62,7 +64,9 @@ public class Constants {
 	public final static short SMSG_DEAD = 226;
 	public final static short SMSG_READY = 227;
 	public final static short SMSG_SET_POSITION = 228;
+	public final static short SMSG_TIME = 229;
 	public final static short SMSG_REQUEST_TIME = 229;
+	public final static short SMSG_CUSTOMIZE = 240;
 	
 	public final static short SMSG_RENDER_CHARACTER = 310;
 	public final static short SMSG_REMOVE_CHARACTER =311;

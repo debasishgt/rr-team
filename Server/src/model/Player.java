@@ -7,6 +7,7 @@ public class Player {
 	private GameRoom room = null;
 	private Position pos;
 	private boolean isReady;
+	private int carId;
 	
 	public Player(int player_id,String username) {
 		this.username = username;
@@ -55,5 +56,29 @@ public class Player {
 	}
 	public void setNotReady(){
 		this.isReady = false;
+	}
+
+	public void setCar_id(int carId) {
+		this.carId = carId;
+		
+	}
+	
+	public int getCarId(int carId) {
+		return this.carId;		
+	}
+
+	public int getCurrency() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void setCurrency(int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 }
