@@ -10,6 +10,14 @@ import model.Player;
 import networking.response.ResponseRegister;
 import utility.DataReader;
 
+/**
+ * Client registers a new account with the server which 
+ * includes a username and password. The server also 
+ * keeps the user’s email for recovering account 
+ * information. The server validates this and responds 
+ * with ResponseRegistration.
+ *
+ */
 public class RequestRegister extends GameRequest {
 
 	// Data
@@ -31,7 +39,7 @@ public class RequestRegister extends GameRequest {
 	@Override
 	public void doBusiness() throws Exception {
 
-		DatabaseDriver db = client.getServer().getDAO();
+		DatabaseDriver db = DatabaseDriver.getInstance();
 		int player_id = db.createPlayer(username, password);
 		if (player_id != 0) {
 			responseRegister.setNumber(1);
