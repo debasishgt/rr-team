@@ -31,7 +31,7 @@ public class GameServer {
 	private boolean ready = false; // Used to keep server looping
 	private HashMap<Long, GameClient> activeThreads = new HashMap<Long, GameClient>(); // Stores active threads by thread ID
 	private HashMap<Integer, Player> activePlayers = new HashMap<Integer, Player>(); // Stores active players by player ID
-
+	private HashMap<Long, GameSession> activeSessions = new HashMap<Long, GameSession>();
 	/**
 	 * Initialize the GameServer by setting up the request types and creating a
 	 * connection with the database.
@@ -125,7 +125,14 @@ public class GameServer {
 
         return null;
     }*/
-
+	public GameSession getGameSessionByRoomId(int roomId){
+		for(GameSession gsession : activeSessions.values()){
+			if(gsession.getGameroom().getId() == roomId){
+				return gsession;
+			}
+		}
+		return null;
+	}
 	/**
 	 * Get the GameClient thread for the player using the username.
 	 *
@@ -153,10 +160,18 @@ public class GameServer {
 	public void addToActiveThreads(GameClient client) {
 		activeThreads.put(client.getId(), client);
 	}
-
+	
+	public void addToActiveSessions(GameSession gamesession){
+		activeSessions.put(gamesession.getId(), gamesession);
+	}
+	
 	public HashMap<Long, GameClient> getActiveThreads()
 	{
 		return this.activeThreads;
+	}
+	
+	public HashMap<Long, GameSession> getActiveSessions(){
+		return this.activeSessions;
 	}
 
 	public List<GameClient> getGameClientsForRoom(int room_id) {
@@ -190,7 +205,11 @@ public class GameServer {
 	public void deletePlayerThreadOutOfActiveThreads(Long threadID) {
 		activeThreads.remove(threadID);
 	}
-
+	
+	public void deleteSessionThreadOutOfActiveThreads(Long threadID) {
+		activeSessions.remove(threadID);
+	}
+	
 	/**
 	 * Push a pending response to a user's queue.
 	 * 

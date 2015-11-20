@@ -52,4 +52,12 @@ public class GameRoom {
 		DatabaseDriver dbDriver = DatabaseDriver.getInstance();
 		dbDriver.updateGame(this);
 	}
+
+	public String getGame_name() {
+		return game_name;
+	}
+
+	public void setGame_name(String game_name) {
+		this.game_name = game_name;
+	}
 }

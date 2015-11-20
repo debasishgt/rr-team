@@ -6,14 +6,17 @@ public class Player {
 	private String email;
 	private GameRoom room = null;
 	private Position pos;
+	private boolean isReady;
 	
 	public Player(int player_id,String username) {
 		this.username = username;
 		this.player_id = player_id;
 		this.pos = new Position();
+		this.isReady = false;
 	}
 	
 	public void setRoom(GameRoom room) {
+		this.isReady = false;
 		this.room = room;
 	}
 	
@@ -42,5 +45,15 @@ public class Player {
 		pos.setY(y);
 		pos.setZ(z);
 		pos.setH(h);
+	}
+
+	public boolean isReady() {
+		return isReady;
+	}
+	public void setReady() {
+		this.isReady = true;
+	}
+	public void setNotReady(){
+		this.isReady = false;
 	}
 }

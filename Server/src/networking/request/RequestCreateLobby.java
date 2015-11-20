@@ -18,7 +18,6 @@ public class RequestCreateLobby extends GameRequest {
 	@Override
 	public void parse() throws IOException {		
 		room_name = DataReader.readString(dataInput);
-		String username = DataReader.readString(dataInput);
 		status = DataReader.readInt(dataInput);
 	}
 
@@ -27,12 +26,12 @@ public class RequestCreateLobby extends GameRequest {
 		GameRoom gameRoom = DatabaseDriver.getInstance().getGameByName(room_name);
 		
 		if(gameRoom == null) {
-//			DatabaseDriver.getInstance().createGame(0, System.currentTimeMillis()/1000, "");
-//			GameRoom gameRoom = DatabaseDriver.getInstance().getGameByName(room_name);
-//			client.getPlayer().setRoom(gameRoom);			
-//			response.setValid(1);
-//			response.setUsername(client.getPlayer().getUsername());
-//			client.getServer().addResponseForRoomExcludingPlayer(gameRoom.getId(), client.getPlayer().getID(), response);
+			DatabaseDriver.getInstance().createGame(0, System.currentTimeMillis()/1000, "");
+			gameRoom = DatabaseDriver.getInstance().getGameByName(room_name);
+			client.getPlayer().setRoom(gameRoom);			
+			response.setValid(1);
+			response.setUsername(client.getPlayer().getUsername());
+			client.getServer().addResponseForAllOnlinePlayers(client.getId(), response);
 		} else {
 			response.setValid(0);
 		}
