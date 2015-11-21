@@ -8,9 +8,9 @@ class ResponseLogin(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
+            flag = data.getString()
 
-            print "ResponseLogin - ", self.msg
+            print "ResponseLogin - ", flag
 
         except:
             self.log('Bad [' + str(Constants.SMSG_LOGIN) + '] Login Response')

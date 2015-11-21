@@ -24,9 +24,7 @@ class ResponseCreateCharacter(ServerResponse):
 
             self.world.characters.append(char)
 
-#             print "ResponseCreateCharacter - ", self.playerId, " x:", self.x, " y:", self.y," z:", self.z
-
-            #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
+            print "ResponseCreateCharacter - ", self.playerId, " x:", self.x, " y:", self.y," z:", self.z
 
         except:
             self.log('Bad [' + str(Constants.RAND_STRING) + '] String Response')

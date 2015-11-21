@@ -8,16 +8,16 @@ class ResponseDead(ServerResponse):
     def execute(self, data):
 
         try:
-            self.playerId = data.getInt32()
+            selfusername = data.getInt32()
 
 
             # Need to have a variable checking if the character is alive
             for character in self.world.characters :
-              if character.playerId == self.playerId :
+              if character.username == self.username :
                 #character.dead = True
                 break
 
-            print "ResponseMove - ",self.playerId
+            print "ResponseDead - ",self.username
             #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
 
         except:
