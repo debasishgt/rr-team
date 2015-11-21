@@ -14,7 +14,7 @@ from net.response.ResponseLogin import ResponseLogin
 from net.response.ResponseMove import ResponseMove
 from net.response.ResponsePowerUp import ResponsePowerUp
 from net.response.ResponsePowerPickUp import ResponsePowerPickUp
-from net.response.ResponseHealth import ResponseHealth
+from net.response.ResponseChangeHealth import ResponseChangeHealth
 from net.response.ResponseResults import ResponseResults
 from net.response.ResponseRankings import ResponseRankings
 from net.response.ResponsePrizes import ResponsePrizes

@@ -199,8 +199,8 @@ class World(DirectObject):
         #Game initialisation
         self.state = "Login"
         self.responseValue = -1
-        self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
-        taskMgr.add(self.enterGame,"EnterGame")
+#         self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
+#         taskMgr.add(self.enterGame,"EnterGame")
 
     def doExit(self):
         self.cleanup()
