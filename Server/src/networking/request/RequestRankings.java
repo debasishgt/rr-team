@@ -1,7 +1,9 @@
 package networking.request;
 
 import java.io.IOException;
+import java.util.HashMap;
 
+import model.Player;
 import utility.DataReader;
 import networking.response.ResponseRankings;
 
@@ -22,8 +24,8 @@ public class RequestRankings extends GameRequest {
 	@Override
 	public void doBusiness() throws Exception {
 		//do the rankings business here
-		responseRankings.setUsername(client.getPlayer().getUsername());
-		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseRankings);
+		HashMap<Player,Integer> rankings = client.getPlayer().getRoom().getRankings();
+		responseRankings.setRankings(rankings);
 	}
 
 }

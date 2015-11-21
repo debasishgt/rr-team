@@ -2,9 +2,13 @@ package core;
 
 import networking.response.ResponseReady;
 import networking.response.ResponseTime;
+
+import java.util.List;
+
 import driver.DatabaseDriver;
 import metadata.Constants;
 import model.GameRoom;
+import model.Player;
 
 public class GameSession extends Thread{
 	private GameRoom gameroom;
@@ -111,7 +115,5 @@ public class GameSession extends Thread{
 			return false;
 		}
 	}
-	
-	
 }
 

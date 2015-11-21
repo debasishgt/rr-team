@@ -1,5 +1,8 @@
 package model;
 
+import java.util.HashMap;
+import java.util.List;
+
 import driver.DatabaseDriver;
 
 public class GameRoom {
@@ -8,6 +11,7 @@ public class GameRoom {
 	private long time_started;
 	private String map_name;
 	private String room_name;
+	private HashMap<Integer,Player> playerRankings;
 	
 	public GameRoom(int id, int type, long time_started, String map_name, String room_name) {
 		this.id = id;
@@ -55,5 +59,53 @@ public class GameRoom {
 
 	public void setRoomName(String game_name) {
 		this.room_name = game_name;
+	}
+	
+	public boolean updatePlayerRanking(Player player, int ranking) {
+		int prevRank = 0;
+		for(int i = 0; i < playerRankings.size(); i++) {
+			if(playerRankings.get(i).getID() == player.getID()) {
+				prevRank = i;
+				break;
+			}
+		}
+		
+		if(prevRank > 0) {
+			if(Math.abs(prevRank-ranking) == 1) {
+				Player temp = playerRankings.get(ranking);
+				playerRankings.put(ranking,player);
+				playerRankings.put(prevRank, temp);
+				return true;
+			} else if (prevRank - ranking == 0) {
+				return true;
+			}
+			
+			return false;
+		} else {
+			Player temp = playerRankings.get(ranking);
+			if(temp == null) {
+				playerRankings.put(ranking,player);
+			} else {
+				System.out.println("Looks like we hit a data integerity issue: GameRoom@updatePlayerRanking");
+				insertPlayerAtRank(player,ranking);
+			}
+			return true;
+		}
+	}
+	
+	private void insertPlayerAtRank(Player player, int rank) {
+		for(int i = playerRankings.size()-1; i > rank; i++) {
+			playerRankings.put(i, playerRankings.get(i-1));
+		}
+		
+		playerRankings.put(rank,player);
+	}
+	
+	public HashMap<Player,Integer> getRankings() {
+		HashMap<Player,Integer> list = new HashMap<Player,Integer>();
+		for(int i = 0; i < playerRankings.size(); i++) {
+			list.put(playerRankings.get(i), i);
+		}
+		return list;
 	}
 }
