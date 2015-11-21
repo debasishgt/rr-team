@@ -14,6 +14,7 @@ from panda3d.core import CollisionHandlerQueue, CollisionRay, CollisionHandlerPu
 from direct.interval.IntervalGlobal import Sequence
 from direct.task import Task
 from Character import Character
+from panda3d.core import NodePath
 
 from panda3d.bullet import BulletVehicle
 from panda3d.bullet import BulletWorld, BulletTriangleMesh,BulletTriangleMeshShape,BulletDebugNode,BulletPlaneShape, BulletRigidBodyNode
@@ -42,6 +43,9 @@ def addTitle(text):
 
 
 class World(DirectObject):
+    state = ""
+    #Login , EnterGame , BeginGame
+    responseValue = -1
     currentTime = 0
     idleTime = 0
     mySequence = None
@@ -89,58 +93,37 @@ class World(DirectObject):
 
         self.createEnvironment()
 
-
         # Collision Code
         # Initialize the collision traverser.
-        base.cTrav = CollisionTraverser()
+        # base.cTrav = CollisionTraverser()
         # Initialize the Pusher collision handler.
-        self.pusher = CollisionHandlerPusher()
+        # self.pusher = CollisionHandlerPusher()
 
         # Create the main character, Ralph
         self.mainCharRef = Character(self,self.bulletWorld, 0,"Me")
         self.mainChar = self.mainCharRef.chassisNP
+        self.mainChar.setPos(0,16,16)
 
-        self.cManager.sendRequest(Constants.CMSG_CREATE_CHARACTER, [self.mainCharRef.type,
-                                                                    self.mainChar.getX(),
-                                                                    self.mainChar.getY(),
-                                                                    self.mainChar.getZ()])
+        self.TestChar = Character(self, self.bulletWorld, 0,"test")
+        self.TestChar.actor.setPos(0,0,0)
+
+#         self.cManager.sendRequest(Constants.CMSG_CREATE_CHARACTER, [self.mainCharRef.type,
+#                                                                     self.mainChar.getX(),
+#                                                                     self.mainChar.getY(),
+#                                                                     self.mainChar.getZ()])
 
         self.previousPos = self.mainChar.getPos()
         taskMgr.doMethodLater(.1, self.updateMove, 'updateMove')
 
-        # Creating Pandas
-        # self.pandas = []
-        # self.pandacount = 2
-        # for x in range(self.pandacount):
-        #     self.pandas.append(MyPanda(self))
-
-        # Creating Stationary spheres
-        # self.spheres = []
-        # self.sphereCount = 3
-        # for x in range(self.sphereCount):
-        #     self.spheres.append(StationarySphere(self))
-
-        # Create Car
-        # self.car = MyCar(self)
-
-        # Panda animation
-        # for panda in self.pandas:
-        #     taskMgr.add(panda.jumpPanda, "jumpPanda")
-        #     taskMgr.add(panda.timerTask, 'timerTask')
-        #     taskMgr.add(panda.pandaWalk, 'pandaWalk')
-        #     taskMgr.add(panda.pandaStop, 'pandaStop')
-        #
-        # taskMgr.add(self.car.makeCircle, "makeCircle")
-        #
         self.floater = NodePath(PandaNode("floater"))
         self.floater.reparentTo(render)
 
-        floorNode = render.attachNewNode("Floor NodePath")
+        # floorNode = render.attachNewNode("Floor NodePath")
 
         # Create a collision plane solid.
-        collPlane = CollisionPlane(Plane(Vec3(0, 0, 1), Point3(0, 0, 0)))
+        # collPlane = CollisionPlane(Plane(Vec3(0, 0, 1), Point3(0, 0, 0)))
         # Call our function that creates a nodepath with a collision node.
-        floorCollisionNP = self.makeCollisionNodePath(floorNode, collPlane)
+        # floorCollisionNP = self.makeCollisionNodePath(floorNode, collPlane)
 
         # Accept the control keys for movement and rotation
         self.accept("escape", self.doExit)
@@ -172,7 +155,7 @@ class World(DirectObject):
 
         # Set up the camera
         base.disableMouse()
-        base.camera.setPos(self.mainChar.getX(), self.mainChar.getY() + 10, 2)
+        base.camera.setPos(self.mainChar.getX(), self.mainChar.getY() + 10,self.mainChar.getZ() +  2)
 
         # Create some lighting
         ambientLight = AmbientLight("ambientLight")
@@ -184,6 +167,12 @@ class World(DirectObject):
         render.setLight(render.attachNewNode(ambientLight))
         render.setLight(render.attachNewNode(directionalLight))
 
+        #Game initialisation
+        self.state = "Login"
+        self.responseValue = -1
+        self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
+        taskMgr.add(self.enterGame,"EnterGame")
+
     def doExit(self):
       self.cleanup()
       sys.exit(1)
@@ -192,6 +181,26 @@ class World(DirectObject):
       self.cManager.closeConnection()
       self.world = None
       self.outsideWorldRender.removeNode()
+
+    def enterGame(self,task):
+      if self.state == "Login":
+        if self.responseValue == 1:
+          #Authentication succeeded
+          self.ConnectionManager.sendRequest(Constants.CMSG_ENTER_GAME_LOBBY,"test1",0)
+          self.responseValue = -1
+
+      elif self.state == "EnterGame":
+        if self.responseValue == 1:
+          self.ConnectionManager.sendRequest(Constants.CMSG_READY)
+          self.responseValue = -1
+
+      elif self.state == "BeginGame":
+        if self.responseValue == 1:
+          taskMgr.add(self.enterGame,"EnterGame")
+          return task.done
+
+      return task.cont
+
 
     def createEnvironment(self):
         self.environ = loader.loadModel("models/square")
@@ -210,6 +219,31 @@ class World(DirectObject):
         self.bulletWorld.attachRigidBody(node)
 
 
+        self.visNP = loader.loadModel('models/track.egg')
+        self.tex = loader.loadTexture("models/tex/Main.png")
+        self.visNP.setTexture(self.tex)
+
+        geom = self.visNP.findAllMatches('**/+GeomNode').getPath(0).node().getGeom(0)
+        mesh = BulletTriangleMesh()
+        mesh.addGeom(geom)
+        trackShape = BulletTriangleMeshShape(mesh, dynamic=False)
+
+        body = BulletRigidBodyNode('Bowl')
+        self.visNP.node().getChild(0).getChild(0).addChild(body)
+        bodyNP = render.anyPath(body)
+        print(bodyNP)
+        bodyNP.node().addShape(trackShape)
+        bodyNP.node().setMass(0.0)
+        bodyNP.setTexture(self.tex)
+
+        self.bulletWorld.attachRigidBody(bodyNP.node())
+
+        self.visNP.reparentTo(render)
+
+        self.bowlNP = bodyNP
+        self.visNP.setScale(70)
+
+
     def initializeBulletWorld(self, debug= False):
         self.outsideWorldRender = render.attachNewNode('world')
 
@@ -221,7 +255,7 @@ class World(DirectObject):
             self.debugNP.node().showWireframe(True)
             self.debugNP.node().showConstraints(True)
             self.debugNP.node().showBoundingBoxes(True)
-            self.debugNP.node().showNormals(True)
+            self.debugNP.node().showNormals(False)
             self.bulletWorld.setDebugNode(self.debugNP.node())
 
 
@@ -255,13 +289,13 @@ class World(DirectObject):
         # If the camera-left key is pressed, move camera left.
         # If the camera-right key is pressed, move camera right.
 
-        dt =globalClock.getDt()
+        dt = globalClock.getDt()
 
         base.camera.lookAt(self.mainChar)
         if (self.keyMap["cam-left"] != 0):
-            base.camera.setX(base.camera, -20 * globalClock.getDt())
+            base.camera.setX(base.camera, -20 * dt)
         if (self.keyMap["cam-right"] != 0):
-            base.camera.setX(base.camera, +20 * globalClock.getDt())
+            base.camera.setX(base.camera, +20 * dt)
 
         # save mainChar's initial position so that we can restore it,
         # in case he falls off the map or runs into something.
@@ -272,8 +306,8 @@ class World(DirectObject):
         # If a move-key is pressed, move ralph in the specified direction.
         # Steering info
         steering = 0.0            # degree
-        steeringClamp = 90.0      # degree
-        steeringIncrement = 180.0 # degree per second
+        steeringClamp = 70.0      # degree
+        steeringIncrement = 150.0 # degree per second
 
         # Process input
         engineForce = 0.0
@@ -342,7 +376,6 @@ class World(DirectObject):
         self.floater.setPos(self.mainChar.getPos())
         self.floater.setZ(self.mainChar.getZ() + 2.0)
         base.camera.lookAt(self.floater)
-
 
         self.bulletWorld.doPhysics(dt)
 
