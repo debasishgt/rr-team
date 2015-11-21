@@ -15,7 +15,7 @@ import model.PlayerVehicle;
 //Singleton
 public class DatabaseDriver {
 	protected final String BASE_VEHICLE = "base_vehicles";
-	protected final String DD_GAME_RANKINGS = "dd_game_rankings";
+	protected final String GAME_RANKING = "game_rankings";
 	protected final String FRIEND_RELATIONSHIPS = "friend_relationships";
 	protected final String GAMES = "games";
 	protected final String PLAYER_POWERUPS = "player_powerups";
@@ -23,7 +23,6 @@ public class DatabaseDriver {
 	protected final String VEHICLE_UPGRADE_RELATIONSHIPS = "vehicle_upgrade_relationships";
 	protected final String PLAYERS = "players";
 	protected final String POWERUPS = "powerups";
-	protected final String RR_GAME_RANKINGS = "rr_game_rankings";
 	protected final String UPGRADES = "upgrades";
 
 	private static DatabaseDriver Instance = null;
@@ -333,48 +332,6 @@ public class DatabaseDriver {
 		return ret;
 	}
 
-	public List<Player> getPlayersForGameId(int gameId) {
-		ArrayList<Player> list = new ArrayList<Player>();
-		try {
-			checkConnection();
-			String selectSQL = "SELECT p.id, p.username FROM "+PLAYERS+" p LEFT JOIN " +DD_GAME_RANKINGS+" d ON (p.id = d.player_id) LEFT JOIN " + RR_GAME_RANKINGS + " r ON (p.id = r.player_id) WHERE d.game_id = ? OR r.game_id = ?";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(1, gameId);
-			preparedStatement.setInt(2, gameId);
-			ResultSet rs = preparedStatement.executeQuery();
-			while (rs.next()) {
-				list.add(new Player(rs.getInt("id"),rs.getString("user_name")));
-			}
-			rs.close();
-			preparedStatement.close();
-			return list;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public List<Integer> getPlayerIdsForGameId(int gameId) {
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		try {
-			checkConnection();
-			String selectSQL = "(SELECT player_id FROM " +DD_GAME_RANKINGS+" game_id = ?) UNION ALL (SELECT player_id FROM " + RR_GAME_RANKINGS + " WHERE game_id = ?) GROUP BY player_id";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(1, gameId);
-			preparedStatement.setInt(2, gameId);
-			ResultSet rs = preparedStatement.executeQuery();
-			while (rs.next()) {
-				list.add(rs.getInt("p.id"));
-			}
-			rs.close();
-			preparedStatement.close();
-			return list;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
 	public GameRoom getGameByName(String name) {
 		GameRoom ret = null;
 		try {
@@ -410,23 +367,90 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-	public HashMap<Player,Integer> getPlayerRanking(int player_id ,int game_id) {
-		return null;
+	
+	public HashMap<Player,Integer> getPlayersRankingForGame(int game_id) {
+		HashMap<Player,Integer> list = new HashMap<Player,Integer>();
+		try {
+			checkConnection();
+			String selectSQL = "SELECT * FROM " +GAME_RANKING+" WHERE game_id = ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, game_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next()) {
+				Player player = getPlayerById(rs.getInt("player_id"));
+				list.put(player, rs.getInt("ranking"));
+			}
+			preparedStatement.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public List<Integer> getPlayerIdsForGame(int game_id) {
+		List<Integer> list = new ArrayList<Integer>();
+		try {
+			checkConnection();
+			String selectSQL = "SELECT player_id FROM " +GAME_RANKING+" WHERE game_id = ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, game_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next()) {
+				list.add(rs.getInt("player_id"));
+			}
+			preparedStatement.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public List<Player> getPlayersForGame(int game_id) {
+		List<Player> list = new ArrayList<Player>();
+		try {
+			checkConnection();
+			String selectSQL = "SELECT player_id FROM " +GAME_RANKING+" WHERE game_id = ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, game_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next()) {
+				list.add(getPlayerById(rs.getInt("player_id")));
+			}
+			preparedStatement.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public int getPlayerRanking(int player_id ,int game_id) {
+		int ret = 0;
+		try {
+			checkConnection();
+			String selectSQL = "SELECT ranking FROM " +GAME_RANKING+" WHERE player_id = ? AND game_id = ? LIMIT 0,1";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, player_id);
+			preparedStatement.setInt(2, game_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next()) {
+				ret = rs.getInt("ranking");
+			}
+			preparedStatement.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
 	}
 	
 	public int insertPlayerRanking(int player_id, int game_id, int ranking) {
-		return 0;
-	}
-
-	public int updatePlayerDRank(int ranking, int gameId, int playerId) {
 		int ret = 0;
 		try {
 			checkConnection();
-			String selectSQL = "UPDATE " +DD_GAME_RANKINGS+" SET ranking = ? WHERE player_id = ? AND game_id = ?";
+			String selectSQL = "INSERT INTO " +GAME_RANKING+" (ranking,player_id,game_id) VALUES (?,?,?)";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, ranking);
-			preparedStatement.setInt(2, playerId);
-			preparedStatement.setInt(3, gameId);
+			preparedStatement.setInt(2, player_id);
+			preparedStatement.setInt(3, game_id);
 			ret = preparedStatement.executeUpdate();
 			preparedStatement.close();
 		} catch (Exception e) {
@@ -434,16 +458,32 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
-
-	public int updatePlayerRRank(int ranking, int gameId, int playerId) {
+	
+	public int updatePlayerRanking(int player_id, int game_id, int ranking) {
 		int ret = 0;
 		try {
 			checkConnection();
-			String selectSQL = "UPDATE " +RR_GAME_RANKINGS+" SET ranking = ? WHERE player_id = ? AND game_id = ?";
+			String selectSQL = "UPDATE " +GAME_RANKING+" SET ranking = ? WHERE player_id = ? AND game_id = ?";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, ranking);
+			preparedStatement.setInt(2, player_id);
+			preparedStatement.setInt(3, game_id);
+			ret = preparedStatement.executeUpdate();
+			preparedStatement.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+
+	public int addPlayerToGame(int gameId, int playerId) {
+		int ret = 0;
+		try {
+			checkConnection();
+			String selectSQL = "INSERT INTO " +GAME_RANKING+" (game_id,player_id) VALUES (?,?)";
+			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, gameId);
 			preparedStatement.setInt(2, playerId);
-			preparedStatement.setInt(3, gameId);
 			ret = preparedStatement.executeUpdate();
 			preparedStatement.close();
 		} catch (Exception e) {
@@ -452,106 +492,20 @@ public class DatabaseDriver {
 		return ret;
 	}
 
-	public int addPlayerToDGame(int gameId, int playerId) {
+	public int removePlayerFromGame(int gameId, int playerId) {
 		int ret = 0;
 		try {
 			checkConnection();
-			String selectSQL = "INSERT INTO " +DD_GAME_RANKINGS+" (game_id,player_id) VALUES (?,?)";
+			String selectSQL = "DELETE FROM " +GAME_RANKING+" WHERE game_id = ? AND player_id = ?)";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(3, playerId);
-			preparedStatement.setInt(2, gameId);
-			ret = preparedStatement.executeUpdate();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-
-	public int removePlayerFromDGame(int gameId, int playerId) {
-		int ret = 0;
-		try {
-			checkConnection();
-			String selectSQL = "DELETE FROM " +DD_GAME_RANKINGS+" WHERE game_id = ? AND player_id = ?)";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(3, playerId);
-			preparedStatement.setInt(2, gameId);
-			ret = preparedStatement.executeUpdate();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-
-	public int addPlayerToRGame(int gameId, int playerId) {
-		int ret = 0;
-		try {
-			checkConnection();
-			String selectSQL = "INSERT INTO " +RR_GAME_RANKINGS+" (game_id,player_id) VALUES (?,?)";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, gameId);
 			preparedStatement.setInt(2, playerId);
-			preparedStatement.setInt(1, gameId);
 			ret = preparedStatement.executeUpdate();
 			preparedStatement.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ret;
-	}
-
-	public int removePlayerFromRGame(int gameId, int playerId) {
-		int ret = 0;
-		try {
-			checkConnection();
-			String selectSQL = "DELETE FROM " +RR_GAME_RANKINGS+" WHERE game_id = ? AND player_id = ?)";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(3, playerId);
-			preparedStatement.setInt(2, gameId);
-			ret = preparedStatement.executeUpdate();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-
-	public List<Player> getPlayersInDGame(int gameId) {
-		List<Player> list = new ArrayList<Player>();
-		try {
-			checkConnection();
-			String selectSQL = "SELECT p.id, p.user_name FROM " +PLAYERS+" LEFT JOIN " + DD_GAME_RANKINGS + " d ON (p.id = d.player_id) WHERE d.game_id = ?";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(1, gameId);
-			ResultSet rs = preparedStatement.executeQuery();
-			while(rs.next()) {
-				list.add(new Player(rs.getInt("id"),rs.getString("user_name")));
-			}
-			rs.close();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public List<Player> getPlayersInRGame(int gameId) {
-		List<Player> list = new ArrayList<Player>();
-		try {
-			checkConnection();
-			String selectSQL = "SELECT p.id, p.user_name FROM " +PLAYERS+" LEFT JOIN " + RR_GAME_RANKINGS + " d ON (p.id = d.player_id) WHERE d.game_id = ?";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(1, gameId);
-			ResultSet rs = preparedStatement.executeQuery();
-			while(rs.next()) {
-				list.add(new Player(rs.getInt("id"),rs.getString("user_name")));
-			}
-			rs.close();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
 	}
 
 	public List<BaseVehicle> getBaseVehicles() {
