@@ -410,6 +410,13 @@ public class DatabaseDriver {
 		}
 		return ret;
 	}
+	public HashMap<Player,Integer> getPlayerRanking(int player_id ,int game_id) {
+		return null;
+	}
+	
+	public int insertPlayerRanking(int player_id, int game_id, int ranking) {
+		return 0;
+	}
 
 	public int updatePlayerDRank(int ranking, int gameId, int playerId) {
 		int ret = 0;
