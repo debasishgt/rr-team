@@ -38,6 +38,8 @@ class Constants:
     CMSG_DEAD                           = 126
     CMSG_READY                          = 127
     CMSG_SET_POSITION                   = 128
+    CMSG_TIME                           = 129
+    CMSG_SET_RANK                       = 130
     REQ_HEARTBEAT                       = 301
 
     SMSG_LOGIN                          = 201
@@ -67,5 +69,7 @@ class Constants:
     SMSG_DEAD                           = 226
     SMSG_READY                          = 227
     SMSG_SET_POSITION                   = 228
+    SMSG_TIME                           = 229
+    SMSG_SET_RANK                       = 230
     SMSG_RENDER_CHARACTER               = 310
     SMSG_REMOVE_CHARACTER               = 311

@@ -22,6 +22,7 @@ from net.response.ResponseCollision import ResponseCollision
 from net.response.ResponseDead import ResponseDead
 from net.response.ResponseReady import ResponseReady
 from net.response.ResponseSetPosition import ResponseSetPosition
+from net.response.ResponseSetRank import ResponseSetRank
 
 class ServerResponseTable:
     """
@@ -54,6 +55,7 @@ class ServerResponseTable:
         self.add(Constants.SMSG_DEAD, 'ResponseDead')
         self.add(Constants.SMSG_READY, 'ResponseReady')
         self.add(Constants.SMSG_SET_POSITION, 'ResponseSetPosition')
+        self.add(Constants.SMSG_SET_RANK, 'ResponseSetRank')
 
     def add(self, constant, name):
         """Map a numeric response code with the name of an existing response module."""
