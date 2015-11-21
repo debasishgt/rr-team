@@ -32,6 +32,6 @@ public class RequestChangeHealth extends GameRequest {
 		System.out.println(healthChange);
         responseChangeHealth.setUsername(client.getPlayer().getUsername()); 
         responseChangeHealth.setHealthChange(healthChange); 
-        client.getServer().addResponseForAllOnlinePlayers(client.getId(), (GameResponse) responseChangeHealth); 
+        client.getServer().addResponseForRoomExcludingPlayer(client.getPlayer().getRoom().getId(), client.getPlayer().getID(), responseChangeHealth); 
     }
 }

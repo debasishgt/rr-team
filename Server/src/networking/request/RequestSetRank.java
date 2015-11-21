@@ -25,6 +25,7 @@ public class RequestSetRank extends GameRequest {
 	public void doBusiness() throws Exception {
 		//do the rankings business here
 		responseSetRank.setRank(rank);
+		client.getPlayer().getRoom().updatePlayerRanking(client.getPlayer(), rank);
 		//client.getPlayer().getRoom()client;
 	}
 
