@@ -9,7 +9,7 @@ public class ResponsePowerPickUp extends GameResponse {
 	private int powerId;
 	
     public ResponsePowerPickUp() {
-        //responseCode = Constants.SMSG_POWER_PICKUP;
+        responseCode = Constants.SMSG_POWER_UP_PICK_UP;
     }
 
     @Override

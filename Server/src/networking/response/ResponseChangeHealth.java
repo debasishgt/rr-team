@@ -10,7 +10,7 @@ public class ResponseChangeHealth extends GameResponse {
     private int healthChange;
 
 	public ResponseChangeHealth() {
-        responseCode = Constants.SMSG_CHAT;
+        responseCode = Constants.SMSG_HEALTH;
     }
 
     @Override
