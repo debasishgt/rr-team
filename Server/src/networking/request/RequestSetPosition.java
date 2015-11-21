@@ -2,7 +2,9 @@ package networking.request;
 
 // Java Imports
 import java.io.IOException;
+import java.util.List;
 
+import model.Player;
 import networking.response.ResponseSetPosition;
 // Custom Imports
 //import core.GameServer;
@@ -13,8 +15,7 @@ public class RequestSetPosition extends GameRequest {
 	private ResponseSetPosition responseSetPosition;
 
 	public RequestSetPosition() {
-		responses.add(responseSetPosition = new ResponseSetPosition());
-
+		
 	}
 
 	@Override
