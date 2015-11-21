@@ -15,7 +15,7 @@ import model.PlayerVehicle;
 //Singleton
 public class DatabaseDriver {
 	protected final String BASE_VEHICLE = "base_vehicles";
-	protected final String GAME_RANKING = "game_rankings";
+	protected final String GAME_RANKINGS = "game_rankings";
 	protected final String FRIEND_RELATIONSHIPS = "friend_relationships";
 	protected final String GAMES = "games";
 	protected final String PLAYER_POWERUPS = "player_powerups";
@@ -372,7 +372,7 @@ public class DatabaseDriver {
 		HashMap<Player,Integer> list = new HashMap<Player,Integer>();
 		try {
 			checkConnection();
-			String selectSQL = "SELECT * FROM " +GAME_RANKING+" WHERE game_id = ?";
+			String selectSQL = "SELECT * FROM " +GAME_RANKINGS+" WHERE game_id = ?";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, game_id);
 			ResultSet rs = preparedStatement.executeQuery();
@@ -391,7 +391,7 @@ public class DatabaseDriver {
 		List<Integer> list = new ArrayList<Integer>();
 		try {
 			checkConnection();
-			String selectSQL = "SELECT player_id FROM " +GAME_RANKING+" WHERE game_id = ?";
+			String selectSQL = "SELECT player_id FROM " +GAME_RANKINGS+" WHERE game_id = ?";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, game_id);
 			ResultSet rs = preparedStatement.executeQuery();
@@ -409,7 +409,7 @@ public class DatabaseDriver {
 		List<Player> list = new ArrayList<Player>();
 		try {
 			checkConnection();
-			String selectSQL = "SELECT player_id FROM " +GAME_RANKING+" WHERE game_id = ?";
+			String selectSQL = "SELECT player_id FROM " +GAME_RANKINGS+" WHERE game_id = ?";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, game_id);
 			ResultSet rs = preparedStatement.executeQuery();
@@ -427,7 +427,7 @@ public class DatabaseDriver {
 		int ret = 0;
 		try {
 			checkConnection();
-			String selectSQL = "SELECT ranking FROM " +GAME_RANKING+" WHERE player_id = ? AND game_id = ? LIMIT 0,1";
+			String selectSQL = "SELECT ranking FROM " +GAME_RANKINGS+" WHERE player_id = ? AND game_id = ? LIMIT 0,1";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, player_id);
 			preparedStatement.setInt(2, game_id);
@@ -446,7 +446,7 @@ public class DatabaseDriver {
 		int ret = 0;
 		try {
 			checkConnection();
-			String selectSQL = "INSERT INTO " +GAME_RANKING+" (ranking,player_id,game_id) VALUES (?,?,?)";
+			String selectSQL = "INSERT INTO " +GAME_RANKINGS+" (ranking,player_id,game_id) VALUES (?,?,?)";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, ranking);
 			preparedStatement.setInt(2, player_id);
@@ -463,7 +463,7 @@ public class DatabaseDriver {
 		int ret = 0;
 		try {
 			checkConnection();
-			String selectSQL = "UPDATE " +GAME_RANKING+" SET ranking = ? WHERE player_id = ? AND game_id = ?";
+			String selectSQL = "UPDATE " +GAME_RANKINGS+" SET ranking = ? WHERE player_id = ? AND game_id = ?";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, ranking);
 			preparedStatement.setInt(2, player_id);
@@ -480,7 +480,7 @@ public class DatabaseDriver {
 		int ret = 0;
 		try {
 			checkConnection();
-			String selectSQL = "INSERT INTO " +GAME_RANKING+" (game_id,player_id) VALUES (?,?)";
+			String selectSQL = "INSERT INTO " +GAME_RANKINGS+" (game_id,player_id) VALUES (?,?)";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, gameId);
 			preparedStatement.setInt(2, playerId);
@@ -496,7 +496,7 @@ public class DatabaseDriver {
 		int ret = 0;
 		try {
 			checkConnection();
-			String selectSQL = "DELETE FROM " +GAME_RANKING+" WHERE game_id = ? AND player_id = ?)";
+			String selectSQL = "DELETE FROM " +GAME_RANKINGS+" WHERE game_id = ? AND player_id = ?)";
 			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
 			preparedStatement.setInt(1, gameId);
 			preparedStatement.setInt(2, playerId);
