@@ -97,7 +97,7 @@ public class GameClient extends Thread {
 					System.out.println("Requesting : " +requestCode);
 					}
 					// Preventing response to be sent if user not authenticated
-					if (requestCode == Constants.CMSG_AUTH ||requestCode == Constants.CMSG_REGISTER || player != null) {  
+					if (requestCode == Constants.CMSG_LOGIN ||requestCode == Constants.CMSG_REGISTER || player != null) {  
 						// Determine the type of request
 						GameRequest request = GameRequestTable.get(requestCode);
 						// If the request exists, process like following:

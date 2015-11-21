@@ -17,8 +17,8 @@ from Character import Character
 from panda3d.core import NodePath
 
 from panda3d.bullet import BulletVehicle
-from panda3d.bullet import BulletWorld, BulletTriangleMesh,BulletTriangleMeshShape,BulletDebugNode,BulletPlaneShape, BulletRigidBodyNode
-
+from panda3d.bullet import BulletWorld, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletPlaneShape, \
+    BulletRigidBodyNode
 # afrom Chat import Chat
 import time
 
@@ -26,6 +26,7 @@ import time
 # import your modules
 from common.Constants import Constants
 from net.ConnectionManager import ConnectionManager
+from Dashboard import *
 
 SPEED = 0.5
 
@@ -63,7 +64,6 @@ class World(DirectObject):
                        "chat0": 0, "chat1": 0}
         base.win.setClearColor(Vec4(0, 0, 0, 1))
 
-
         # Network Setup
         self.cManager = ConnectionManager(self)
         self.startConnection()
@@ -73,19 +73,20 @@ class World(DirectObject):
         # taskMgr.add(self.message, 'message')
 
 
+
         # Post the instructions
 
-        self.title = addTitle("Panda3D Tutorial: Roaming Ralph (Walking on the Moon)")
-        self.inst1 = addInstructions(0.95, "[ESC]: Quit")
-        self.inst2 = addInstructions(0.90, "[A]: Rotate Ralph Left")
-        self.inst3 = addInstructions(0.85, "[D]: Rotate Ralph Right")
-        self.inst4 = addInstructions(0.80, "[W]: Run Ralph Forward")
-        self.inst4 = addInstructions(0.75, "[S]: Run Ralph Backward")
-        self.inst6 = addInstructions(0.70, "[Left Arrow]: Rotate Camera Left")
-        self.inst7 = addInstructions(0.65, "[Right Arrow]: Rotate Camera Right")
-        self.inst8 = addInstructions(0.60, "[L]: List Connected Users")
-        self.inst9 = addInstructions(0.55, "[0]: Toggle Chat Broadcast")
-        self.inst10 = addInstructions(0.50, "[1]: Toggle Private Chat")
+        # self.title = addTitle("Panda3D Tutorial: Roaming Ralph (Walking on the Moon)")
+        # self.inst1 = addInstructions(0.95, "[ESC]: Quit")
+        # self.inst2 = addInstructions(0.90, "[A]: Rotate Ralph Left")
+        # self.inst3 = addInstructions(0.85, "[D]: Rotate Ralph Right")
+        # self.inst4 = addInstructions(0.80, "[W]: Run Ralph Forward")
+        # self.inst4 = addInstructions(0.75, "[S]: Run Ralph Backward")
+        # self.inst6 = addInstructions(0.70, "[Left Arrow]: Rotate Camera Left")
+        # self.inst7 = addInstructions(0.65, "[Right Arrow]: Rotate Camera Right")
+        # self.inst8 = addInstructions(0.60, "[L]: List Connected Users")
+        # self.inst9 = addInstructions(0.55, "[0]: Toggle Chat Broadcast")
+        # self.inst10 = addInstructions(0.50, "[1]: Toggle Private Chat")
 
         # Set up the environment
         #
@@ -100,7 +101,7 @@ class World(DirectObject):
         # self.pusher = CollisionHandlerPusher()
 
         # Create the main character, Ralph
-        self.mainCharRef = Character(self,self.bulletWorld, 0,"Me")
+        self.mainCharRef = Character(self, self.bulletWorld, 0, "Me")
         self.mainChar = self.mainCharRef.chassisNP
         self.mainChar.setPos(0,16,16)
 
@@ -115,6 +116,34 @@ class World(DirectObject):
         self.previousPos = self.mainChar.getPos()
         taskMgr.doMethodLater(.1, self.updateMove, 'updateMove')
 
+        # Set Dashboard
+        self.dashboard = Dashboard(self.mainCharRef, taskMgr)
+
+
+        # Creating Pandas
+        # self.pandas = []
+        # self.pandacount = 2
+        # for x in range(self.pandacount):
+        #     self.pandas.append(MyPanda(self))
+
+        # Creating Stationary spheres
+        # self.spheres = []
+        # self.sphereCount = 3
+        # for x in range(self.sphereCount):
+        #     self.spheres.append(StationarySphere(self))
+
+        # Create Car
+        # self.car = MyCar(self)
+
+        # Panda animation
+        # for panda in self.pandas:
+        #     taskMgr.add(panda.jumpPanda, "jumpPanda")
+        #     taskMgr.add(panda.timerTask, 'timerTask')
+        #     taskMgr.add(panda.pandaWalk, 'pandaWalk')
+        #     taskMgr.add(panda.pandaStop, 'pandaStop')
+        #
+        # taskMgr.add(self.car.makeCircle, "makeCircle")
+        #
         self.floater = NodePath(PandaNode("floater"))
         self.floater.reparentTo(render)
 
@@ -174,13 +203,13 @@ class World(DirectObject):
         taskMgr.add(self.enterGame,"EnterGame")
 
     def doExit(self):
-      self.cleanup()
-      sys.exit(1)
+        self.cleanup()
+        sys.exit(1)
 
     def cleanup(self):
-      self.cManager.closeConnection()
-      self.world = None
-      self.outsideWorldRender.removeNode()
+        self.cManager.closeConnection()
+        self.world = None
+        self.outsideWorldRender.removeNode()
 
     def enterGame(self,task):
       if self.state == "Login":
@@ -218,7 +247,6 @@ class World(DirectObject):
 
         self.bulletWorld.attachRigidBody(node)
 
-
         self.visNP = loader.loadModel('models/track.egg')
         self.tex = loader.loadTexture("models/tex/Main.png")
         self.visNP.setTexture(self.tex)
@@ -244,7 +272,7 @@ class World(DirectObject):
         self.visNP.setScale(70)
 
 
-    def initializeBulletWorld(self, debug= False):
+    def initializeBulletWorld(self, debug=False):
         self.outsideWorldRender = render.attachNewNode('world')
 
         self.bulletWorld = BulletWorld()
@@ -257,7 +285,6 @@ class World(DirectObject):
             self.debugNP.node().showBoundingBoxes(True)
             self.debugNP.node().showNormals(False)
             self.bulletWorld.setDebugNode(self.debugNP.node())
-
 
     def makeCollisionNodePath(self, nodepath, solid):
         '''
@@ -312,25 +339,25 @@ class World(DirectObject):
         # Process input
         engineForce = 0.0
         brakeForce = 0.0
-        if (self.keyMap["forward"]!=0):
+        if (self.keyMap["forward"] != 0):
             engineForce = 2000.0
             brakeForce = 0.0
 
-        if (self.keyMap["backward"]!=0):
-          if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= 0:
-              engineForce = -500.0
-              brakeForce = 0.0
-          else:
-              engineForce = 0.0
-              brakeForce = 100.0
+        if (self.keyMap["backward"] != 0):
+            if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= 0:
+                engineForce = -500.0
+                brakeForce = 0.0
+            else:
+                engineForce = 0.0
+                brakeForce = 100.0
 
-        if (self.keyMap["left"]!=0):
-          steering += dt * steeringIncrement
-          steering = min(steering, steeringClamp)
+        if (self.keyMap["left"] != 0):
+            steering += dt * steeringIncrement
+            steering = min(steering, steeringClamp)
 
-        if (self.keyMap["right"]!=0):
-          steering -= dt * steeringIncrement
-          steering = max(steering, -steeringClamp)
+        if (self.keyMap["right"] != 0):
+            steering -= dt * steeringIncrement
+            steering = max(steering, -steeringClamp)
 
         # Apply steering to front wheels
         self.mainCharRef.vehicle.setSteeringValue(steering, 0)

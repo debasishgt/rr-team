@@ -23,7 +23,6 @@ public class RequestChangeHealth extends GameRequest {
 
 	@Override
 	public void parse() throws IOException {
-		String username = DataReader.readString(dataInput);
 		healthChange = DataReader.readInt(dataInput);
 	}
 

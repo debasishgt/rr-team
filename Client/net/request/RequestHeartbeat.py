@@ -11,8 +11,11 @@ class RequestHeartbeat(ServerRequest):
         try:
             pkg = PyDatagram()
             pkg.addUint16(Constants.REQ_HEARTBEAT)
+
+            pkg.addString("adrien")
+
+
             self.cWriter.send(pkg, self.connection)
 
-            #self.log('Sent [' + str(Constants.RAND_STRING) + '] Int Request')
         except:
-            self.log('Bad [' + str(Constants.RAND_STRING) + '] Int Request')
+            self.log('Bad [' + str(Constants.REQ_HEARTBEAT) + '] Heartbeat Request')

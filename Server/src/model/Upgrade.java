@@ -64,4 +64,9 @@ public class Upgrade {
 	public int getId() {
 		return id;
 	}
+
+	public int getPrice() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
