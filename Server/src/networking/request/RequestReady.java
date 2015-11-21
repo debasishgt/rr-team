@@ -1,10 +1,10 @@
 package networking.request;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 
 import core.GameClient;
-import core.GameSession;
-import utility.DataReader;
 import networking.response.ResponseReady;
 
 public class RequestReady extends GameRequest {
@@ -12,7 +12,7 @@ public class RequestReady extends GameRequest {
 	private ResponseReady responseReady;
 	
 	public RequestReady() {
-		
+		responseReady = new ResponseReady();
     }
 	
 	@Override
@@ -29,6 +29,22 @@ public class RequestReady extends GameRequest {
 				this.client.getServer().getGameSessionByRoomId(roomId).gameStart();
 			}
 		}
+		
+		Map<String, Integer> status = new HashMap<>();
+		
+		for(GameClient client : this.client.getServer().getGameClientsForRoom(this.client.getPlayer().getRoom().getId()))
+		{
+			if(client.getPlayer().isReady())
+			{
+				status.put(client.getName(), 1);
+			}
+			else
+			{
+				status.put(client.getName(), 0);
+			}
+		}
+		
+		this.client.getServer().addResponseForRoom(this.client.getPlayer().getRoom().getId(), responseReady);
 	}
 
 	private boolean allReady(int room_id) {
