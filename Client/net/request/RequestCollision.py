@@ -4,7 +4,6 @@ from net.request.ServerRequest import ServerRequest
 
 class RequestCollision(ServerRequest):
 
-  #args stores the x y z components of the moving
     def send(self, args = []):
 
         try:
@@ -15,7 +14,5 @@ class RequestCollision(ServerRequest):
 
             self.cWriter.send(pkg, self.connection)
 
-            #print("sent move: ", args[0], " ",args[1], " ", args[2])
-            #self.log('Sent [' + str(Constants.RAND_FLOAT) + '] Float Request')
         except:
-            self.log('Bad [' + str(Constants.CMSG_COLLISION) + '] Move Request')
+            self.log('Bad [' + str(Constants.CMSG_COLLISION) + '] Collision Request')

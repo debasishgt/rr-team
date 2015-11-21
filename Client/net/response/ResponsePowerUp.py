@@ -18,9 +18,9 @@ class ResponsePowerUp(ServerResponse):
                 # Sends a visual effect from the character model
                 # Also hides the powerId from the map until it respawns.
                 break
-                
+
             #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
 
         except:
-            self.log('Bad [' + str(Constants.RAND_STRING) + '] String Response')
+            self.log('Bad [' + str(Constants.SMSG_POWER_UP) + '] Power Up Response')
             print_exc()

@@ -13,7 +13,7 @@ from net.request.RequestHeartbeat import RequestHeartbeat
 from net.request.RequestMove import RequestMove
 from net.request.RequestPowerUp import RequestPowerUp
 from net.request.RequestPowerPickUp import RequestPowerPickUp
-from net.request.RequestHealth import RequestHealth
+from net.request.RequestChangeHealth import RequestChangeHealth
 from net.request.RequestResults import RequestResults
 from net.request.RequestRankings import RequestRankings
 from net.request.RequestPrizes import RequestPrizes
@@ -43,7 +43,7 @@ class ServerRequestTable:
         self.add(Constants.CMSG_MOVE, 'RequestMove')
         self.add(Constants.CMSG_POWER_UP, 'RequestPowerUp')
         self.add(Constants.CMSG_POWER_UP_PICK_UP, 'RequestPowerPickUp')
-        self.add(Constants.CMSG_HEALTH, 'RequestHealth')
+        self.add(Constants.CMSG_HEALTH, 'RequestChangeHealth')
         self.add(Constants.REQ_HEARTBEAT, 'RequestHeartbeat')
         self.add(Constants.CMSG_RESULTS, 'RequestResults')
         self.add(Constants.CMSG_RANKINGS, 'RequestRankings')

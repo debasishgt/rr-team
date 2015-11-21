@@ -15,8 +15,7 @@ class ResponseReady(ServerResponse):
             #     self.readyPlayers[data.getString()] = data.getInt32()
 
             print "ResponseMove - ",self.playerCount
-            #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
 
         except:
-            self.log('Bad [' + str(Constants.RAND_STRING) + '] String Response')
+            self.log('Bad [' + str(Constants.SMSG_READY) + '] Ready Response')
             print_exc()

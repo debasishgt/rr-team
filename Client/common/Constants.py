@@ -11,7 +11,7 @@ class Constants:
     DEBUG                               = True
     MSG_NONE                            = 0
 
-    CMSG_AUTH                           = 101
+    CMSG_LOGIN                          = 101
     CMSG_DISCONNECT                     = 102
     CMSG_REGISTER                       = 103
     CMSG_FORGOT_PASSWORD                = 104
@@ -40,7 +40,7 @@ class Constants:
     CMSG_SET_POSITION                   = 128
     REQ_HEARTBEAT                       = 301
 
-    SMSG_AUTH                           = 201
+    SMSG_LOGIN                          = 201
     SMSG_DISCONNECT                     = 202
     SMSG_REGISTER                       = 203
     SMSG_FORGOT_PASSWORD                = 204
@@ -49,7 +49,7 @@ class Constants:
     SMSG_MOVE                           = 207
     SMSG_POWER_UP                       = 208
     SMSG_POWER_UP_PICK_UP               = 209
-    SMSG_HEALTH 						= 210
+    SMSG_CHANGE_HEALTH 					= 210
     SMSG_ENTER_LOBBY                    = 211
     SMSG_ENTER_GAME_LOBBY               = 212
     SMSG_ENTER_GAME_NAME                = 213

@@ -28,5 +28,5 @@ class ResponseSetPosition(ServerResponse):
             #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
 
         except:
-            self.log('Bad [' + str(Constants.RAND_STRING) + '] String Response')
+            self.log('Bad [' + str(Constants.SMSG_SET_POSITION) + '] Set Position Response')
             print_exc()
