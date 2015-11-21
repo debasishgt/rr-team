@@ -82,7 +82,7 @@ class ConnectionManager:
 
             if request != None:
                 request.set(self.cWriter, self.connection)
-               # print("Request sent - ", requestCode)
+                # print("Request sent - ", requestCode)
                 request.send(args)
 
     def handleResponse(self, responseCode, data):

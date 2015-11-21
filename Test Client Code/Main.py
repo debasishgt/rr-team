@@ -21,8 +21,7 @@ from net.ConnectionManager import ConnectionManager
 class Main(DirectObject):
 
     def __init__(self):
-        
-	    # Network Setup
+        # Network Setup
         self.cManager = ConnectionManager()
         self.startConnection()
         

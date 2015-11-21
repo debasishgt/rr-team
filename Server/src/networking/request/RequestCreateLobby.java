@@ -2,6 +2,7 @@ package networking.request;
 
 import java.io.IOException;
 
+import core.GameSession;
 import driver.DatabaseDriver;
 import model.GameRoom;
 import networking.response.ResponseCreateLobby;
@@ -18,7 +19,7 @@ public class RequestCreateLobby extends GameRequest {
 	@Override
 	public void parse() throws IOException {		
 		room_name = DataReader.readString(dataInput);
-		String username = DataReader.readString(dataInput);
+		int gameid = DataReader.readInt(dataInput); //Dont need
 		status = DataReader.readInt(dataInput);
 	}
 
@@ -27,12 +28,16 @@ public class RequestCreateLobby extends GameRequest {
 		GameRoom gameRoom = DatabaseDriver.getInstance().getGameByName(room_name);
 		
 		if(gameRoom == null) {
-//			DatabaseDriver.getInstance().createGame(0, System.currentTimeMillis()/1000, "");
-//			GameRoom gameRoom = DatabaseDriver.getInstance().getGameByName(room_name);
-//			client.getPlayer().setRoom(gameRoom);			
-//			response.setValid(1);
-//			response.setUsername(client.getPlayer().getUsername());
-//			client.getServer().addResponseForRoomExcludingPlayer(gameRoom.getId(), client.getPlayer().getID(), response);
+			DatabaseDriver.getInstance().createGame(0, System.currentTimeMillis()/1000, "",room_name,status);
+			gameRoom = DatabaseDriver.getInstance().getGameByName(room_name);
+			client.getPlayer().setRoom(gameRoom);
+			response.setValid(1);
+			
+			GameSession session = new GameSession(client.getServer(),gameRoom);
+			client.getServer().addToActiveSessions(session);
+			response.setGameName(room_name);
+			response.setUsername(client.getPlayer().getUsername());
+			client.getServer().addResponseForAllOnlinePlayers(client.getId(), response);
 		} else {
 			response.setValid(0);
 		}

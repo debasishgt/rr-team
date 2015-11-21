@@ -6,6 +6,8 @@ import utility.GamePacket;
 public class ResponseCreateLobby extends GameResponse {
 	private String gameName;
 	private int valid;
+	private String owner;
+	
 	public ResponseCreateLobby() {
 		responseCode = Constants.SMSG_CREATE_LOBBY;
 	}
@@ -15,6 +17,7 @@ public class ResponseCreateLobby extends GameResponse {
 		GamePacket packet = new GamePacket(responseCode);
 		packet.addString(gameName);
 		packet.addInt32(valid);
+		packet.addString(owner);	
 		return packet.getBytes();
 	}
 	
@@ -32,5 +35,9 @@ public class ResponseCreateLobby extends GameResponse {
 
 	public int getValid() {
 		return this.valid;
+	}
+
+	public void setUsername(String username) {
+		this.owner = username;
 	}
 }

@@ -77,8 +77,8 @@ class Character:
         self.vehicle.setCoordinateSystem(ZUp)
         bulletWorld.attachVehicle(self.vehicle)
 
-        for fb, y in (("F", 0.8), ("B", -0.8)):
-            for side, x in (("R", 0.8), ("L", -0.8)):
+        for fb, y in (("F", 1.1), ("B", -1.1)):
+            for side, x in (("R", 0.75), ("L", -0.75)):
                 np = loader.loadModel("models/tire%s.egg" % side)
                 np.reparentTo(render)
                 isFront = fb == "F"

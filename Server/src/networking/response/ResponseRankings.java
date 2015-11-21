@@ -1,10 +1,14 @@
 package networking.response;
 
 import utility.GamePacket;
+
+import java.util.HashMap;
+
 import metadata.Constants;
+import model.Player;
 
 public class ResponseRankings extends GameResponse {
-	private String username;
+	private HashMap<Player,Integer> rankings;
 	
 	public ResponseRankings() {
         responseCode = Constants.SMSG_RANKINGS;
@@ -14,12 +18,16 @@ public class ResponseRankings extends GameResponse {
 	public byte[] constructResponseInBytes() {
 		// TODO Auto-generated method stub
 		GamePacket packet = new GamePacket(responseCode);
-		packet.addString(username);
+		packet.addInt32(rankings.size());
+		for(Player player : rankings.keySet()) {
+			packet.addString(player.getUsername());
+			packet.addInt32(rankings.get(player));
+		}
 		// add the data need to pass to the client here
         return packet.getBytes();
 	}
 	
-	public void setUsername(String username) {
-		this.username = username;
+	public void setRankings(HashMap<Player,Integer> rankings) {
+		this.rankings = rankings;
 	}
 }

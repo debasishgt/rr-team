@@ -4,8 +4,7 @@ package networking.request;
 import java.io.IOException;
 
 import driver.DatabaseDriver;
-import model.Player;
-import networking.response.ResponseAuth;
+import networking.response.ResponseLogin;
 // Custom Imports
 //import core.GameServer;
 import utility.DataReader;
@@ -16,10 +15,10 @@ public class RequestLogin extends GameRequest {
 	private String username;
 	private String password;
 	// Responses
-	private ResponseAuth responseAuth;
+	private ResponseLogin responseAuth;
 
 	public RequestLogin() {
-		responses.add(responseAuth = new ResponseAuth());
+		responses.add(responseAuth = new ResponseLogin());
 
 	}
 

@@ -2,11 +2,14 @@ package networking.request;
 
 import java.io.IOException;
 
+import driver.DatabaseDriver;
 import networking.response.ResponseResults;
+import utility.DataReader;
 
 public class RequestResults extends GameRequest {
 
 	// Data
+	private int gameId;
 	// Responses
 	private ResponseResults responseResults;
 
@@ -16,18 +19,11 @@ public class RequestResults extends GameRequest {
 
 	@Override
 	public void parse() throws IOException {
-
+		gameId = DataReader.readInt(dataInput);
 	}
 
 	@Override
 	public void doBusiness() throws Exception {
-		responseResults.setUsername(client.getPlayer().getUsername());
-		/*
-		 * When the client ends the race or dies they request the results to see
-		 * where the placed in the gamemode. This calls the response for the
-		 * user and all of the other users who have finished the race with
-		 * ResponseResults
-		 */
-		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responseResults);
+		responseResults.setRankings(DatabaseDriver.getInstance().getPlayersRankingForGame(gameId));
 	}
 }

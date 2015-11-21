@@ -6,6 +6,7 @@ import utility.GamePacket;
 
 public class ResponsePowerPickUp extends GameResponse {
 	private String username;
+	private int powerId;
 	
     public ResponsePowerPickUp() {
         //responseCode = Constants.SMSG_POWER_PICKUP;
@@ -15,7 +16,7 @@ public class ResponsePowerPickUp extends GameResponse {
     public byte[] constructResponseInBytes() {
         GamePacket packet = new GamePacket(responseCode);
         packet.addString(username);
-      /*Construct packet*/
+     	packet.addInt32(powerId);
         return packet.getBytes();
     }
 
@@ -23,4 +24,7 @@ public class ResponsePowerPickUp extends GameResponse {
 		this.username = username;
 	}
     
+	public void setPowerId(int powerId){
+		this.powerId = powerId;
+	}
 }

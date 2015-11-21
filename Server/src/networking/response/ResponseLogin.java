@@ -4,12 +4,12 @@ package networking.response;
 import metadata.Constants;
 import utility.GamePacket;
 
-public class ResponseAuth extends GameResponse {
+public class ResponseLogin extends GameResponse {
 
     private short answer;
 
-    public ResponseAuth() {
-        responseCode = Constants.SMSG_AUTH;
+    public ResponseLogin() {
+        responseCode = Constants.SMSG_LOGIN;
     }
 
     @Override
