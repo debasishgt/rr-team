@@ -11,13 +11,12 @@ class RequestLogin(ServerRequest):
 
         try:
             pkg = PyDatagram()
-            pkg.addUint16(Constants.CMSG_AUTH)
+            pkg.addUint16(Constants.CMSG_LOGIN)
             pkg.addString(username)
             pkg.addString(password)
 
             self.cWriter.send(pkg, self.connection)
-
-            #self.log('Sent [' + str(Constants.RAND_STRING) + '] Int Request')
+            
         except:
-            self.log('Bad [' + str(Constants.RAND_STRING) + '] Int Request')
+            self.log('Bad [' + str(Constants.CMSG_LOGIN) + '] Login Request')
             print_exc()

@@ -13,9 +13,9 @@ class ResponsePrizes(ServerResponse):
 
             # Gives the user an item based on what the server responses with
             # Popup to show what they unlocked?
-            
+
             #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
 
         except:
-            self.log('Bad [' + str(Constants.RAND_STRING) + '] String Response')
+            self.log('Bad [' + str(Constants.SMSG_PRIZES) + '] Prizes Response')
             print_exc()

@@ -10,6 +10,7 @@ from common.Constants import Constants
 # from ResponseUsers import ResponseUsers
 # from ResponseChatOne import ResponseChatOne
 
+from net.response.ResponseLogin import ResponseLogin
 from net.response.ResponseMove import ResponseMove
 from net.response.ResponsePowerUp import ResponsePowerUp
 from net.response.ResponsePowerPickUp import ResponsePowerPickUp
@@ -41,10 +42,11 @@ class ServerResponseTable:
         # self.add(Constants.CMSG_USERS, 'ResponseUsers')
         # self.add(Constants.CMSG_CHAT_ONE, 'ResponseChatOne')
 
+        self.add(Constants.SMSG_LOGIN, 'ResponseLogin')
         self.add(Constants.SMSG_MOVE, 'ResponseMove')
         self.add(Constants.SMSG_POWER_UP, 'ResponsePowerUp')
         self.add(Constants.SMSG_POWER_UP_PICK_UP, 'ResponsePowerPickUp')
-        self.add(Constants.SMSG_HEALTH, 'ResponseHealth')
+        self.add(Constants.SMSG_CHANGE_HEALTH, 'ResponseChangeHealth')
         self.add(Constants.SMSG_RESULTS, 'ResponseResults')
         self.add(Constants.SMSG_RANKINGS, 'ResponseRankings')
         self.add(Constants.SMSG_PRIZES, 'ResponsePrizes')

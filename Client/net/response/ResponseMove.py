@@ -28,5 +28,5 @@ class ResponseMove(ServerResponse):
             #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
 
         except:
-            self.log('Bad [' + str(Constants.RAND_STRING) + '] String Response')
+            self.log('Bad [' + str(Constants.SMSG_MOVE) + '] Move Response')
             print_exc()
