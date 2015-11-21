@@ -41,11 +41,13 @@ public class Player {
 		return pos;
 	}
 	
-	public void setPosition(float x, float y, float z, float h){
+	public void setPosition(float x, float y, float z, float h, float p, float r){
 		pos.setX(x);
 		pos.setY(y);
 		pos.setZ(z);
 		pos.setH(h);
+		pos.setP(p);
+		pos.setZ(r);
 	}
 
 	public boolean isReady() {

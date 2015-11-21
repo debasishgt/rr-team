@@ -30,6 +30,7 @@ public class RequestPowerUp extends GameRequest {
     public void doBusiness() {
     	//do the prizes business here
     	responsePowerUp.setUsername(client.getPlayer().getUsername());
-    	client.getServer().addResponseForAllOnlinePlayers(client.getId(), responsePowerUp);
+    	responsePowerUp.setPowerId(powerId);
+    	client.getServer().addResponseForRoom(client.getPlayer().getRoom().getId(), responsePowerUp);
     }
 }
