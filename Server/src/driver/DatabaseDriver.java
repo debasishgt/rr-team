@@ -8,7 +8,6 @@ import configuration.GameServerConf;
 import model.BaseVehicle;
 import model.GameRoom;
 import model.Player;
-import model.Powerup;
 import model.Upgrade;
 import model.PlayerVehicle;
 
@@ -22,7 +21,6 @@ public class DatabaseDriver {
 	protected final String PLAYER_VEHICLES = "player_vehicles";
 	protected final String VEHICLE_UPGRADE_RELATIONSHIPS = "vehicle_upgrade_relationships";
 	protected final String PLAYERS = "players";
-	protected final String POWERUPS = "powerups";
 	protected final String UPGRADES = "upgrades";
 
 	private static DatabaseDriver Instance = null;
@@ -767,114 +765,6 @@ public class DatabaseDriver {
 			ResultSet rs = statement.executeQuery(selectSQL);
 			while(rs.next()) {
 				list.add(new Upgrade(rs.getInt("id"),rs.getString("name"),rs.getString("description"), rs.getDouble("health"),rs.getDouble("armor"),rs.getDouble("acceleration")));	
-			}
-			rs.close();
-			statement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public List<Powerup> getPlayerPowerups(int player_id) {
-		List<Powerup> list = new ArrayList<Powerup>();
-		try {
-			checkConnection();
-			String selectSQL = "SELECT p.*, pp.quantity FROM " +PLAYER_POWERUPS+" pp LEFT JOIN " +POWERUPS+" p ON (pp.powerup_id = p.id) WHERE pp.player_id = ?";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(1, player_id);
-			ResultSet rs = preparedStatement.executeQuery();
-			while(rs.next()) {
-				list.add(new Powerup(rs.getInt("id"),rs.getString("name"),rs.getString("description"), rs.getDouble("damage"), rs.getDouble("health"),rs.getDouble("armor"),rs.getDouble("acceleration"),rs.getBoolean("can_make_immune"),rs.getBoolean("can_blind"), rs.getBoolean("can_toggle"),rs.getInt("quantity")));
-			}
-			rs.close();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;		
-	}
-
-	public int updatePlayerPowerup(Powerup powerup,int player_id) {
-		int ret = 0;
-		try {
-			checkConnection();
-			String selectSQL = "UPDATE " +PLAYER_POWERUPS+" SET quantity = ? WHERE player_id = ? AND powerup_id = ?";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(1, powerup.getQuantity());
-			preparedStatement.setInt(2, player_id);
-			preparedStatement.setInt(3, powerup.getId());
-			ret = preparedStatement.executeUpdate();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;		
-	}
-
-	public int removePlayerPowerup(int powerup_id,int player_id) {
-		int ret = 0;
-		try {
-			checkConnection();
-			String selectSQL = "DELET FROM " +PLAYER_POWERUPS+" WHERE player_id = ? AND powerup_id = ?";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(1, player_id);
-			preparedStatement.setInt(2, powerup_id);
-			ret = preparedStatement.executeUpdate();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;		
-	}
-
-	public Powerup getPowerUpById(int powerup_id) {
-		Powerup ret = null;
-		try {
-			checkConnection();
-			String selectSQL = "SELECT * FROM " +POWERUPS+" WHERE id = ? LIMIT 0,1";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setInt(1, powerup_id);
-			ResultSet rs = preparedStatement.executeQuery();
-			while(rs.next()) {
-				ret = new Powerup(rs.getInt("id"),rs.getString("name"),rs.getString("description"), rs.getDouble("damage"), rs.getDouble("health"),rs.getDouble("armor"),rs.getDouble("acceleration"),rs.getBoolean("can_make_immune"),rs.getBoolean("can_blind"), rs.getBoolean("can_toggle"),0);
-			}
-			rs.close();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-
-	public Powerup getPowerupByName(String powerup_name) {
-		Powerup ret = null;
-		try {
-			checkConnection();
-			String selectSQL = "SELECT * FROM " +POWERUPS+" WHERE name = ? LIMIT 0,1";
-			PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-			preparedStatement.setString(1, powerup_name);
-			ResultSet rs = preparedStatement.executeQuery();
-			while(rs.next()) {
-				ret = new Powerup(rs.getInt("id"),rs.getString("name"),rs.getString("description"), rs.getDouble("damage"), rs.getDouble("health"),rs.getDouble("armor"),rs.getDouble("acceleration"),rs.getBoolean("can_make_immune"),rs.getBoolean("can_blind"), rs.getBoolean("can_toggle"),0);	
-			}
-			rs.close();
-			preparedStatement.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-
-	public List<Powerup> getPowerups() {
-		List<Powerup> list = new ArrayList<Powerup>();
-		try {
-			checkConnection();
-			String selectSQL = "SELECT * FROM " +POWERUPS;
-			Statement statement = conn.createStatement();
-			ResultSet rs = statement.executeQuery(selectSQL);
-			while(rs.next()) {
-				list.add(new Powerup(rs.getInt("id"),rs.getString("name"),rs.getString("description"), rs.getDouble("damage"), rs.getDouble("health"),rs.getDouble("armor"),rs.getDouble("acceleration"),rs.getBoolean("can_make_immune"),rs.getBoolean("can_blind"), rs.getBoolean("can_toggle"),0));	
 			}
 			rs.close();
 			statement.close();
