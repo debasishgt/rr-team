@@ -12,7 +12,7 @@ public class RequestReady extends GameRequest {
 	private ResponseReady responseReady;
 	
 	public RequestReady() {
-		responseReady = new ResponseReady();
+		responses.add(responseReady = new ResponseReady());
     }
 	
 	@Override
@@ -29,21 +29,7 @@ public class RequestReady extends GameRequest {
 				this.client.getServer().getGameSessionByRoomId(roomId).gameStart();
 			}
 		}
-		
-		Map<String, Integer> status = new HashMap<>();
-		
-		for(GameClient client : this.client.getServer().getGameClientsForRoom(this.client.getPlayer().getRoom().getId()))
-		{
-			if(client.getPlayer().isReady())
-			{
-				status.put(client.getName(), 1);
-			}
-			else
-			{
-				status.put(client.getName(), 0);
-			}
-		}
-		
+		responseReady.setUsername(this.client.getPlayer().getUsername());
 		this.client.getServer().addResponseForRoom(this.client.getPlayer().getRoom().getId(), responseReady);
 	}
 
