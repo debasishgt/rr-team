@@ -428,12 +428,12 @@ class World(DirectObject):
         #    if self.isMoving:
         #        self.mainCharRef.walk()
         #        self.isMoving = False
-        
+
         dt = globalClock.getDt()
 
         self.mainCharRef.processInput(inputState, dt)
         self.bulletWorld.doPhysics(dt, 10, 0.02)
-        
+
         # use power-ups
         if self.keyMap["pow1"] != 0:
             print "power up 1 activated"
