@@ -71,5 +71,6 @@ class Constants:
     SMSG_SET_POSITION                   = 228
     SMSG_TIME                           = 229
     SMSG_SET_RANK                       = 230
+    SMSG_SET_READY                      = 231
     SMSG_RENDER_CHARACTER               = 310
     SMSG_REMOVE_CHARACTER               = 311

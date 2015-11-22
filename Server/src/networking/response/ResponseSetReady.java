@@ -4,11 +4,11 @@ import utility.GamePacket;
 import java.util.Map;
 import metadata.Constants;
 
-public class ResponseReady extends GameResponse {
+public class ResponseSetReady extends GameResponse {
 	private String username;
 	
-	public ResponseReady() {
-        responseCode = Constants.SMSG_READY;
+	public ResponseSetReady() {
+        responseCode = Constants.SMSG_SET_READY;
     }
 	
 	@Override
