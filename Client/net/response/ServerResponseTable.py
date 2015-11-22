@@ -4,7 +4,6 @@ from common.Constants import Constants
 # from net.response.ResponseRandomString import ResponseRandomString
 # from net.response.ResponseRandomShort import ResponseRandomShort
 # from net.response.ResponseRandomFloat import ResponseRandomFloat
-# from net.response.ResponseLogin import ResponseLogin
 # from net.response.ResponseCreateCharacter import ResponseCreateCharacter
 # from ResponseChatAll import ResponseChatAll
 # from ResponseUsers import ResponseUsers
@@ -39,7 +38,6 @@ class ServerResponseTable:
         # self.add(Constants.RAND_STRING, 'ResponseRandomString')
         # self.add(Constants.RAND_SHORT, 'ResponseRandomShort')
         # self.add(Constants.RAND_FLOAT, 'ResponseRandomFloat')
-        # self.add(Constants.CMSG_AUTH, 'ResponseLogin')
         # self.add(Constants.SMSG_CREATE_CHARACTER, 'ResponseCreateCharacter')
         # self.add(Constants.CMSG_CHAT_ALL, 'ResponseChatAll')
         # self.add(Constants.CMSG_USERS, 'ResponseUsers')

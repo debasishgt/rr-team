@@ -16,8 +16,9 @@ class Dashboard(DirectObject):
         self.speed = "0.0 km/h"
         self.start_time = datetime.datetime.now()
         self.time_elapsed = datetime.timedelta(milliseconds=0)
+        self.countdown_time = datetime.timedelta(minutes=8)
         # insert total time
-        self.game_time = datetime.timedelta(minutes=8) - self.time_elapsed
+        self.game_time = self.countdown_time - self.time_elapsed
         # print self.game_time
 
         # Timer
@@ -89,7 +90,7 @@ class Dashboard(DirectObject):
 
     def show_timer(self, task):
         self.time_elapsed = datetime.datetime.now() - self.start_time
-        game_time = str(datetime.timedelta(minutes=8) - self.time_elapsed)[2:11]
+        game_time = str(self.countdown_time - self.time_elapsed)[2:11]
         self.display_timer.destroy()
         self.display_timer = OnscreenText(text=game_time, style=3, fg=(1, 1, 1, 1), pos=(0, .9), scale=.15,
                                           font=self.font_digital)
@@ -97,7 +98,8 @@ class Dashboard(DirectObject):
 
     # server updates client time in ms
     def force_timer(self, server_time):
-        self.time_elapsed = datetime.timedelta(milliseconds=server_time)
+        self.start_time = datetime.datetime.now()
+        self.countdown_time = datetime.timedelta(milliseconds=server_time)
 
     def update_rank(self, task):
         self.display_rank.destroy()
