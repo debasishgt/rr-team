@@ -15,7 +15,6 @@ from direct.interval.IntervalGlobal import Sequence
 from direct.task import Task
 from Character import Character
 from panda3d.core import NodePath
-
 from panda3d.bullet import BulletVehicle
 from panda3d.bullet import BulletWorld, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletPlaneShape, \
     BulletRigidBodyNode
@@ -45,7 +44,7 @@ def addTitle(text):
 
 class World(DirectObject):
     state = ""
-    #Login , EnterGame , BeginGame
+    # Login , EnterGame , BeginGame
     responseValue = -1
     currentTime = 0
     idleTime = 0
@@ -103,22 +102,21 @@ class World(DirectObject):
         # Create the main character, Ralph
         self.mainCharRef = Character(self, self.bulletWorld, 0, "Me")
         self.mainChar = self.mainCharRef.chassisNP
-        self.mainChar.setPos(0,16,16)
+        self.mainChar.setPos(0, 25, 16)
 
-        self.TestChar = Character(self, self.bulletWorld, 0,"test")
-        self.TestChar.actor.setPos(0,0,0)
+        self.TestChar = Character(self, self.bulletWorld, 0, "test")
+        self.TestChar.actor.setPos(0, 0, 0)
 
-#         self.cManager.sendRequest(Constants.CMSG_CREATE_CHARACTER, [self.mainCharRef.type,
-#                                                                     self.mainChar.getX(),
-#                                                                     self.mainChar.getY(),
-#                                                                     self.mainChar.getZ()])
+        #         self.cManager.sendRequest(Constants.CMSG_CREATE_CHARACTER, [self.mainCharRef.type,
+        #                                                                     self.mainChar.getX(),
+        #                                                                     self.mainChar.getY(),
+        #                                                                     self.mainChar.getZ()])
 
         self.previousPos = self.mainChar.getPos()
         taskMgr.doMethodLater(.1, self.updateMove, 'updateMove')
 
         # Set Dashboard
         self.dashboard = Dashboard(self.mainCharRef, taskMgr)
-
 
         # Creating Pandas
         # self.pandas = []
@@ -184,7 +182,7 @@ class World(DirectObject):
 
         # Set up the camera
         base.disableMouse()
-        base.camera.setPos(self.mainChar.getX(), self.mainChar.getY() + 10,self.mainChar.getZ() +  2)
+        base.camera.setPos(self.mainChar.getX(), self.mainChar.getY() + 10, self.mainChar.getZ() + 2)
 
         # Create some lighting
         ambientLight = AmbientLight("ambientLight")
@@ -196,11 +194,12 @@ class World(DirectObject):
         render.setLight(render.attachNewNode(ambientLight))
         render.setLight(render.attachNewNode(directionalLight))
 
-        #Game initialisation
+        # Game initialisation
         self.state = "Login"
         self.responseValue = -1
-#         self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
-#         taskMgr.add(self.enterGame,"EnterGame")
+
+    #         self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
+    #         taskMgr.add(self.enterGame,"EnterGame")
 
     def doExit(self):
         self.cleanup()
@@ -211,25 +210,24 @@ class World(DirectObject):
         self.world = None
         self.outsideWorldRender.removeNode()
 
-    def enterGame(self,task):
-      if self.state == "Login":
-        if self.responseValue == 1:
-          #Authentication succeeded
-          self.ConnectionManager.sendRequest(Constants.CMSG_ENTER_GAME_LOBBY,"test1",0)
-          self.responseValue = -1
+    def enterGame(self, task):
+        if self.state == "Login":
+            if self.responseValue == 1:
+                # Authentication succeeded
+                self.ConnectionManager.sendRequest(Constants.CMSG_ENTER_GAME_LOBBY, "test1", 0)
+                self.responseValue = -1
 
-      elif self.state == "EnterGame":
-        if self.responseValue == 1:
-          self.ConnectionManager.sendRequest(Constants.CMSG_READY)
-          self.responseValue = -1
+        elif self.state == "EnterGame":
+            if self.responseValue == 1:
+                self.ConnectionManager.sendRequest(Constants.CMSG_READY)
+                self.responseValue = -1
 
-      elif self.state == "BeginGame":
-        if self.responseValue == 1:
-          taskMgr.add(self.enterGame,"EnterGame")
-          return task.done
+        elif self.state == "BeginGame":
+            if self.responseValue == 1:
+                taskMgr.add(self.enterGame, "EnterGame")
+                return task.done
 
-      return task.cont
-
+        return task.cont
 
     def createEnvironment(self):
         self.environ = loader.loadModel("models/square")
@@ -257,7 +255,7 @@ class World(DirectObject):
         trackShape = BulletTriangleMeshShape(mesh, dynamic=False)
 
         body = BulletRigidBodyNode('Bowl')
-        self.visNP.node().getChild(0).getChild(0).addChild(body)
+        self.visNP.node().getChild(0).addChild(body)
         bodyNP = render.anyPath(body)
         print(bodyNP)
         bodyNP.node().addShape(trackShape)
@@ -270,7 +268,6 @@ class World(DirectObject):
 
         self.bowlNP = bodyNP
         self.visNP.setScale(70)
-
 
     def initializeBulletWorld(self, debug=False):
         self.outsideWorldRender = render.attachNewNode('world')
@@ -332,16 +329,18 @@ class World(DirectObject):
         # If a move-key is pressed, move ralph in the specified direction.
         # If a move-key is pressed, move ralph in the specified direction.
         # Steering info
-        steering = 0.0            # degree
-        steeringClamp = 70.0      # degree
-        steeringIncrement = 150.0 # degree per second
+        steering = 0.0  # degree
+        steeringClamp = 70.0  # degree
+        steeringIncrement = 180.0  # degree per second
 
         # Process input
         engineForce = 0.0
         brakeForce = 0.0
         if (self.keyMap["forward"] != 0):
-            engineForce = 2000.0
-            brakeForce = 0.0
+            # checks for vehicle's max speed
+            if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= self.mainCharRef.max_speed:
+                engineForce = 2000.0
+                brakeForce = 0.0
 
         if (self.keyMap["backward"] != 0):
             if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= 0:

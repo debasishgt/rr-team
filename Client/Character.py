@@ -13,16 +13,13 @@ from panda3d.core import CollisionTraverser, CollisionNode, CollisionSphere
 from panda3d.core import CollisionHandlerQueue, CollisionRay, CollisionHandlerPusher, CollisionPlane
 from direct.interval.IntervalGlobal import Sequence
 from direct.task import Task
-
 from panda3d.bullet import (
-        BulletPlaneShape, BulletCylinderShape,
-        BulletBoxShape, BulletHeightfieldShape)
+    BulletPlaneShape, BulletCylinderShape,
+    BulletBoxShape, BulletHeightfieldShape)
 from panda3d.bullet import BulletRigidBodyNode, BulletDebugNode
 from panda3d.bullet import BulletVehicle, BulletSphereShape
-
 from panda3d.bullet import BulletTriangleMeshShape, BulletTriangleMesh
 from panda3d.bullet import XUp, YUp, ZUp
-
 import time
 
 
@@ -36,7 +33,7 @@ class Character:
         self.acceleration = 1.5
         self.brakes = .7
         self.min_speed = 0
-        self.max_speed = 200
+        self.max_speed = 150
         self.reverse_speed = 20
         self.reverse_limit = -40
         self.armor = 100
@@ -51,13 +48,13 @@ class Character:
         elif type == 1:
             self.actor = Actor("models/policecarpainted", {})
             self.actor.setScale(0.30)
-            self.actor.setH(180)# elif type == 2:
-        #     self.actor = loader.loadModel("knucklehead.egg")
+            self.actor.setH(180)  # elif type == 2:
+        # self.actor = loader.loadModel("knucklehead.egg")
         #     self.tex = loader.loadTexture("knucklehead.jpg")
         #     self.actor.setTexture(self.car_tex, 1)
 
 
-        shape = BulletBoxShape(Vec3(1.0, 1.5,0.4))
+        shape = BulletBoxShape(Vec3(1.0, 1.5, 0.4))
         ts = TransformState.makePos(Point3(0, 0, 0.6))
 
         self.chassisNP = render.attachNewNode(BulletRigidBodyNode('Vehicle'))
@@ -139,7 +136,7 @@ class Character:
 
     def walk(self):
         self.actor.stop()
-        self.actor.pose("walk",5)
+        self.actor.pose("walk", 5)
         self.isMoving = False
 
     def run(self):
