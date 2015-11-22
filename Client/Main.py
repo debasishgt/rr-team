@@ -190,8 +190,13 @@ class World(DirectObject):
         directionalLight.setDirection(Vec3(-5, -5, -5))
         directionalLight.setColor(Vec4(1, 1, 1, 1))
         directionalLight.setSpecularColor(Vec4(1, 1, 1, 1))
+        directionalLight2 = DirectionalLight("directionalLight2")
+        directionalLight2.setDirection(Vec3(5, 5, -5))
+        directionalLight2.setColor(Vec4(1, 1, 1, 1))
+        directionalLight2.setSpecularColor(Vec4(1, 1, 1, 1))
         render.setLight(render.attachNewNode(ambientLight))
         render.setLight(render.attachNewNode(directionalLight))
+        render.setLight(render.attachNewNode(directionalLight2))
 
         # Game initialisation
         self.state = "Login"
