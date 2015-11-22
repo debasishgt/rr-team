@@ -5,14 +5,14 @@ import java.util.Map;
 import java.util.HashMap;
 
 import core.GameClient;
-import networking.response.ResponseSetReady;
+import networking.response.ResponseReady;
 
 public class RequestReady extends GameRequest {
 	
-	private ResponseSetReady responseSetReady;
+	private ResponseReady responseReady;
 	
 	public RequestReady() {
-		responseSetReady = new ResponseReady();
+		responses.add(responseReady = new ResponseReady());
     }
 	
 	@Override
@@ -29,9 +29,8 @@ public class RequestReady extends GameRequest {
 				this.client.getServer().getGameSessionByRoomId(roomId).gameStart();
 			}
 		}
-		
-		responseSetReady.setUsername(this.client.getPlayer().getUsername())
-		this.client.getServer().addResponseForRoom(this.client.getPlayer().getRoom().getId(), responseSetReady);
+		responseReady.setUsername(this.client.getPlayer().getUsername());
+		this.client.getServer().addResponseForRoom(this.client.getPlayer().getRoom().getId(), responseReady);
 	}
 
 	private boolean allReady(int room_id) {
