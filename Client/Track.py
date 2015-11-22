@@ -12,37 +12,39 @@ from panda3d.bullet import BulletPlaneShape
 from panda3d.core import Vec3
 from panda3d.core import NodePath
 
+
 class Track(object):
+    def __init__(self, bulletWorld):
 
-  def __init__(self, bulletWorld):
+        # model used as collision mesh
+        collisionModel = loader.loadModel('models/walledTrack')
+        # model used as display model
+        model = loader.loadModel('models/FullTrack')
 
-    #model used as collision mesh
-    collisionModel = loader.loadModel('models/walledTrack')
-    #model used as display model
-    model = loader.loadModel('models/FullTrack')
+        tex = loader.loadTexture("models/tex/Main.png")
+        model.setTexture(tex)
+        # renders track from two camera views
+        model.setTwoSided(True)
 
-    tex = loader.loadTexture("models/tex/Main.png")
-    model.setTexture(tex)
+        mesh = BulletTriangleMesh()
+        for geomNP in collisionModel.findAllMatches('**/+GeomNode'):
+            geomNode = geomNP.node()
+            ts = geomNP.getTransform(collisionModel)
+            for geom in geomNode.getGeoms():
+                mesh.addGeom(geom, ts)
 
-    mesh = BulletTriangleMesh()
-    for geomNP in collisionModel.findAllMatches('**/+GeomNode'):
-        geomNode = geomNP.node()
-        ts = geomNP.getTransform(collisionModel)
-        for geom in geomNode.getGeoms():
-            mesh.addGeom(geom, ts)
+        shape = BulletTriangleMeshShape(mesh, dynamic=False)
 
-    shape = BulletTriangleMeshShape(mesh, dynamic=False)
+        self.rigidNode = BulletRigidBodyNode('Heightfield')
+        self.rigidNode.notifyCollisions(False)
+        np = render.attachNewNode(self.rigidNode)
+        np.node().addShape(shape)
 
-    self.rigidNode = BulletRigidBodyNode('Heightfield')
-    self.rigidNode.notifyCollisions(False)
-    np = render.attachNewNode(self.rigidNode)
-    np.node().addShape(shape)
+        model.reparentTo(np)
+        np.setScale(70)
+        np.setPos(0, 0, -5)
+        np.setCollideMask(BitMask32.allOn())
+        np.node().notifyCollisions(False)
+        bulletWorld.attachRigidBody(np.node())
 
-    model.reparentTo(np)
-    np.setScale(70)
-    np.setPos(0, 0, -5)
-    np.setCollideMask(BitMask32.allOn())
-    np.node().notifyCollisions(False)
-    bulletWorld.attachRigidBody(np.node())
-
-    self.hf = np.node() # To enable/disable debug visualisation
+        self.hf = np.node()  # To enable/disable debug visualisation
