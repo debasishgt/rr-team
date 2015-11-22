@@ -60,7 +60,7 @@ class World(DirectObject):
     def __init__(self):
 
         self.keyMap = {"hello": 0, "left": 0, "right": 0, "forward": 0, "backward": 0, "cam-left": 0, "cam-right": 0,
-                       "chat0": 0, "chat1": 0}
+                       "chat0": 0, "pow1": 0, "pow2": 0, "pow3": 0}
         base.win.setClearColor(Vec4(0, 0, 0, 1))
 
         # Network Setup
@@ -170,10 +170,9 @@ class World(DirectObject):
         self.accept("h-up", self.setKey, ["hello", 0])
         self.accept("0", self.setKey, ["chat0", 1])
         self.accept("0-up", self.setKey, ["chat0", 0])
-        self.accept("1", self.setKey, ["chat1", 1])
-        self.accept("1-up", self.setKey, ["chat1", 0])
-        self.accept("l", self.setKey, ["users", 1])
-        self.accept("l-up", self.setKey, ["users", 0])
+        self.accept("1", self.use_powerup1)
+        self.accept("2", self.use_powerup2)
+        self.accept("3", self.use_powerup3)
 
         taskMgr.add(self.move, "moveTask")
 
@@ -200,6 +199,21 @@ class World(DirectObject):
 
     #         self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
     #         taskMgr.add(self.enterGame,"EnterGame")
+
+    def use_powerup1(self):
+        self.use_powerup(1)
+
+    def use_powerup2(self):
+        self.use_powerup(2)
+
+    def use_powerup3(self):
+        self.use_powerup(3)
+
+    def use_powerup(self, num):
+        if self.mainCharRef.power_ups[num - 1] == 0:
+            print "power-up slot empty"
+        else:
+            print "power-up", num, "used"
 
     def doExit(self):
         self.cleanup()
@@ -381,6 +395,14 @@ class World(DirectObject):
                 self.mainCharRef.walk()
                 self.isMoving = False
 
+        # use power-ups
+        if self.keyMap["pow1"] != 0:
+            print "power up 1 activated"
+        if self.keyMap["pow2"] != 0:
+            print "power up 2 activated"
+        if self.keyMap["pow3"] != 0:
+            print "power up 3 activated"
+
         # If the camera is too far from ralph, move it closer.
         # If the camera is too close to ralph, move it farther.
 
@@ -477,7 +499,11 @@ class World(DirectObject):
         if self.isMoving == True:
             moving = self.mainChar.getPos() - self.previousPos
 
-            self.cManager.sendRequest(Constants.CMSG_MOVE, [moving.getX(), moving.getY(), moving.getZ()])
+            self.cManager.sendRequest(Constants.CMSG_MOVE,
+                                      [moving.getX(), moving.getY(), moving.getZ(), self.mainCharRef.actor.getH(),
+                                       self.mainCharRef.actor.getP(),
+                                       self.mainCharRef.actor.getR(), " "])
+
 
             # self.cManager.sendRequest(Constants.RAND_FLOAT, 1.0)
             self.previousPos = self.mainChar.getPos()

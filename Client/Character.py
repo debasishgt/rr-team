@@ -40,6 +40,7 @@ class Character:
         self.health = 100
         self.a_timer_start = time.time()
         self.a_timer_end = time.time()
+        self.power_ups = [0, 0, 0]
 
         if type == 0:
             self.actor = Actor("models/batcar")
