@@ -14,7 +14,9 @@ class RequestMove(ServerRequest):
             pkg.addFloat32(args[1])
             pkg.addFloat32(args[2])
             pkg.addFloat32(args[3])
-            pkg.addString(args[4])
+            pkg.addFloat32(args[4])
+            pkg.addFloat32(args[5])
+            pkg.addString(args[6])
 
             self.cWriter.send(pkg, self.connection)
 
