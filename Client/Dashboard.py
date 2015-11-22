@@ -9,9 +9,9 @@ from panda3d.core import TransparencyAttrib
 
 class Dashboard(DirectObject):
     def __init__(self, character, taskMgr):
-        self.font_courier = loader.loadFont('models/cour.ttf')
-        self.total_players = 1
-        self.rank = 1
+        self.font_digital = loader.loadFont('models/font/SFDigitalReadout-Heavy.ttf')
+        self.total_players = 30
+        self.rank = 21
         self.main_char = character
         self.speed = "0.0 km/h"
         self.start_time = datetime.datetime.now()
@@ -22,7 +22,7 @@ class Dashboard(DirectObject):
 
         # Timer
         self.display_timer = OnscreenText(text=str(self.game_time), style=1, fg=(1, 1, 1, 1), pos=(0, .9), scale=.1,
-                                          font=self.font_courier)
+                                          font=self.font_digital)
 
         # Mini-Map
         self.mini_map = OnscreenImage(image="models/dashb/minimap.png", scale=.15, pos=(-1.15, 0, .8))
@@ -31,27 +31,29 @@ class Dashboard(DirectObject):
         # Speedometer
         self.speed_img = OnscreenImage(image="models/dashb/speedometer.png", scale=.5, pos=(1.1, 0, -.95))
         self.speed_img.setTransparency(TransparencyAttrib.MAlpha)
-        # Rank
-        self.display_rank = OnscreenText(text=str(self.rank), style=1, fg=(1, 1, 1, 1),
-                                         pos=(-.8, .85), align=TextNode.ALeft,
-                                         scale=.15)
-        OnscreenText(text="/", style=1, fg=(1, 1, 1, 1),
-                     pos=(-.7, .85), align=TextNode.ALeft,
-                     scale=.18)
-        self.display_players = OnscreenText(text=str(self.total_players), style=1, fg=(1, 1, 1, 1),
-                                            pos=(-.6, .85), align=TextNode.ALeft,
-                                            scale=.15)
+        OnscreenText(text="km\n/h", style=1, fg=(1, 1, 1, 1),
+                     font=self.font_digital, scale=.07, pos=(1.25, -.92))
 
-        # Ranking
-        OnscreenText(text="1:", style=1, fg=(1, 1, 1, 1),
-                     pos=(-1.3, .5), align=TextNode.ALeft,
-                     scale=.05)
-        OnscreenText(text="2:", style=1, fg=(1, 1, 1, 1),
-                     pos=(-1.3, .45), align=TextNode.ALeft,
-                     scale=.05)
-        OnscreenText(text="3:", style=1, fg=(1, 1, 1, 1),
-                     pos=(-1.3, .4), align=TextNode.ALeft,
-                     scale=.05)
+        # Your Rank
+        OnscreenText(text="Rank", style=1, fg=(1, 1, 1, 1), pos=(-.9, .89), align=TextNode.ALeft,
+                     font=self.font_digital, scale=.06)
+        rank = str(self.rank) + "/" + str(self.total_players)
+        self.display_rank = OnscreenText(text=rank, style=1, fg=(1, 1, 1, 1),
+                                         pos=(-.8, .85), align=TextNode.ALeft,
+                                         scale=.15, font=self.font_digital)
+        OnscreenText(text="Players\nLeft", style=1, fg=(1, 1, 1, 1), pos=(-.5, .89), align=TextNode.ALeft,
+                     font=self.font_digital, scale=.06)
+
+        # Leaderboard Ranking
+        self.leader1 = OnscreenText(text="1:", style=1, fg=(1, 1, 1, 1),
+                                    pos=(-1.3, .5), align=TextNode.ALeft,
+                                    scale=.07, font=self.font_digital)
+        self.leader2 = OnscreenText(text="2:", style=1, fg=(1, 1, 1, 1),
+                                    pos=(-1.3, .45), align=TextNode.ALeft,
+                                    scale=.07, font=self.font_digital)
+        self.leader3 = OnscreenText(text="3:", style=1, fg=(1, 1, 1, 1),
+                                    pos=(-1.3, .4), align=TextNode.ALeft,
+                                    scale=.07, font=self.font_digital)
 
         # Power-ups
         OnscreenText(text="1", style=1, fg=(1, 1, 1, 1),
@@ -69,28 +71,28 @@ class Dashboard(DirectObject):
 
         # Display Speed
         self.display_speed = OnscreenText(text=self.speed, style=1, fg=(1, 1, 1, 1),
-                                          pos=(1.3, -0.95), align=TextNode.ARight, scale=.07, font=self.font_courier)
+                                          pos=(1.3, -0.95), align=TextNode.ARight, scale=.07, font=self.font_digital)
 
         taskMgr.doMethodLater(.1, self.show_speed, 'updateSpeed')
         taskMgr.doMethodLater(.1, self.show_timer, 'updateTimer')
         taskMgr.doMethodLater(.1, self.update_rank, 'updateRank')
 
     def show_speed(self, task):
-        self.speed = str(format(self.main_char.vehicle.getCurrentSpeedKmHour(), '0.2f')) + "km/h"
+        self.speed = str(format(self.main_char.vehicle.getCurrentSpeedKmHour(), '0.2f'))
         # print self.speed
 
         # Update Speed Display
         self.display_speed.destroy()
         self.display_speed = OnscreenText(text=self.speed, style=3, fg=(1, 1, 1, 1),
-                                          pos=(1.3, -0.95), align=TextNode.ARight, scale=.1, font=self.font_courier)
+                                          pos=(1.2, -0.95), align=TextNode.ARight, scale=.15, font=self.font_digital)
         return task.cont
 
     def show_timer(self, task):
         self.time_elapsed = datetime.datetime.now() - self.start_time
         game_time = str(datetime.timedelta(minutes=8) - self.time_elapsed)[2:11]
         self.display_timer.destroy()
-        self.display_timer = OnscreenText(text=game_time, style=3, fg=(1, 1, 1, 1), pos=(0, .9), scale=.1,
-                                          font=self.font_courier)
+        self.display_timer = OnscreenText(text=game_time, style=3, fg=(1, 1, 1, 1), pos=(0, .9), scale=.15,
+                                          font=self.font_digital)
         return task.cont
 
     # server updates client time in ms
@@ -98,14 +100,29 @@ class Dashboard(DirectObject):
         self.time_elapsed = datetime.timedelta(milliseconds=server_time)
 
     def update_rank(self, task):
-        self.display_players.destroy()
         self.display_rank.destroy()
 
-        # Rank
-        self.display_rank = OnscreenText(text=str(self.rank), style=1, fg=(1, 1, 1, 1),
+        # Your Rank
+        rank = str(self.rank) + "/" + str(self.total_players)
+        self.display_rank = OnscreenText(text=rank, style=1, fg=(1, 1, 1, 1),
                                          pos=(-.8, .85), align=TextNode.ALeft,
-                                         scale=.15)
-        self.display_players = OnscreenText(text=str(self.total_players), style=1, fg=(1, 1, 1, 1),
-                                            pos=(-.6, .85), align=TextNode.ALeft,
-                                            scale=.15)
+                                         scale=.15, font=self.font_digital)
+
+        # Leader board
+        self.leader1.destroy()
+        self.leader2.destroy()
+        self.leader3.destroy()
+        lead1 = "1:"
+        lead2 = "2:"
+        lead3 = "3:"
+        self.leader1 = OnscreenText(text=lead1, style=1, fg=(1, 1, 1, 1),
+                                    pos=(-1.3, .5), align=TextNode.ALeft,
+                                    scale=.07, font=self.font_digital)
+        self.leader2 = OnscreenText(text=lead2, style=1, fg=(1, 1, 1, 1),
+                                    pos=(-1.3, .45), align=TextNode.ALeft,
+                                    scale=.07, font=self.font_digital)
+        self.leader3 = OnscreenText(text=lead3, style=1, fg=(1, 1, 1, 1),
+                                    pos=(-1.3, .4), align=TextNode.ALeft,
+                                    scale=.07, font=self.font_digital)
+
         return task.cont
