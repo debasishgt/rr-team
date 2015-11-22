@@ -27,10 +27,11 @@ public class RequestPowerPickUp extends GameRequest {
 		if(this.client.getServer().getGameSessionByRoomId(roomId).getPowerups(powerId)){
 			//if the powerup is available, the powerId will be sent back
 			responsePowerUpPickUp.setPowerId(powerId);
+			client.getServer().addResponseForRoomExcludingPlayer(client.getPlayer().getRoom().getId(),
+					client.getPlayer().getID(), responsePowerUpPickUp);
 		}else{
 			//if the powerup is not available, 0 will be sent back
-			responsePowerUpPickUp.setPowerId(0);
+			responsePowerUpPickUp.setPowerId(-1);
 		}
-		client.getServer().addResponseForAllOnlinePlayers(client.getId(), responsePowerUpPickUp);
 	}
 }

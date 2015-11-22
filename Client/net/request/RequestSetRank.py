@@ -8,7 +8,7 @@ class RequestSetRank(ServerRequest):
 
         try:
             pkg = PyDatagram()
-            pkg.addUint16(Constants.CMSG_COLLISION)
+            pkg.addUint16(Constants.CMSG_SET_RANK)
             pkg.addInt32(rank)
 
             self.cWriter.send(pkg, self.connection)

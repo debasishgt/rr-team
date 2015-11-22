@@ -8,8 +8,8 @@ class ResponseChangeHealth(ServerResponse):
     def execute(self, data):
 
         try:
-            self.playerId = data.getInt32()
-            self.healthChange = data.getInt32()
+            username = data.getInt32()
+            healthChange = data.getInt32()
 
 
             # Need to set Heading and use keys
@@ -18,9 +18,7 @@ class ResponseChangeHealth(ServerResponse):
                 # character.setHealth(self.healthChange)
                 break
 
-            print "ResponseMove - ",self.playerId," moved ", self.x, " ", self.y, " ", self.z, " ", self.h
-
-            #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
+            print "ResponseChangeHealth - ",username, " ", healthChange
 
         except:
             self.log('Bad [' + str(Constants.RAND_STRING) + '] String Response')

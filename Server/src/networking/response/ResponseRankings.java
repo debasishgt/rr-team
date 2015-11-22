@@ -23,7 +23,6 @@ public class ResponseRankings extends GameResponse {
 			packet.addString(player.getUsername());
 			packet.addInt32(rankings.get(player));
 		}
-		// add the data need to pass to the client here
         return packet.getBytes();
 	}
 	

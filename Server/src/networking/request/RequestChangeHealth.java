@@ -28,10 +28,9 @@ public class RequestChangeHealth extends GameRequest {
 
 	@Override
 	public void doBusiness() throws Exception {
-
 		System.out.println(healthChange);
         responseChangeHealth.setUsername(client.getPlayer().getUsername()); 
         responseChangeHealth.setHealthChange(healthChange); 
-        client.getServer().addResponseForAllOnlinePlayers(client.getId(), (GameResponse) responseChangeHealth); 
+        client.getServer().addResponseForRoom(client.getPlayer().getRoom().getId(), responseChangeHealth);
     }
 }
