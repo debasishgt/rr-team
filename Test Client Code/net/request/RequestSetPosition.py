@@ -1,0 +1,15 @@
+from traceback import print_exc
+
+from direct.distributed.PyDatagram import PyDatagram
+from common.Constants import Constants
+from net.request.ServerRequest import ServerRequest
+
+class RequestSetPosition(ServerRequest):
+    def send(self, username = None):
+        try:
+            pkg = PyDatagram()
+            pkg.addUint16(Constants.CMSG_SET_POSITION)
+            self.cWriter.send(pkg, self.connection)
+        except:
+            self.log('Bad [' + str(Constants.CMSG_SET_POSITION) + '] Int Request')
+            print_exc()

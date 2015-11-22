@@ -8,7 +8,7 @@ class ResponseAccountInformation(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
+            self.msg = data.getInt32()
             print "ResponseAccountInformation - ", self.msg
 
         except:

@@ -11,13 +11,11 @@ class RequestCollision(ServerRequest):
 
         try:
             user_data = data.split()
-            playerid = int(user_data[0])
+            username = user_data[0]
             damage = int(user_data[1])
-            print playerid
-            print damage
             pkg = PyDatagram()
             pkg.addUint16(Constants.CMSG_COLLISION)
-            pkg.addInt32(playerid)
+            pkg.addString(username)
             pkg.addInt32(damage)
             self.cWriter.send(pkg, self.connection)
         except:

@@ -15,7 +15,9 @@ class RequestMove(ServerRequest):
             y = float(user_data[1])
             z = float(user_data[2])
             h = float(user_data[3])
-            keys = str(user_data[4])
+            p = float(user_data[4])
+            r = float(user_data[5])
+            keys = str(user_data[6])
             print x
             print y
             print z
@@ -27,6 +29,8 @@ class RequestMove(ServerRequest):
             pkg.addFloat32(y)
             pkg.addFloat32(z)
             pkg.addFloat32(h)
+            pkg.addFloat32(p)
+            pkg.addFloat32(r)
             pkg.addString(keys)
             self.cWriter.send(pkg, self.connection)
         except:

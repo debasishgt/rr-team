@@ -8,8 +8,8 @@ class ResponseCollision(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
-            print "ResponseCollision - ", self.msg
+            self.validate = data.getInt32()
+            print "\nResponseCollision - ", self.validate
 
         except:
             self.log('Bad [' + str(Constants.SMSG_COLLISION) + '] String Response')

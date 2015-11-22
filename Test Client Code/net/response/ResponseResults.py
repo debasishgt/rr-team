@@ -8,12 +8,11 @@ class ResponseResults(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
-
-            print "ResponseResults - ", self.msg
-
-            #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
-
+            print "\nResponseResults - "
+            self.place = data.getInt32()
+            self.numOfPlayers = data.getInt32()
+            print self.place
+            print self.numOfPlayers
         except:
             self.log('Bad [' + str(Constants.SMSG_RESULTS) + '] String Response')
             print_exc()

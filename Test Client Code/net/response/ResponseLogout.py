@@ -8,8 +8,7 @@ class ResponseLogout(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
-            print "ResponseLogout - ", self.msg
+            print "ResponseLogout - "
 
         except:
             self.log('Bad [' + str(Constants.SMSG_DISCONNECT) + '] String Response')

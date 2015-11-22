@@ -8,8 +8,8 @@ class ResponseDead(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
-            print "ResponseDead - ", self.msg
+            self.username = data.getString()
+            print "ResponseDead - ", self.username
 
         except:
             self.log('Bad [' + str(Constants.SMSG_AUTH) + '] String Response')

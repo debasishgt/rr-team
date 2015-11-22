@@ -8,8 +8,9 @@ class ResponseChat(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
-            print "ResponseChat - ", self.msg
+            self.user = data.getString()
+            self.msg  = data.getString() 
+            print "ResponseChat - ", self.user, self.msg
 
         except:
             self.log('Bad [' + str(Constants.SMSG_CHAT) + '] String Response')

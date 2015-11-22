@@ -8,11 +8,8 @@ class ResponseRegistration(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
-
-            print "ResponseRegistration - ", self.msg
-
-            #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')
+            self.msg = data.getInt32()
+            print "\nResponseRegistration - ", self.msg
 
         except:
             self.log('Bad [' + str(Constants.SMSG_REGISTER) + '] String Response')

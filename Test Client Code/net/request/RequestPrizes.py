@@ -13,7 +13,7 @@ class RequestPrizes(ServerRequest):
             print username
             pkg = PyDatagram()
             pkg.addUint16(Constants.CMSG_PRIZES)
-            pkg.addString(username)
+            #pkg.addString(username)
             self.cWriter.send(pkg, self.connection)
         except:
             self.log('Bad [' + str(Constants.CMSG_PRIZES) + '] Request')

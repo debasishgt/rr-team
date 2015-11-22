@@ -7,8 +7,11 @@ class ResponsePowerUpPickUp(ServerResponse):
 
     def execute(self, data):
         try:
-            self.msg = data.getString()
-            print "ResponsePowerUpPickUp - ", self.msg
+            print "\nResponsePowerUpPickUp - "
+            self.username = data.getString()
+            self.power = data.getInt32()
+            print self.username
+            print self.power
 
         except:
             self.log('Bad [' + str(Constants.SMSG_POWER_PICKUP) + '] String Response')

@@ -43,7 +43,7 @@ class Main(DirectObject):
     
     def menu(self, task):
         # Accept raw_input choice
-        choice = input("1 - Rand int\n2 - Rand string\n3 - Rand short\n4 - Rand float\n6 - Exit\n101 - login\n102 - Disconnect\n103 - Register\n104 - Forget Password\n105 - Create Character\n106 - Chat\n107 - Move\n108 - Power Up\n109 - Power Pick Up\n110 - Health\n122 - Results\n123 - Rankings\n124 - Prizes\n125 - Collistion\n126 - Dead\n127 - Ready\n128 - Player\n")
+        choice = input("\n\n0 - Request Server\n1 - Rand int\n2 - Rand string\n3 - Rand short\n4 - Rand float\n6 - Exit\n101 - login\n102 - Disconnect\n103 - Register\n104 - Forget Password\n105 - Create Character\n106 - Chat\n107 - Move\n108 - Power Up\n109 - Power Pick Up\n110 - Health\n122 - Results\n123 - Rankings\n124 - Prizes\n125 - Collistion\n126 - Dead\n127 - Ready\n128 - SetPosition\n130 - Set Rank\n")
         
         msg = 0
         username = 0
@@ -53,6 +53,8 @@ class Main(DirectObject):
         elif choice is 2: msg = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for x in range(7))
         elif choice is 3: msg = random.randint(0, 2**16 - 1)
         elif choice is 4: msg = 100 * random.random()
+        elif choice is 0:
+            self.cManager.sendRequest(choice,0)
         elif choice is 101:
             username = "vatsal"
             password = "sevak"
@@ -80,40 +82,39 @@ class Main(DirectObject):
             y = 0
             z = 0
             h = 0
+            p = 0
+            r = 0
             keys = "keys"
-            self.cManager.sendRequest(choice, ""+str(x)+" "+str(y)+" "+str(z)+" "+str(h)+" "+keys)
+            self.cManager.sendRequest(choice, ""+str(x)+" "+str(y)+" "+str(z)+" "+str(h)+" "+str(p)+" "+str(r)+" "+keys)
         elif choice is 108: 
-            x = 5
-            self.cManager.sendRequest(choice, x)
+            powerUp = 5
+            self.cManager.sendRequest(choice, powerUp)
         elif choice is 109:
-            x = 10
-            self.cManager.sendRequest(choice, x)
+            powerId = 10
+            self.cManager.sendRequest(choice, powerId)
         elif choice is 110:
-            username = "vatsal"
+            #username = "vatsal"
             healthChange = 2
-            self.cManager.sendRequest(choice, username+" "+str(healthChange))
+            self.cManager.sendRequest(choice, healthChange)
         elif choice is 122:
             gameId = 1
             self.cManager.sendRequest(choice, gameId)
         elif choice is 123:
-            gameId = 1
-            self.cManager.sendRequest(choice, gameId)
+            self.cManager.sendRequest(choice)
         elif choice is 124:
-            username = "vatsal"
-            self.cManager.sendRequest(choice, username)
+            self.cManager.sendRequest(choice)
         elif choice is 125:
-            playerId = 1
             damage = 1
-            self.cManager.sendRequest(choice, ""+str(playerId)+" "+str(damage))
+            self.cManager.sendRequest(choice, ""+"username"+" "+str(damage))
         elif choice is 126:
-            dead = 1
-            self.cManager.sendRequest(choice, dead)
+            self.cManager.sendRequest(choice)
         elif choice is 127:
-            ready = 1
-            self.cManager.sendRequest(choice, ready)
+            self.cManager.sendRequest(choice)
         elif choice is 128:
-            playerCount = 1
-            self.cManager.sendRequest(choice, playerCount)
+            self.cManager.sendRequest(choice)
+        elif choice is 130:
+            rank = 1
+            self.cManager.sendRequest(choice,rank)
         elif choice is 6: 
             sys.exit()
         else: print "Invalid input"

@@ -4,7 +4,7 @@ from net.response.ResponseRandomInt import ResponseRandomInt
 from net.response.ResponseRandomString import ResponseRandomString
 from net.response.ResponseRandomShort import ResponseRandomShort
 from net.response.ResponseRandomFloat import ResponseRandomFloat
-from net.response.ResponseAuth import ResponseAuth
+from net.response.ResponseLogin import ResponseLogin
 from net.response.ResponseLogout import ResponseLogout
 from net.response.ResponseRegistration import ResponseRegistration
 from net.response.ResponseAccountInformation import ResponseAccountInformation
@@ -20,7 +20,11 @@ from net.response.ResponsePrizes import ResponsePrizes
 from net.response.ResponseCollision import ResponseCollision
 from net.response.ResponseDead import ResponseDead
 from net.response.ResponseReady import ResponseReady
-from net.response.ResponsePlayer import ResponsePlayer
+from net.response.ResponseSetPosition import ResponseSetPosition
+from net.response.ResponseServer import ResponseServer
+from net.response.ResponseTime import ResponseTime
+from net.response.ResponseSetRank import ResponseSetRank
+from net.response.ResponseSetReady import ResponseSetReady
 
 
 class ServerResponseTable:
@@ -37,7 +41,7 @@ class ServerResponseTable:
         self.add(Constants.RAND_SHORT, 'ResponseRandomShort')
         self.add(Constants.RAND_FLOAT, 'ResponseRandomFloat')
         
-        self.add(Constants.SMSG_AUTH, 'ResponseAuth')
+        self.add(Constants.SMSG_AUTH, 'ResponseLogin')
         self.add(Constants.SMSG_DISCONNECT,'ResponseLogout')
         self.add(Constants.SMSG_REGISTER,'ResponseRegistration')
         self.add(Constants.SMSG_FORGOT_PASSWORD,'ResponseAccountInformation')
@@ -53,8 +57,10 @@ class ServerResponseTable:
         self.add(Constants.SMSG_COLLISION,'ResponseCollision')
         self.add(Constants.SMSG_DEAD,'ResponseDead')
         self.add(Constants.SMSG_READY,'ResponseReady')
-        self.add(Constants.SMSG_PLAYER,'ResponsePlayer')
-        self.add(Constants.SMSG_TIMER, 'ResponseTimer')
+        self.add(Constants.SMSG_SET_POSITION,'ResponseSetPosition')
+        self.add(Constants.SMSG_TIME, 'ResponseTime')
+        self.add(Constants.SMSG_SET_RANK, 'ResponseSetRank')
+        self.add(Constants.SMSG_SERVER, 'ResponseServer')
 
     def add(self, constant, name):
         """Map a numeric response code with the name of an existing response module."""

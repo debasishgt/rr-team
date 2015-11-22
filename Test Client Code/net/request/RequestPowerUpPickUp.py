@@ -10,7 +10,6 @@ class RequestPowerUpPickUp(ServerRequest):
     def send(self, powerId = None):
 
         try:
-            print powerId
             pkg = PyDatagram()
             pkg.addUint16(Constants.CMSG_POWER_PICKUP)
             pkg.addInt32(powerId)

@@ -8,8 +8,11 @@ class ResponseChangeHealth(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
-            print "ResponseChangeHealth - ", self.msg
+            print "\nResponseChangeHealth - "
+            self.username = data.getString()
+            self.healthChange = data.getInt32()
+            print self.username
+            print self.healthChange
 
         except:
             self.log('Bad [' + str(Constants.SMSG_HEALTH) + '] String Response')

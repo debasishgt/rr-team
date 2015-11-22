@@ -8,8 +8,8 @@ class ResponseRankings(ServerResponse):
     def execute(self, data):
 
         try:
-            self.msg = data.getString()
-            print "ResponseRankings - ", self.msg
+            self.msg = data.getInt32()
+            print "\nResponseRankings - ", self.msg
 
         except:
             self.log('Bad [' + str(Constants.SMSG_RANKINGS) + '] String Response')

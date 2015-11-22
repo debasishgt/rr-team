@@ -10,10 +10,10 @@ class RequestRankings(ServerRequest):
     def send(self, gameId = None):
 
         try:
-            print gameId
+            #print gameId
             pkg = PyDatagram()
             pkg.addUint16(Constants.CMSG_RANKINGS)
-            pkg.addInt32(gameId)
+            #pkg.addInt32(gameId)
             self.cWriter.send(pkg, self.connection)
         except:
             self.log('Bad [' + str(Constants.CMSG_RANKINGS) + '] Request')
