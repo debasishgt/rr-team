@@ -43,7 +43,7 @@ class Character:
         self.power_ups = [0, 0, 0]
 
         if type == 0:
-            self.actor = Actor("models/batcar")
+            self.actor = Actor("models/batmobile-chassis")
             self.actor.setScale(0.7)
             carRadius = 3
         elif type == 1:

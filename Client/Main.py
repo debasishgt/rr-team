@@ -7,6 +7,7 @@ from panda3d.core import Vec3, Vec4, BitMask32
 from direct.gui.OnscreenText import OnscreenText
 from direct.actor.Actor import Actor
 from direct.showbase.DirectObject import DirectObject
+from direct.showbase.InputStateGlobal import inputState
 import random, sys, os, math
 from panda3d.core import Point3, Plane
 from panda3d.core import CollisionTraverser, CollisionNode, CollisionSphere
@@ -18,6 +19,11 @@ from panda3d.core import NodePath
 from panda3d.bullet import BulletVehicle
 from panda3d.bullet import BulletWorld, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletPlaneShape, \
     BulletRigidBodyNode
+
+from Track import Track
+from Vehicle import Vehicle
+from Camera import Camera
+from SkyDome import SkyDome
 # afrom Chat import Chat
 import time
 
@@ -59,8 +65,17 @@ class World(DirectObject):
 
     def __init__(self):
 
+        base.setFrameRateMeter(True)
+        #input states
+        inputState.watchWithModifiers('forward', 'w')
+        inputState.watchWithModifiers('left', 'a')
+        inputState.watchWithModifiers('brake', 's')
+        inputState.watchWithModifiers('right', 'd')
+        inputState.watchWithModifiers('turnLeft', 'q')
+        inputState.watchWithModifiers('turnRight', 'e')
+
         self.keyMap = {"hello": 0, "left": 0, "right": 0, "forward": 0, "backward": 0, "cam-left": 0, "cam-right": 0,
-                       "chat0": 0, "pow1": 0, "pow2": 0, "pow3": 0}
+                       "chat0": 0, "pow1": 0, "pow2": 0, "pow3": 0, "reset": 0}
         base.win.setClearColor(Vec4(0, 0, 0, 1))
 
         # Network Setup
@@ -91,7 +106,8 @@ class World(DirectObject):
         #
         self.initializeBulletWorld(False)
 
-        self.createEnvironment()
+        #self.createEnvironment()
+        Track(self.bulletWorld)
 
         # Collision Code
         # Initialize the collision traverser.
@@ -100,9 +116,11 @@ class World(DirectObject):
         # self.pusher = CollisionHandlerPusher()
 
         # Create the main character, Ralph
-        self.mainCharRef = Character(self, self.bulletWorld, 0, "Me")
+
+        self.mainCharRef = Vehicle(self.bulletWorld, (0, 25, 16, 0, 0, 0))
+        #self.mainCharRef = Character(self, self.bulletWorld, 0, "Me")
         self.mainChar = self.mainCharRef.chassisNP
-        self.mainChar.setPos(0, 25, 16)
+        #self.mainChar.setPos(0, 25, 16)
 
         self.TestChar = Character(self, self.bulletWorld, 0, "test")
         self.TestChar.actor.setPos(0, 0, 0)
@@ -173,15 +191,20 @@ class World(DirectObject):
         self.accept("1", self.use_powerup1)
         self.accept("2", self.use_powerup2)
         self.accept("3", self.use_powerup3)
+        self.accept("r", self.doReset)
 
         taskMgr.add(self.move, "moveTask")
 
         # Game state variables
         self.isMoving = False
 
+        # Sky Dome
+        self.sky = SkyDome()
+
         # Set up the camera
-        base.disableMouse()
-        base.camera.setPos(self.mainChar.getX(), self.mainChar.getY() + 10, self.mainChar.getZ() + 2)
+        self.camera = Camera(self.mainChar)
+        #base.disableMouse()
+        #base.camera.setPos(self.mainChar.getX(), self.mainChar.getY() + 10, self.mainChar.getZ() + 2)
 
         # Create some lighting
         ambientLight = AmbientLight("ambientLight")
@@ -228,6 +251,9 @@ class World(DirectObject):
         self.cManager.closeConnection()
         self.world = None
         self.outsideWorldRender.removeNode()
+
+    def doReset(self):
+        self.mainCharRef.reset()
 
     def enterGame(self, task):
         if self.state == "Login":
@@ -332,74 +358,82 @@ class World(DirectObject):
         # If the camera-left key is pressed, move camera left.
         # If the camera-right key is pressed, move camera right.
 
-        dt = globalClock.getDt()
+        #dt = globalClock.getDt()
 
-        base.camera.lookAt(self.mainChar)
-        if (self.keyMap["cam-left"] != 0):
-            base.camera.setX(base.camera, -20 * dt)
-        if (self.keyMap["cam-right"] != 0):
-            base.camera.setX(base.camera, +20 * dt)
+        #update camera
+        self.camera.update(self.mainChar)
+
+        #base.camera.lookAt(self.mainChar)
+        #if (self.keyMap["cam-left"] != 0):
+        #    base.camera.setX(base.camera, -20 * dt)
+        #if (self.keyMap["cam-right"] != 0):
+        #    base.camera.setX(base.camera, +20 * dt)
 
         # save mainChar's initial position so that we can restore it,
         # in case he falls off the map or runs into something.
-
-        startpos = self.mainChar.getPos()
-
+        #
+        #startpos = self.mainChar.getPos()
+        #
         # If a move-key is pressed, move ralph in the specified direction.
         # If a move-key is pressed, move ralph in the specified direction.
         # Steering info
-        steering = 0.0  # degree
-        steeringClamp = 70.0  # degree
-        steeringIncrement = 180.0  # degree per second
-
+        #steering = 0.0  # degree
+        #steeringClamp = 70.0  # degree
+        #steeringIncrement = 180.0  # degree per second
+        #
         # Process input
-        engineForce = 0.0
-        brakeForce = 0.0
-        if (self.keyMap["forward"] != 0):
-            # checks for vehicle's max speed
-            if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= self.mainCharRef.max_speed:
-                engineForce = 2000.0
-                brakeForce = 0.0
-
-        if (self.keyMap["backward"] != 0):
-            if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= 0:
-                engineForce = -500.0
-                brakeForce = 0.0
-            else:
-                engineForce = 0.0
-                brakeForce = 100.0
-
-        if (self.keyMap["left"] != 0):
-            steering += dt * steeringIncrement
-            steering = min(steering, steeringClamp)
-
-        if (self.keyMap["right"] != 0):
-            steering -= dt * steeringIncrement
-            steering = max(steering, -steeringClamp)
-
+        #engineForce = 0.0
+        #brakeForce = 0.0
+        #if (self.keyMap["forward"] != 0):
+        #    # checks for vehicle's max speed
+        #    if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= self.mainCharRef.max_speed:
+        #        engineForce = 2000.0
+        #        brakeForce = 0.0
+        #
+        #if (self.keyMap["backward"] != 0):
+        #    if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= 0:
+        #        engineForce = -500.0
+        #        brakeForce = 0.0
+        #    else:
+        #        engineForce = 0.0
+        #        brakeForce = 100.0
+        #
+        #if (self.keyMap["left"] != 0):
+        #    steering += dt * steeringIncrement
+        #    steering = min(steering, steeringClamp)
+        #
+        #if (self.keyMap["right"] != 0):
+        #    steering -= dt * steeringIncrement
+        #    steering = max(steering, -steeringClamp)
+        #
         # Apply steering to front wheels
-        self.mainCharRef.vehicle.setSteeringValue(steering, 0)
-        self.mainCharRef.vehicle.setSteeringValue(steering, 1)
-
+        #self.mainCharRef.vehicle.setSteeringValue(steering, 0)
+        #self.mainCharRef.vehicle.setSteeringValue(steering, 1)
+        #
         # Apply engine and brake to rear wheels
-        self.mainCharRef.vehicle.applyEngineForce(engineForce, 2)
-        self.mainCharRef.vehicle.applyEngineForce(engineForce, 3)
-        self.mainCharRef.vehicle.setBrake(brakeForce, 2)
-        self.mainCharRef.vehicle.setBrake(brakeForce, 3)
+        #self.mainCharRef.vehicle.applyEngineForce(engineForce, 2)
+        #self.mainCharRef.vehicle.applyEngineForce(engineForce, 3)
+        #self.mainCharRef.vehicle.setBrake(brakeForce, 2)
+        #self.mainCharRef.vehicle.setBrake(brakeForce, 3)
 
         # If ralph is moving, loop the run animation.
         # If he is standing still, stop the animation.
-        if (self.keyMap["forward"] != 0) or (self.keyMap["backward"] != 0) or (self.keyMap["left"] != 0) or (
-                    self.keyMap["right"] != 0):
-            if self.isMoving is False:
-                self.mainCharRef.run()
-                self.isMoving = True
+        #if (self.keyMap["forward"] != 0) or (self.keyMap["backward"] != 0) or (self.keyMap["left"] != 0) or (
+        #            self.keyMap["right"] != 0):
+        #    if self.isMoving is False:
+        #        self.mainCharRef.run()
+        #        self.isMoving = True
+        #
+        #else:
+        #    if self.isMoving:
+        #        self.mainCharRef.walk()
+        #        self.isMoving = False
+        
+        dt = globalClock.getDt()
 
-        else:
-            if self.isMoving:
-                self.mainCharRef.walk()
-                self.isMoving = False
-
+        self.mainCharRef.processInput(inputState, dt)
+        self.bulletWorld.doPhysics(dt, 10, 0.02)
+        
         # use power-ups
         if self.keyMap["pow1"] != 0:
             print "power up 1 activated"
@@ -411,24 +445,24 @@ class World(DirectObject):
         # If the camera is too far from ralph, move it closer.
         # If the camera is too close to ralph, move it farther.
 
-        camvec = self.mainChar.getPos() - base.camera.getPos()
-        camvec.setZ(0)
-        camdist = camvec.length()
-        camvec.normalize()
-        if (camdist > 10.0):
-            base.camera.setPos(base.camera.getPos() + camvec * (camdist - 10))
-            camdist = 10.0
-        if (camdist < 5.0):
-            base.camera.setPos(base.camera.getPos() - camvec * (5 - camdist))
-            camdist = 5.0
+        #camvec = self.mainChar.getPos() - base.camera.getPos()
+        #camvec.setZ(0)
+        #camdist = camvec.length()
+        #camvec.normalize()
+        #if (camdist > 10.0):
+        #    base.camera.setPos(base.camera.getPos() + camvec * (camdist - 10))
+        #    camdist = 10.0
+        #if (camdist < 5.0):
+        #    base.camera.setPos(base.camera.getPos() - camvec * (5 - camdist))
+        #    camdist = 5.0
 
         # The camera should look in ralph's direction,
         # but it should also try to stay horizontal, so look at
         # a floater which hovers above ralph's head.
 
-        self.floater.setPos(self.mainChar.getPos())
-        self.floater.setZ(self.mainChar.getZ() + 2.0)
-        base.camera.lookAt(self.floater)
+        #self.floater.setPos(self.mainChar.getPos())
+        #self.floater.setZ(self.mainChar.getZ() + 2.0)
+        #base.camera.lookAt(self.floater)
 
         self.bulletWorld.doPhysics(dt)
 
