@@ -22,6 +22,7 @@ from net.request.RequestDead import RequestDead
 from net.request.RequestReady import RequestReady
 from net.request.RequestSetPosition import RequestSetPosition
 from net.request.RequestSetRank import RequestSetRank
+from net.request.RequestTime import RequestTime
 
 class ServerRequestTable:
     """
@@ -54,6 +55,7 @@ class ServerRequestTable:
         self.add(Constants.CMSG_READY, 'RequestReady')
         self.add(Constants.CMSG_SET_POSITION, 'RequestSetPosition')
         self.add(Constants.CMSG_SET_RANK, 'RequestSetRank')
+        self.add(Constants.CMSG_TIME, 'RequestTime')
 
     def add(self, constant, name):
         """Map a numeric request code with the name of an existing request module."""
