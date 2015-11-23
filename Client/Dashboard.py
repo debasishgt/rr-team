@@ -9,6 +9,7 @@ from panda3d.core import TransparencyAttrib
 
 class Dashboard(DirectObject):
     def __init__(self, character, taskMgr):
+        self.active = False
         self.font_digital = loader.loadFont('models/font/SFDigitalReadout-Heavy.ttf')
         self.total_players = 30
         self.rank = 21
@@ -19,6 +20,7 @@ class Dashboard(DirectObject):
         self.lead3 = ""
         self.start_time = datetime.datetime.now()
         self.time_elapsed = datetime.timedelta(milliseconds=0)
+        self.total_game_time = 8
         # insert total time
         self.game_time = datetime.timedelta(minutes=8) - self.time_elapsed
         # print self.game_time
@@ -90,9 +92,13 @@ class Dashboard(DirectObject):
                                           pos=(1.2, -0.95), align=TextNode.ARight, scale=.15, font=self.font_digital)
         return task.cont
 
+    def start_timer(self):
+        self.active = True
+
     def show_timer(self, task):
-        self.time_elapsed = datetime.datetime.now() - self.start_time
-        game_time = str(datetime.timedelta(minutes=8) - self.time_elapsed)[2:11]
+        if self.active:
+            self.time_elapsed = datetime.datetime.now() - self.start_time
+        game_time = str(datetime.timedelta(minutes=self.total_game_time) - self.time_elapsed)[2:11]
         self.display_timer.destroy()
         self.display_timer = OnscreenText(text=game_time, style=3, fg=(1, 1, 1, 1), pos=(0, .9), scale=.15,
                                           font=self.font_digital)

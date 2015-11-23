@@ -61,6 +61,7 @@ class World(DirectObject):
     host = ""
     port = 0
     players = []  # Stores the list of all the others players characters
+    control_active = False
 
     def __init__(self):
 
@@ -90,7 +91,7 @@ class World(DirectObject):
         # Post the instructions
 
         # self.title = addTitle("Panda3D Tutorial: Roaming Ralph (Walking on the Moon)")
-        # self.inst1 = addInstructions(0.95, "[ESC]: Quit")
+        self.inst1 = OnscreenText(scale=.1, text="Game starts after 3 seconds.", pos=(0, 0), fg=(1, 1, 1, 1))
         # self.inst2 = addInstructions(0.90, "[A]: Rotate Ralph Left")
         # self.inst3 = addInstructions(0.85, "[D]: Rotate Ralph Right")
         # self.inst4 = addInstructions(0.80, "[W]: Run Ralph Forward")
@@ -197,8 +198,11 @@ class World(DirectObject):
         self.state = "Login"
         self.responseValue = -1
 
-    #         self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
-    #         taskMgr.add(self.enterGame,"EnterGame")
+        #         self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
+        #         taskMgr.add(self.enterGame,"EnterGame")
+
+        # start game after 5 secs
+        taskMgr.doMethodLater(3.0, self.start_game, "start game")
 
     def use_powerup1(self):
         self.use_powerup(1)
@@ -337,7 +341,9 @@ class World(DirectObject):
 
         dt = globalClock.getDt()
 
-        self.mainCharRef.processInput(inputState, dt)
+        # if game has started, then accept user move inputs
+        if self.control_active:
+            self.mainCharRef.processInput(inputState, dt)
         self.bulletWorld.doPhysics(dt, 10, 0.02)
 
         # use power-ups
@@ -381,6 +387,19 @@ class World(DirectObject):
             self.previousPos = self.mainChar.getPos()
 
         return task.again
+
+    def start_game(self, task):
+        # self.countdown(5)
+        self.control_active = True
+        self.dashboard.active = True
+        self.inst1.destroy()
+
+    def countdown(self, count):
+        for i in range(count):
+            c = str(count - i)
+            self.count_down = OnscreenText(scale=.1, text=c, pos=(0, 0), style=1, fg=(1, 1, 1, 1))
+            time.sleep(1)
+            self.count_down.destroy()
 
 
 w = World()
