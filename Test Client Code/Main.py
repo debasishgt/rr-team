@@ -61,8 +61,8 @@ class Main(DirectObject):
         elif choice is 102:
             self.cManager.sendRequest(choice, msg)
         elif choice is 103:
-            username = "username"
-            password = "password"
+            username = "test2"
+            password = "1234"
             #email = "vatsalsevak@gmail.com"
             self.cManager.sendRequest(choice, username+" "+password)
         elif choice is 104:

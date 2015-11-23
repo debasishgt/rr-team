@@ -41,6 +41,7 @@ class Character:
         self.a_timer_start = time.time()
         self.a_timer_end = time.time()
         self.power_ups = [0, 0, 0]
+        self.playerId = playerId
 
         if type == 0:
             self.actor = Actor("models/batmobile-chassis")

@@ -13,7 +13,7 @@ class ResponseLogin(ServerResponse):
             print "ResponseLogin - ", flag
 
 
-            if flag == "1":
+            if flag == 1:
                 self.world.responseValue = 1
 
         except:

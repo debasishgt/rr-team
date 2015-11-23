@@ -4,7 +4,7 @@ from net.request.ServerRequest import ServerRequest
 
 class RequestReady(ServerRequest):
 
-    def send(self):
+    def send(self, data):
 
         try:
             pkg = PyDatagram()

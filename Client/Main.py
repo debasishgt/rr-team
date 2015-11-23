@@ -49,7 +49,7 @@ def addTitle(text):
 
 
 class World(DirectObject):
-    gameStateDict = {"Login" : 0,"CreateLobby":4, "EnterGame": 1, "BeginGame": 2, "InitializeGame"}
+    gameStateDict = {"Login" : 0,"CreateLobby":4, "EnterGame": 1, "BeginGame": 2, "InitializeGame":3}
     gameState = -1
     # Login , EnterGame , BeginGame
     responseValue = -1
@@ -62,7 +62,7 @@ class World(DirectObject):
     previousPos = None  # used to store the mainChar pos from one frame to another
     host = ""
     port = 0
-    characters = []  # Stores the list of all the others players characters
+    vehiclelist = []  # Stores the list of all the others players characters
 
     def __init__(self):
 
@@ -82,7 +82,7 @@ class World(DirectObject):
         # Network Setup
         self.cManager = ConnectionManager(self)
         self.startConnection()
-        self.cManager.sendRequest(Constants.CMSG_LOGIN, ["username", "password"])
+        #self.cManager.sendRequest(Constants.CMSG_LOGIN, ["username", "password"])
         # chat box
         # self.chatbox = Chat(self.cManager, self)
 
@@ -119,7 +119,7 @@ class World(DirectObject):
 
         # Create the main character, Ralph
 
-        self.mainCharRef = Vehicle(self.bulletWorld, (0, 25, 16, 0, 0, 0))
+        self.mainCharRef = Vehicle(self.bulletWorld, (0, 25, 16, 0, 0, 0), "test1")
         #self.mainCharRef = Character(self, self.bulletWorld, 0, "Me")
         self.mainChar = self.mainCharRef.chassisNP
         #self.mainChar.setPos(0, 25, 16)
@@ -137,6 +137,7 @@ class World(DirectObject):
 
         # Set Dashboard
         self.dashboard = Dashboard(self.mainCharRef, taskMgr)
+
 
         # Creating Pandas
         # self.pandas = []
@@ -196,7 +197,7 @@ class World(DirectObject):
         self.accept("r", self.doReset)
         self.accept("p", self.setTime)
 
-        taskMgr.add(self.move, "moveTask")
+        #taskMgr.add(self.move, "moveTask")
 
         # Game state variables
         self.isMoving = False
@@ -228,8 +229,8 @@ class World(DirectObject):
         self.gameState = self.gameStateDict["Login"]
         self.responseValue = -1
 
-             #self.ConnectionManager.sendRequest(Constants.CMSG_LOGIN,"test1","1234")
-             #taskMgr.add(self.enterGame,"EnterGame")
+        self.cManager.sendRequest(Constants.CMSG_LOGIN,["test1","1234"])
+        taskMgr.add(self.enterGame,"EnterGame")
 
     def use_powerup1(self):
         self.use_powerup(1)
@@ -239,7 +240,7 @@ class World(DirectObject):
 
     def use_powerup3(self):
         self.use_powerup(3)
-        
+
     def setTime(self):
         self.cManager.sendRequest(Constants.CMSG_TIME)
 
@@ -254,7 +255,7 @@ class World(DirectObject):
         sys.exit(1)
 
     def cleanup(self):
-#         self.cManager.sendRequest(Constants.CMSG_DISCONNECT)
+        self.cManager.sendRequest(Constants.CMSG_DISCONNECT)
         self.cManager.closeConnection()
         self.world = None
         self.outsideWorldRender.removeNode()
@@ -267,28 +268,34 @@ class World(DirectObject):
             #responseValue = 1 indicates that this state has been finished
             if self.responseValue == 1:
                 # Authentication succeeded
-                self.cManager.sendRequest(Constants.CMSG_CREATE_LOBBY, ["game1",0])
+                self.cManager.sendRequest(Constants.CMSG_CREATE_LOBBY, ["raceroyal","0","1"])
                 self.gameState = self.gameStateDict["CreateLobby"]
                 self.responseValue = -1
         elif self.gameState == self.gameStateDict["CreateLobby"]:
             if self.responseValue == 1:
-                # Lobby Created
-                #Let's join it
-                self.cManager.sendRequest(Constants.CMSG_ENTER_GAME_NAME, "game1")
+                # Lobby Created and we are already in
                 self.gameState = self.gameStateDict["EnterGame"]
                 self.responseValue = -1
+            elif self.responseValue == 0:
+                #Game already created, let's join it
+                self.cManager.sendRequest(Constants.CMSG_ENTER_GAME_NAME, "raceroyal")
+                self.gameState = self.gameStateDict["EnterGame"]
+                self.responseValue = -1
+
         elif self.gameState == self.gameStateDict["EnterGame"]:
             if self.responseValue == 1:
-#               Everyone is in the game, we send ReqReady, and the server will send positions when every client did
-                self.cManager.sendRequest(Constants.CMSG_READY)
 #                 When the positions are sent, an acknowledgment is sent and we begin the InitializeGame
                 self.responseValue = -1
+                self.gameState = self.gameStateDict["InitializeGame"]
+#               Everyone is in the game, we send ReqReady, and the server will send positions when every client did
+                self.cManager.sendRequest(Constants.CMSG_READY)
+
 
         elif self.gameState == self.gameStateDict["InitializeGame"]:
             if self.responseValue == 1:
                 # Set up the camera
                 self.camera = Camera(self.mainChar)
-
+                self.gameState = self.gameStateDict["BeginGame"]
                 self.cManager.sendRequest(Constants.CMSG_READY)
                 self.responseValue = -1
 
@@ -558,7 +565,7 @@ class World(DirectObject):
     #             self.chatbox.hide()
     #         self.keyMap["chat5"] = 0
     #     return task.cont
-    
+
     def listFromInputState(self, inputState):
         # index 0 == forward
         # index 1 == brake

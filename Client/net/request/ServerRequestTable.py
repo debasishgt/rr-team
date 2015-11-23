@@ -26,6 +26,8 @@ from net.request.RequestSetRank import RequestSetRank
 
 from net.request.RequestLogout import RequestLogout
 from net.request.RequestTime import RequestTime
+from net.request.RequestEnterGameName import RequestEnterGameName
+
 
 class ServerRequestTable:
     """
@@ -61,6 +63,8 @@ class ServerRequestTable:
         self.add(Constants.CMSG_SET_POSITION, 'RequestSetPosition')
         self.add(Constants.CMSG_SET_RANK, 'RequestSetRank')
         self.add(Constants.CMSG_TIME, 'RequestTime')
+        self.add(Constants.CMSG_ENTER_GAME_NAME, 'RequestEnterGameName')
+
 
     def add(self, constant, name):
         """Map a numeric request code with the name of an existing request module."""

@@ -24,6 +24,9 @@ from net.response.ResponseSetPosition import ResponseSetPosition
 from net.response.ResponseSetRank import ResponseSetRank
 from net.response.ResponseSetReady import ResponseSetReady
 from net.response.ResponseTime import ResponseTime
+from net.response.ResponseCreateLobby import ResponseCreateLobby
+from net.response.ResponseEnterGameName import ResponseEnterGameName
+
 
 class ServerResponseTable:
     """
@@ -58,6 +61,8 @@ class ServerResponseTable:
         self.add(Constants.SMSG_SET_RANK, 'ResponseSetRank')
         self.add(Constants.SMSG_SET_READY, 'ResponseSetReady')
         self.add(Constants.SMSG_TIME, 'ResponseTime')
+        self.add(Constants.SMSG_CREATE_LOBBY, 'ResponseCreateLobby')
+        self.add(Constants.SMSG_ENTER_GAME_NAME, 'ResponseEnterGameName')
 
     def add(self, constant, name):
         """Map a numeric response code with the name of an existing response module."""

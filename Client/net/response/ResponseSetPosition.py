@@ -9,10 +9,12 @@ class ResponseSetPosition(ServerResponse):
 
         try:
             playerCount = data.getInt32()
-            
+
             for x in range(0, playerCount):
                 vehicle = self.world.vehiclelist[data.getString()]
                 vehicle.setPos(data.getFloat32(), data.getFloat32(), data.getFloat32(), data.getFloat32())
+
+            print "ResponseSetPosition - ", playerCount
 
             self.world.responseValue = 1
 

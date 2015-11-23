@@ -12,6 +12,7 @@ class RequestLogin(ServerRequest):
         try:
             pkg = PyDatagram()
             pkg.addUint16(Constants.CMSG_LOGIN)
+            print args
             pkg.addString(args[0])
             pkg.addString(args[1])
 

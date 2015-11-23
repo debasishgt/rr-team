@@ -15,8 +15,9 @@ import math
 class Vehicle(object):
     COUNT = 0
 
-    def __init__(self, bulletWorld, pos):
+    def __init__(self, bulletWorld, pos,username):
         self.world = bulletWorld
+        self.username = username
         self.brakeForce = 100.0
         self.mass = 800.0  # kg
         self.max_speed = 150  # km
