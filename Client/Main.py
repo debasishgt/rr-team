@@ -82,6 +82,7 @@ class World(DirectObject):
         # Network Setup
         self.cManager = ConnectionManager(self)
         self.startConnection()
+        self.cManager.sendRequest(Constants.CMSG_LOGIN, ["username", "password"])
         # chat box
         # self.chatbox = Chat(self.cManager, self)
 
@@ -193,6 +194,7 @@ class World(DirectObject):
         self.accept("2", self.use_powerup2)
         self.accept("3", self.use_powerup3)
         self.accept("r", self.doReset)
+        self.accept("p", self.setTime)
 
         taskMgr.add(self.move, "moveTask")
 
@@ -237,6 +239,9 @@ class World(DirectObject):
 
     def use_powerup3(self):
         self.use_powerup(3)
+        
+    def setTime(self):
+        self.cManager.sendRequest(Constants.CMSG_TIME)
 
     def use_powerup(self, num):
         if self.mainCharRef.power_ups[num - 1] == 0:
@@ -553,6 +558,23 @@ class World(DirectObject):
     #             self.chatbox.hide()
     #         self.keyMap["chat5"] = 0
     #     return task.cont
+    
+    def listFromInputState(self, inputState):
+        # index 0 == forward
+        # index 1 == brake
+        # index 2 == right
+        # index 3 == left
+        result = [0, 0, 0, 0]
+        if inputState.isSet('forward'):
+            result[0] = 1
+        if inputState.isSet('brake'):
+            result[1] = 1
+        if inputState.isSet('right'):
+            result[2] = 1
+        if inputState.isSet('left'):
+            result[3] = 1
+
+        return result
 
     def updateMove(self, task):
         if self.isMoving == True:
@@ -561,7 +583,7 @@ class World(DirectObject):
             self.cManager.sendRequest(Constants.CMSG_MOVE,
                                       [moving.getX(), moving.getY(), moving.getZ(), self.mainCharRef.actor.getH(),
                                        self.mainCharRef.actor.getP(),
-                                       self.mainCharRef.actor.getR(), " "])
+                                       self.mainCharRef.actor.getR(), self.listFromInputState(inputState)])
 
 
             # self.cManager.sendRequest(Constants.RAND_FLOAT, 1.0)

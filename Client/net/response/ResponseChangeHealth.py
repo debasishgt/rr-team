@@ -11,12 +11,9 @@ class ResponseChangeHealth(ServerResponse):
             username = data.getInt32()
             healthChange = data.getInt32()
 
-
             # Need to set Heading and use keys
-            for character in self.world.characters :
-              if character.playerId == self.playerId :
-                # character.setHealth(self.healthChange)
-                break
+            vehicle = self.world.vehiclelist[username]
+            vehicle.setHealth(username)
 
             print "ResponseChangeHealth - ",username, " ", healthChange
 

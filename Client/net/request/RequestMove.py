@@ -16,7 +16,11 @@ class RequestMove(ServerRequest):
             pkg.addFloat32(args[3])
             pkg.addFloat32(args[4])
             pkg.addFloat32(args[5])
-            pkg.addString(args[6])
+            listTmp = args[6]
+            pkg.addInt32(listTmp[0])
+            pkg.addInt32(listTmp[1])
+            pkg.addInt32(listTmp[2])
+            pkg.addInt32(listTmp[3])
 
             self.cWriter.send(pkg, self.connection)
 

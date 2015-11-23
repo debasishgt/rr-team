@@ -8,14 +8,10 @@ class ResponseDead(ServerResponse):
     def execute(self, data):
 
         try:
-            selfusername = data.getInt32()
+            username = data.getString()
 
-
-            # Need to have a variable checking if the character is alive
-            for character in self.world.characters :
-              if character.username == self.username :
-                #character.dead = True
-                break
+            vehicle = self.world.vehiclelist[username]
+            vehicle.remove()
 
             print "ResponseDead - ",self.username
             #self.log('Received [' + str(Constants.RAND_STRING) + '] String Response')

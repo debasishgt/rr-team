@@ -4,7 +4,7 @@ from common.Constants import Constants
 # from net.request.RequestRandomString import RequestRandomString
 # from net.request.RequestRandomShort import RequestRandomShort
 # from net.request.RequestRandomFloat import RequestRandomFloat
-# from net.request.RequestLogin import RequestLogin
+from net.request.RequestLogin import RequestLogin
 # from net.request.RequestCreateCharacter import RequestCreateCharacter
 # from net.request.RequestChatAll import RequestChatAll
 # from net.request.RequestChatOne import RequestChatOne
@@ -23,8 +23,9 @@ from net.request.RequestDead import RequestDead
 from net.request.RequestReady import RequestReady
 from net.request.RequestSetPosition import RequestSetPosition
 from net.request.RequestSetRank import RequestSetRank
-from net.request.RequestLogout import RequestLogout
 
+from net.request.RequestLogout import RequestLogout
+from net.request.RequestTime import RequestTime
 
 class ServerRequestTable:
     """
@@ -39,7 +40,7 @@ class ServerRequestTable:
         # self.add(Constants.RAND_STRING, 'RequestRandomString')
         # self.add(Constants.RAND_SHORT, 'RequestRandomShort')
         # self.add(Constants.RAND_FLOAT, 'RequestRandomFloat')
-        # self.add(Constants.CMSG_AUTH, 'RequestLogin')
+        self.add(Constants.CMSG_LOGIN, 'RequestLogin')
         # self.add(Constants.CMSG_CREATE_CHARACTER, 'RequestCreateCharacter')
         # self.add(Constants.CMSG_CHAT_ALL, 'RequestChatAll')
         # self.add(Constants.CMSG_CHAT_ONE, 'RequestChatOne')
@@ -59,6 +60,7 @@ class ServerRequestTable:
         self.add(Constants.CMSG_READY, 'RequestReady')
         self.add(Constants.CMSG_SET_POSITION, 'RequestSetPosition')
         self.add(Constants.CMSG_SET_RANK, 'RequestSetRank')
+        self.add(Constants.CMSG_TIME, 'RequestTime')
 
     def add(self, constant, name):
         """Map a numeric request code with the name of an existing request module."""
