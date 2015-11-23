@@ -43,7 +43,7 @@ class Track(object):
         model.reparentTo(np)
         np.setScale(70)
         np.setPos(0, 0, -5)
-        np.setCollideMask(BitMask32.allOn())
+        np.setCollideMask(BitMask32(0xf0))
         np.node().notifyCollisions(False)
         bulletWorld.attachRigidBody(np.node())
 

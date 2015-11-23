@@ -32,6 +32,8 @@ import time
 from common.Constants import Constants
 from net.ConnectionManager import ConnectionManager
 from Dashboard import *
+from Checkpoint import Checkpoint
+from rr.helper.RaceMaster import RaceMaster
 
 SPEED = 0.5
 
@@ -135,6 +137,27 @@ class World(DirectObject):
 
         # Set Dashboard
         self.dashboard = Dashboard(self.mainCharRef, taskMgr)
+        
+            # this will be set by the server
+        self.howmanyplayers = 2
+        
+        self.rm = RaceMaster( self, self.mainCharRef, 1, self.howmanyplayers, 0)
+        sp = self.rm.getStartingPoints()
+        pos = sp[0]
+        self.mainCharRef.chassisNP.setPosHpr(pos[0] ,pos[1] ,pos[2] , pos[3], pos[4], pos[5])
+         
+         
+        # checkpoints for tracking positions
+        #     self.cself.rm.getCheckpointMarkers()
+        taskMgr.doMethodLater(.1, self.rm.updateCheckpoints, 'updateRace')
+#         taskMgr.doMethodLater(.1, self.updateMiniMap, 'updateMiniMap')
+#         self.miniMapOn = True
+#     
+#         # Top view
+#         if self.miniMapOn:
+#             self.miniMap = TopView(self.vehicleContainer)
+
+        
 
         # Creating Pandas
         # self.pandas = []

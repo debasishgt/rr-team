@@ -1,6 +1,7 @@
 from panda3d.core import Vec3
 from panda3d.core import Vec4
 from panda3d.core import Point3
+from panda3d.core import BitMask32
 from panda3d.core import TransformState
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletPlaneShape
@@ -9,6 +10,7 @@ from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletDebugNode
 from panda3d.bullet import BulletVehicle
 from panda3d.bullet import ZUp
+
 import math
 
 
@@ -129,6 +131,8 @@ class Vehicle(object):
         self.chassisNP.node().setMass(self.mass)
         self.chassisNP.node().setDeactivationEnabled(False)
 
+        self.chassisNP.setCollideMask(BitMask32.allOn())
+    
         bulletWorld.attachRigidBody(self.chassisNP.node())
 
         # np.node().setCcdSweptSphereRadius(1.0)
