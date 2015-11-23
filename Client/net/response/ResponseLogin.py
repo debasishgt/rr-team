@@ -12,6 +12,10 @@ class ResponseLogin(ServerResponse):
 
             print "ResponseLogin - ", flag
 
+
+            if flag == "1":
+                self.world.responseValue = 1
+
         except:
             self.log('Bad [' + str(Constants.SMSG_LOGIN) + '] Login Response')
             print_exc()

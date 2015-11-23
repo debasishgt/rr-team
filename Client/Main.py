@@ -49,7 +49,8 @@ def addTitle(text):
 
 
 class World(DirectObject):
-    state = ""
+    gameStateDict = {"Login" : 0,"CreateLobby":4, "EnterGame": 1, "BeginGame": 2, "InitializeGame"}
+    gameState = -1
     # Login , EnterGame , BeginGame
     responseValue = -1
     currentTime = 0
@@ -222,11 +223,11 @@ class World(DirectObject):
         render.setLight(render.attachNewNode(directionalLight2))
 
         # Game initialisation
-        self.state = "Login"
+        self.gameState = self.gameStateDict["Login"]
         self.responseValue = -1
 
-    #         self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
-    #         taskMgr.add(self.enterGame,"EnterGame")
+             #self.ConnectionManager.sendRequest(Constants.CMSG_LOGIN,"test1","1234")
+             #taskMgr.add(self.enterGame,"EnterGame")
 
     def use_powerup1(self):
         self.use_powerup(1)
@@ -248,6 +249,7 @@ class World(DirectObject):
         sys.exit(1)
 
     def cleanup(self):
+#         self.cManager.sendRequest(Constants.CMSG_DISCONNECT)
         self.cManager.closeConnection()
         self.world = None
         self.outsideWorldRender.removeNode()
@@ -256,20 +258,39 @@ class World(DirectObject):
         self.mainCharRef.reset()
 
     def enterGame(self, task):
-        if self.state == "Login":
+        if self.gameState == self.gameStateDict["Login"]:
+            #responseValue = 1 indicates that this state has been finished
             if self.responseValue == 1:
                 # Authentication succeeded
-                self.ConnectionManager.sendRequest(Constants.CMSG_ENTER_GAME_LOBBY, "test1", 0)
+                self.cManager.sendRequest(Constants.CMSG_CREATE_LOBBY, ["game1",0])
+                self.gameState = self.gameStateDict["CreateLobby"]
+                self.responseValue = -1
+        elif self.gameState == self.gameStateDict["CreateLobby"]:
+            if self.responseValue == 1:
+                # Lobby Created
+                #Let's join it
+                self.cManager.sendRequest(Constants.CMSG_ENTER_GAME_NAME, "game1")
+                self.gameState = self.gameStateDict["EnterGame"]
+                self.responseValue = -1
+        elif self.gameState == self.gameStateDict["EnterGame"]:
+            if self.responseValue == 1:
+#               Everyone is in the game, we send ReqReady, and the server will send positions when every client did
+                self.cManager.sendRequest(Constants.CMSG_READY)
+#                 When the positions are sent, an acknowledgment is sent and we begin the InitializeGame
                 self.responseValue = -1
 
-        elif self.state == "EnterGame":
+        elif self.gameState == self.gameStateDict["InitializeGame"]:
             if self.responseValue == 1:
-                self.ConnectionManager.sendRequest(Constants.CMSG_READY)
+                # Set up the camera
+                self.camera = Camera(self.mainChar)
+
+                self.cManager.sendRequest(Constants.CMSG_READY)
                 self.responseValue = -1
 
-        elif self.state == "BeginGame":
+        elif self.gameState == self.gameStateDict["BeginGame"]:
             if self.responseValue == 1:
-                taskMgr.add(self.enterGame, "EnterGame")
+
+                taskMgr.add(self.move, "moveTask")
                 return task.done
 
         return task.cont
@@ -302,7 +323,6 @@ class World(DirectObject):
         body = BulletRigidBodyNode('Bowl')
         self.visNP.node().getChild(0).addChild(body)
         bodyNP = render.anyPath(body)
-        print(bodyNP)
         bodyNP.node().addShape(trackShape)
         bodyNP.node().setMass(0.0)
         bodyNP.setTexture(self.tex)

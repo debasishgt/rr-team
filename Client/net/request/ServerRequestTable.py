@@ -10,6 +10,7 @@ from common.Constants import Constants
 # from net.request.RequestChatOne import RequestChatOne
 
 from net.request.RequestHeartbeat import RequestHeartbeat
+from net.request.RequestCreateLobby import RequestCreateLobby
 from net.request.RequestMove import RequestMove
 from net.request.RequestPowerUp import RequestPowerUp
 from net.request.RequestPowerPickUp import RequestPowerPickUp
@@ -22,6 +23,8 @@ from net.request.RequestDead import RequestDead
 from net.request.RequestReady import RequestReady
 from net.request.RequestSetPosition import RequestSetPosition
 from net.request.RequestSetRank import RequestSetRank
+from net.request.RequestLogout import RequestLogout
+
 
 class ServerRequestTable:
     """
@@ -40,7 +43,9 @@ class ServerRequestTable:
         # self.add(Constants.CMSG_CREATE_CHARACTER, 'RequestCreateCharacter')
         # self.add(Constants.CMSG_CHAT_ALL, 'RequestChatAll')
         # self.add(Constants.CMSG_CHAT_ONE, 'RequestChatOne')
+        self.add(Constants.CMSG_DISCONNECT, 'RequestLogout')
 
+        self.add(Constants.CMSG_CREATE_LOBBY, 'RequestCreateLobby')
         self.add(Constants.CMSG_MOVE, 'RequestMove')
         self.add(Constants.CMSG_POWER_UP, 'RequestPowerUp')
         self.add(Constants.CMSG_POWER_UP_PICK_UP, 'RequestPowerPickUp')
