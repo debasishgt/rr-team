@@ -20,10 +20,6 @@ from panda3d.bullet import BulletVehicle
 from panda3d.bullet import BulletWorld, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletPlaneShape, \
     BulletRigidBodyNode
 
-from Track import Track
-from Vehicle import Vehicle
-from Camera import Camera
-from SkyDome import SkyDome
 # afrom Chat import Chat
 import time
 
@@ -32,6 +28,13 @@ import time
 from common.Constants import Constants
 from net.ConnectionManager import ConnectionManager
 from Dashboard import *
+
+from Track import Track
+from Vehicle import Vehicle
+from Camera import Camera
+from SkyDome import SkyDome
+from ClientConst import ClientConst
+from LoadingScreen import LoadingScreen
 
 SPEED = 0.5
 
@@ -64,6 +67,8 @@ class World(DirectObject):
     characters = []  # Stores the list of all the others players characters
 
     def __init__(self):
+
+        loading = LoadingScreen()
 
         base.setFrameRateMeter(True)
         #input states
@@ -117,10 +122,17 @@ class World(DirectObject):
 
         # Create the main character, Ralph
 
-        self.mainCharRef = Vehicle(self.bulletWorld, (0, 25, 16, 0, 0, 0))
+        self.mainCharRef = Vehicle(self.bulletWorld, ClientConst.STARTINGPOSHPR[0])
         #self.mainCharRef = Character(self, self.bulletWorld, 0, "Me")
         self.mainChar = self.mainCharRef.chassisNP
         #self.mainChar.setPos(0, 25, 16)
+
+        #otherPlayers
+        otherPlayer = []
+        iterPos = iter(ClientConst.STARTINGPOSHPR)
+        next(iterPos)
+        for pos in iterPos:
+            otherPlayer.append(Vehicle(self.bulletWorld, pos))
 
         self.TestChar = Character(self, self.bulletWorld, 0, "test")
         self.TestChar.actor.setPos(0, 0, 0)
@@ -193,16 +205,21 @@ class World(DirectObject):
         self.accept("3", self.use_powerup3)
         self.accept("r", self.doReset)
 
-        taskMgr.add(self.move, "moveTask")
-
-        # Game state variables
-        self.isMoving = False
-
         # Sky Dome
         self.sky = SkyDome()
 
         # Set up the camera
         self.camera = Camera(self.mainChar)
+        self.camera.update(self.mainChar)
+
+        loading.finish()
+        taskMgr.doMethodLater(5, self.move, "moveTask")
+
+        # Game state variables
+        self.isMoving = False
+
+
+
         #base.disableMouse()
         #base.camera.setPos(self.mainChar.getX(), self.mainChar.getY() + 10, self.mainChar.getZ() + 2)
 
@@ -224,6 +241,7 @@ class World(DirectObject):
         # Game initialisation
         self.state = "Login"
         self.responseValue = -1
+
 
     #         self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
     #         taskMgr.add(self.enterGame,"EnterGame")
@@ -464,7 +482,7 @@ class World(DirectObject):
         #self.floater.setZ(self.mainChar.getZ() + 2.0)
         #base.camera.lookAt(self.floater)
 
-        self.bulletWorld.doPhysics(dt)
+        #self.bulletWorld.doPhysics(dt)
 
         return task.cont
 
@@ -548,7 +566,6 @@ class World(DirectObject):
             self.previousPos = self.mainChar.getPos()
 
         return task.again
-
 
 w = World()
 run()

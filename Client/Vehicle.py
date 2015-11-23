@@ -18,7 +18,7 @@ class Vehicle(object):
   COUNT = 0
 
   def __init__(self, bulletWorld, pos):
-    self.specs = {"mass": 400.0, "maxWheelForce": 2000.0, "brakeForce": 100.0, "steeringLock": 45.0}
+    self.specs = {"mass": 400.0, "maxWheelForce": 2000.0, "brakeForce": 100.0, "steeringLock": 30.0}
     self.vehicleControlState = {"throttle": 0, "reverse": False, "brake": 0.0, "steering": 0.0}
 
     # Steering change per second, normalised to steering lock
@@ -33,6 +33,9 @@ class Vehicle(object):
     COUNT = 1
 
   def processInput(self, inputState, dt):
+    print self.chassisNP.getPos()
+    print self.chassisNP.getH()
+
     #print self.chassisNP.getPos()
     #print self.chassisNP.getH()
     """Use controls to update the player's car"""
