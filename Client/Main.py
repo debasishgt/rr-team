@@ -24,6 +24,8 @@ from Track import Track
 from Vehicle import Vehicle
 from Camera import Camera
 from SkyDome import SkyDome
+from Powerups import PowerupManager
+
 # afrom Chat import Chat
 import time
 
@@ -76,7 +78,7 @@ class World(DirectObject):
         inputState.watchWithModifiers('turnRight', 'e')
 
         self.keyMap = {"hello": 0, "left": 0, "right": 0, "forward": 0, "backward": 0, "cam-left": 0, "cam-right": 0,
-                       "chat0": 0, "pow1": 0, "pow2": 0, "pow3": 0, "reset": 0}
+                       "chat0": 0, "powerup": 0, "reset": 0}
         base.win.setClearColor(Vec4(0, 0, 0, 1))
 
         # Network Setup
@@ -123,6 +125,8 @@ class World(DirectObject):
         #self.mainCharRef = Character(self, self.bulletWorld, 0, "Me")
         self.mainChar = self.mainCharRef.chassisNP
         #self.mainChar.setPos(0, 25, 16)
+
+        self.characters.append(self.mainCharRef)
 
         self.TestChar = Character(self, self.bulletWorld, 0, "test")
         self.TestChar.actor.setPos(0, 0, 0)
@@ -191,9 +195,12 @@ class World(DirectObject):
         self.accept("h-up", self.setKey, ["hello", 0])
         self.accept("0", self.setKey, ["chat0", 1])
         self.accept("0-up", self.setKey, ["chat0", 0])
-        self.accept("1", self.use_powerup1)
-        self.accept("2", self.use_powerup2)
-        self.accept("3", self.use_powerup3)
+        self.accept("1", self.setKey,["powerup", 1])
+        self.accept("1-up", self.setKey,["powerup", 0])
+        self.accept("2", self.setKey,["powerup", 2])
+        self.accept("2-up", self.setKey,["powerup", 0])
+        self.accept("3", self.setKey,["powerup", 3])
+        self.accept("3-up", self.setKey,["powerup", 0])
         self.accept("r", self.doReset)
         self.accept("p", self.setTime)
 
@@ -232,11 +239,24 @@ class World(DirectObject):
         self.cManager.sendRequest(Constants.CMSG_LOGIN,["test1","1234"])
         taskMgr.add(self.enterGame,"EnterGame")
 
-    def use_powerup1(self):
-        self.use_powerup(1)
+    # Create Powerups
+        self.createPowerups()
+        taskMgr.add(self.powerups.checkPowerPickup, "checkPowerupTask")
+        taskMgr.add(self.usePowerup, "usePowerUp")
 
-    def use_powerup2(self):
-        self.use_powerup(2)
+    def usePowerup(self, task):
+        if self.keyMap["powerup"] == 1:
+            self.mainCharRef.usePowerup(0)
+        elif self.keyMap["powerup"] == 2:
+            self.mainCharRef.usePowerup(1)
+        elif self.keyMap["powerup"] == 3:
+            self.mainCharRef.usePowerup(2)
+
+        return task.cont
+
+    def createPowerups(self):
+        self.powerups = PowerupManager(self.cManager, self.characters)
+
 
     def use_powerup3(self):
         self.use_powerup(3)
@@ -465,14 +485,6 @@ class World(DirectObject):
 
         self.mainCharRef.processInput(inputState, dt)
         self.bulletWorld.doPhysics(dt, 10, 0.02)
-
-        # use power-ups
-        if self.keyMap["pow1"] != 0:
-            print "power up 1 activated"
-        if self.keyMap["pow2"] != 0:
-            print "power up 2 activated"
-        if self.keyMap["pow3"] != 0:
-            print "power up 3 activated"
 
         # If the camera is too far from ralph, move it closer.
         # If the camera is too close to ralph, move it farther.
