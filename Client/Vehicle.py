@@ -28,6 +28,9 @@ class Vehicle(object):
 
     self.pos = pos
 
+    self.currentPowerups = {"powerup1": None, "powerup2": None,"powerup3": None}
+
+
     self.setupVehicle(bulletWorld)
 
     COUNT = 1
@@ -175,3 +178,31 @@ class Vehicle(object):
     self.chassisNP.setP(0)
     self.chassisNP.setR(0)
 
+  def pickedPowerup(self, powerup):
+    if not powerup.pickable:
+        powerup.useAbility()
+    else:
+        if self.currentPowerups["powerup1"] is None:
+            self.currentPowerups["powerup1"] = powerup
+        elif self.currentPowerups["powerup2"] is None:
+            self.currentPowerups["powerup2"] = powerup
+        elif self.currentPowerups["powerup3"] is None:
+            self.currentPowerups["powerup3"] = powerup
+        
+  def canPickUpPowerup(self):
+    return (self.currentPowerups["powerup1"] is None or 
+            self.currentPowerups["powerup2"] is None or 
+            self.currentPowerups["powerup3"] is None)
+    
+  def usePowerup(self, powerupIndex):
+    # Move usePowerupN to this function
+    if powerupIndex == 0 and self.currentPowerups["powerup1"] is not None:
+        self.currentPowerups["powerup1"].useAbility()
+        self.currentPowerups["powerup1"] = None
+    elif powerupIndex == 1 and self.currentPowerups["powerup2"] is not None:
+        self.currentPowerups["powerup2"].useAbility()
+        self.currentPowerups["powerup2"] = None
+    elif powerupIndex == 2 and self.currentPowerups["powerup3"] is not None:
+        self.currentPowerups["powerup3"].useAbility()
+        self.currentPowerups["powerup3"] = None
+        
