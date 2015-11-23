@@ -143,7 +143,7 @@ class World(DirectObject):
         #                                                                     self.mainChar.getZ()])
 
         self.previousPos = self.mainChar.getPos()
-        taskMgr.doMethodLater(.1, self.updateMove, 'updateMove')
+        #taskMgr.doMethodLater(.1, self.updateMove, 'updateMove')
 
         # Set Dashboard
         self.dashboard = Dashboard(self.mainCharRef, taskMgr)
@@ -208,16 +208,16 @@ class World(DirectObject):
         # Sky Dome
         self.sky = SkyDome()
 
-        # Set up the camera
-        self.camera = Camera(self.mainChar)
-        self.camera.update(self.mainChar)
-
-        loading.finish()
-        taskMgr.doMethodLater(5, self.move, "moveTask")
-
         # Game state variables
         self.isMoving = False
 
+        # Set up the camera
+        loading.finish()
+        self.camera = Camera(self.mainChar)
+        self.camera.update(self.mainChar)
+        self.camera.update(self.mainChar)
+        taskMgr.add(self.move, "move")
+        taskMgr.doMethodLater(5, self.start, "start")
 
 
         #base.disableMouse()
@@ -245,6 +245,9 @@ class World(DirectObject):
 
     #         self.ConnectionManager.sendRequest(Constants.CMSG_AUTH,"test1","1234")
     #         taskMgr.add(self.enterGame,"EnterGame")
+
+    def start(self, task):
+        self.isMoving = True
 
     def use_powerup1(self):
         self.use_powerup(1)
@@ -449,8 +452,9 @@ class World(DirectObject):
         
         dt = globalClock.getDt()
 
-        self.mainCharRef.processInput(inputState, dt)
-        self.bulletWorld.doPhysics(dt, 10, 0.02)
+        if self.isMoving:
+            self.mainCharRef.processInput(inputState, dt)
+            self.bulletWorld.doPhysics(dt, 10, 0.02)
         
         # use power-ups
         if self.keyMap["pow1"] != 0:

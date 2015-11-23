@@ -3,11 +3,11 @@ from direct.gui.OnscreenImage import OnscreenImage
 from direct.gui.OnscreenText import OnscreenText,TextNode
 from direct.task import Task
 
-countDownStart = 5
+countDownStart = 6
 
 class LoadingScreen:
     def __init__(self):
-        self.imageObject = OnscreenImage(image = 'images/loading.png', pos = (0, 0, 0))
+        self.imageObject = OnscreenImage(image = 'images/loading.jpg', pos = (0, 0, 0))
         self.imageObject.reparentTo(render2d)
         base.graphicsEngine.renderFrame()
         base.graphicsEngine.renderFrame()
