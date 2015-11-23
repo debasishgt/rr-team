@@ -23,6 +23,9 @@ from net.request.RequestReady import RequestReady
 from net.request.RequestSetPosition import RequestSetPosition
 from net.request.RequestSetRank import RequestSetRank
 from net.request.RequestServer import RequestServer
+from net.request.RequestEnterLobby import RequestEnterLobby
+from net.request.RequestEnterGameLobby import RequestEnterGameLobby
+from net.request.RequestCreateLobby import RequestCreateLobby
 
 
 class ServerRequestTable:
@@ -58,6 +61,10 @@ class ServerRequestTable:
         self.add(Constants.CMSG_SET_POSITION,'RequestSetPosition')
         self.add(Constants.CMSG_SET_RANK, 'RequestSetRank')       
         self.add(Constants.CMSG_SERVER, 'RequestServer')
+
+        self.add(Constants.CMSG_ENTER_LOBBY,'RequestEnterLobby')
+        self.add(Constants.CMSG_ENTER_GAME_LOBBY,'RequestEnterGameLobby')
+        self.add(Constants.CMSG_CREATE_LOBBY,'RequestCreateLobby')
 
     def add(self, constant, name):
         """Map a numeric request code with the name of an existing request module."""

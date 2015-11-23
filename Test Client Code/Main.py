@@ -43,7 +43,7 @@ class Main(DirectObject):
     
     def menu(self, task):
         # Accept raw_input choice
-        choice = input("\n\n0 - Request Server\n1 - Rand int\n2 - Rand string\n3 - Rand short\n4 - Rand float\n6 - Exit\n101 - login\n102 - Disconnect\n103 - Register\n104 - Forget Password\n105 - Create Character\n106 - Chat\n107 - Move\n108 - Power Up\n109 - Power Pick Up\n110 - Health\n122 - Results\n123 - Rankings\n124 - Prizes\n125 - Collistion\n126 - Dead\n127 - Ready\n128 - SetPosition\n130 - Set Rank\n")
+        choice = input("\n\n0 - Request Server\n1 - Rand int\n2 - Rand string\n3 - Rand short\n4 - Rand float\n6 - Exit\n101 - login\n102 - Disconnect\n103 - Register\n104 - Forget Password\n105 - Create Character\n106 - Chat\n107 - Move\n108 - Power Up\n109 - Power Pick Up\n110 - Health\n111 - Enter Lobby\n112 - Enter Game Lobby\n114 - Create Lobby\n122 - Results\n123 - Rankings\n124 - Prizes\n125 - Collistion\n126 - Dead\n127 - Ready\n128 - SetPosition\n130 - Set Rank\n")
         
         msg = 0
         username = 0
@@ -96,6 +96,24 @@ class Main(DirectObject):
             #username = "vatsal"
             healthChange = 2
             self.cManager.sendRequest(choice, healthChange)
+
+
+        elif choice is 111:
+            username="raceroyal"
+            lobbyid = 5
+            self.cManager.sendRequest(choice, ""+username+" "+str(lobbyid))
+        elif choice is 112:
+            username="raceroyal"
+            gameid = 1
+            lobbyid = 5
+            self.cManager.sendRequest(choice, ""+username+" "+str(gameid)+" "+str(lobbyid))
+        elif choice is 114:
+            groupname="raceroyal"
+            groupmodeid = 5
+            status = 1
+            self.cManager.sendRequest(choice, ""+groupname+" "+str(groupmodeid)+" "+str(status))
+
+
         elif choice is 122:
             gameId = 1
             self.cManager.sendRequest(choice, gameId)

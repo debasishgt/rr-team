@@ -8,6 +8,7 @@ class ResponseLogin(ServerResponse):
     def execute(self, data):
 
         try:
+            print data
             self.msg = data.getInt32()
             print "ResponseLogin - ", self.msg
 

@@ -93,7 +93,10 @@ class ConnectionManager:
 
         if response != None:
             #response.set(main)
-            response.execute(data)
+            if responseCode == 0:
+                response.execute(self,data)
+            else:
+                response.execute(data)
 
     def checkConnection(self, task):
 
