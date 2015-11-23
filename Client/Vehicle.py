@@ -17,14 +17,12 @@ class Vehicle(object):
 
     def __init__(self, bulletWorld, pos):
         self.world = bulletWorld
-        self.acceleration = 1.5
         self.brakeForce = 100.0
-        self.mass = 800
-        self.max_speed = 150
-        self.reverse_limit = -40
+        self.mass = 800.0  # kg
+        self.max_speed = 150  # km
         self.armor = 100
         self.health = 100
-        self.maxWheelForce = 2000.0
+        self.maxWheelForce = 2000.0  # acceleration
         self.power_ups = [0, 0, 0]
 
         self.specs = {"mass": self.mass, "maxWheelForce": self.maxWheelForce, "brakeForce": self.brakeForce,
