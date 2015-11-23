@@ -14,6 +14,9 @@ class Dashboard(DirectObject):
         self.rank = 21
         self.main_char = character
         self.speed = "0.0 km/h"
+        self.lead1 = ""
+        self.lead2 = ""
+        self.lead3 = ""
         self.start_time = datetime.datetime.now()
         self.time_elapsed = datetime.timedelta(milliseconds=0)
         # insert total time
@@ -99,6 +102,12 @@ class Dashboard(DirectObject):
     def force_timer(self, server_time):
         self.time_elapsed = datetime.timedelta(milliseconds=server_time)
 
+    def update_ranking(self, leaders):
+        # get usernames from list
+        self.lead1 = leaders.get(1)
+        self.lead2 = leaders.get(3)
+        self.lead3 = leaders.get(5)
+
     def update_rank(self, task):
         self.display_rank.destroy()
 
@@ -112,9 +121,9 @@ class Dashboard(DirectObject):
         self.leader1.destroy()
         self.leader2.destroy()
         self.leader3.destroy()
-        lead1 = "1:"
-        lead2 = "2:"
-        lead3 = "3:"
+        lead1 = "1:" + self.lead1
+        lead2 = "2:" + self.lead2
+        lead3 = "3:" + self.lead3
         self.leader1 = OnscreenText(text=lead1, style=1, fg=(1, 1, 1, 1),
                                     pos=(-1.3, .5), align=TextNode.ALeft,
                                     scale=.07, font=self.font_digital)
