@@ -19,7 +19,6 @@ from panda3d.core import NodePath
 from panda3d.bullet import BulletVehicle
 from panda3d.bullet import BulletWorld, BulletTriangleMesh, BulletTriangleMeshShape, BulletDebugNode, BulletPlaneShape, \
     BulletRigidBodyNode
-
 from Track import Track
 from Vehicle import Vehicle
 from Camera import Camera
@@ -61,12 +60,12 @@ class World(DirectObject):
     previousPos = None  # used to store the mainChar pos from one frame to another
     host = ""
     port = 0
-    characters = []  # Stores the list of all the others players characters
+    players = []  # Stores the list of all the others players characters
 
     def __init__(self):
 
         base.setFrameRateMeter(True)
-        #input states
+        # input states
         inputState.watchWithModifiers('forward', 'w')
         inputState.watchWithModifiers('left', 'a')
         inputState.watchWithModifiers('brake', 's')
@@ -74,7 +73,7 @@ class World(DirectObject):
         inputState.watchWithModifiers('turnLeft', 'q')
         inputState.watchWithModifiers('turnRight', 'e')
 
-        self.keyMap = {"hello": 0, "left": 0, "right": 0, "forward": 0, "backward": 0, "cam-left": 0, "cam-right": 0,
+        self.keyMap = {"left": 0, "right": 0, "forward": 0, "backward": 0, "cam-left": 0, "cam-right": 0,
                        "chat0": 0, "pow1": 0, "pow2": 0, "pow3": 0, "reset": 0}
         base.win.setClearColor(Vec4(0, 0, 0, 1))
 
@@ -106,7 +105,7 @@ class World(DirectObject):
         #
         self.initializeBulletWorld(False)
 
-        #self.createEnvironment()
+        # self.createEnvironment()
         Track(self.bulletWorld)
 
         # Collision Code
@@ -115,12 +114,11 @@ class World(DirectObject):
         # Initialize the Pusher collision handler.
         # self.pusher = CollisionHandlerPusher()
 
-        # Create the main character, Ralph
-
+        # Create the yourself Main Player
         self.mainCharRef = Vehicle(self.bulletWorld, (0, 25, 16, 0, 0, 0))
-        #self.mainCharRef = Character(self, self.bulletWorld, 0, "Me")
+        # self.mainCharRef = Character(self, self.bulletWorld, 0, "Me")
         self.mainChar = self.mainCharRef.chassisNP
-        #self.mainChar.setPos(0, 25, 16)
+        # self.mainChar.setPos(0, 25, 16)
 
         self.TestChar = Character(self, self.bulletWorld, 0, "test")
         self.TestChar.actor.setPos(0, 0, 0)
@@ -136,30 +134,6 @@ class World(DirectObject):
         # Set Dashboard
         self.dashboard = Dashboard(self.mainCharRef, taskMgr)
 
-        # Creating Pandas
-        # self.pandas = []
-        # self.pandacount = 2
-        # for x in range(self.pandacount):
-        #     self.pandas.append(MyPanda(self))
-
-        # Creating Stationary spheres
-        # self.spheres = []
-        # self.sphereCount = 3
-        # for x in range(self.sphereCount):
-        #     self.spheres.append(StationarySphere(self))
-
-        # Create Car
-        # self.car = MyCar(self)
-
-        # Panda animation
-        # for panda in self.pandas:
-        #     taskMgr.add(panda.jumpPanda, "jumpPanda")
-        #     taskMgr.add(panda.timerTask, 'timerTask')
-        #     taskMgr.add(panda.pandaWalk, 'pandaWalk')
-        #     taskMgr.add(panda.pandaStop, 'pandaStop')
-        #
-        # taskMgr.add(self.car.makeCircle, "makeCircle")
-        #
         self.floater = NodePath(PandaNode("floater"))
         self.floater.reparentTo(render)
 
@@ -184,8 +158,6 @@ class World(DirectObject):
         self.accept("s-up", self.setKey, ["backward", 0])
         self.accept("arrow_left-up", self.setKey, ["cam-left", 0])
         self.accept("arrow_right-up", self.setKey, ["cam-right", 0])
-        self.accept("h", self.setKey, ["hello", 1])
-        self.accept("h-up", self.setKey, ["hello", 0])
         self.accept("0", self.setKey, ["chat0", 1])
         self.accept("0-up", self.setKey, ["chat0", 0])
         self.accept("1", self.use_powerup1)
@@ -203,8 +175,8 @@ class World(DirectObject):
 
         # Set up the camera
         self.camera = Camera(self.mainChar)
-        #base.disableMouse()
-        #base.camera.setPos(self.mainChar.getX(), self.mainChar.getY() + 10, self.mainChar.getZ() + 2)
+        # base.disableMouse()
+        # base.camera.setPos(self.mainChar.getX(), self.mainChar.getY() + 10, self.mainChar.getZ() + 2)
 
         # Create some lighting
         ambientLight = AmbientLight("ambientLight")
@@ -358,76 +330,10 @@ class World(DirectObject):
         # If the camera-left key is pressed, move camera left.
         # If the camera-right key is pressed, move camera right.
 
-        #dt = globalClock.getDt()
+        # dt = globalClock.getDt()
 
-        #update camera
+        # update camera
         self.camera.update(self.mainChar)
-
-        #base.camera.lookAt(self.mainChar)
-        #if (self.keyMap["cam-left"] != 0):
-        #    base.camera.setX(base.camera, -20 * dt)
-        #if (self.keyMap["cam-right"] != 0):
-        #    base.camera.setX(base.camera, +20 * dt)
-
-        # save mainChar's initial position so that we can restore it,
-        # in case he falls off the map or runs into something.
-        #
-        #startpos = self.mainChar.getPos()
-        #
-        # If a move-key is pressed, move ralph in the specified direction.
-        # If a move-key is pressed, move ralph in the specified direction.
-        # Steering info
-        #steering = 0.0  # degree
-        #steeringClamp = 70.0  # degree
-        #steeringIncrement = 180.0  # degree per second
-        #
-        # Process input
-        #engineForce = 0.0
-        #brakeForce = 0.0
-        #if (self.keyMap["forward"] != 0):
-        #    # checks for vehicle's max speed
-        #    if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= self.mainCharRef.max_speed:
-        #        engineForce = 2000.0
-        #        brakeForce = 0.0
-        #
-        #if (self.keyMap["backward"] != 0):
-        #    if self.mainCharRef.vehicle.getCurrentSpeedKmHour() <= 0:
-        #        engineForce = -500.0
-        #        brakeForce = 0.0
-        #    else:
-        #        engineForce = 0.0
-        #        brakeForce = 100.0
-        #
-        #if (self.keyMap["left"] != 0):
-        #    steering += dt * steeringIncrement
-        #    steering = min(steering, steeringClamp)
-        #
-        #if (self.keyMap["right"] != 0):
-        #    steering -= dt * steeringIncrement
-        #    steering = max(steering, -steeringClamp)
-        #
-        # Apply steering to front wheels
-        #self.mainCharRef.vehicle.setSteeringValue(steering, 0)
-        #self.mainCharRef.vehicle.setSteeringValue(steering, 1)
-        #
-        # Apply engine and brake to rear wheels
-        #self.mainCharRef.vehicle.applyEngineForce(engineForce, 2)
-        #self.mainCharRef.vehicle.applyEngineForce(engineForce, 3)
-        #self.mainCharRef.vehicle.setBrake(brakeForce, 2)
-        #self.mainCharRef.vehicle.setBrake(brakeForce, 3)
-
-        # If ralph is moving, loop the run animation.
-        # If he is standing still, stop the animation.
-        #if (self.keyMap["forward"] != 0) or (self.keyMap["backward"] != 0) or (self.keyMap["left"] != 0) or (
-        #            self.keyMap["right"] != 0):
-        #    if self.isMoving is False:
-        #        self.mainCharRef.run()
-        #        self.isMoving = True
-        #
-        #else:
-        #    if self.isMoving:
-        #        self.mainCharRef.walk()
-        #        self.isMoving = False
 
         dt = globalClock.getDt()
 
@@ -444,25 +350,6 @@ class World(DirectObject):
 
         # If the camera is too far from ralph, move it closer.
         # If the camera is too close to ralph, move it farther.
-
-        #camvec = self.mainChar.getPos() - base.camera.getPos()
-        #camvec.setZ(0)
-        #camdist = camvec.length()
-        #camvec.normalize()
-        #if (camdist > 10.0):
-        #    base.camera.setPos(base.camera.getPos() + camvec * (camdist - 10))
-        #    camdist = 10.0
-        #if (camdist < 5.0):
-        #    base.camera.setPos(base.camera.getPos() - camvec * (5 - camdist))
-        #    camdist = 5.0
-
-        # The camera should look in ralph's direction,
-        # but it should also try to stay horizontal, so look at
-        # a floater which hovers above ralph's head.
-
-        #self.floater.setPos(self.mainChar.getPos())
-        #self.floater.setZ(self.mainChar.getZ() + 2.0)
-        #base.camera.lookAt(self.floater)
 
         self.bulletWorld.doPhysics(dt)
 
@@ -481,59 +368,6 @@ class World(DirectObject):
 
         return True
 
-    # Chat
-    # def message(self, task):
-    #     # hide all chatboxes
-    #     if self.keyMap["chat0"] != 0:
-    #         if self.chatbox.getVisible() is False:
-    #             self.chatbox.setVisible(True)
-    #             self.chatbox.show(0)
-    #         else:
-    #             self.chatbox.setVisible(False)
-    #             self.chatbox.hide()
-    #         self.keyMap["chat0"] = 0
-    #     if self.keyMap["chat1"] != 0:
-    #         if self.chatbox.getVisible() is False:
-    #             self.chatbox.setVisible(True)
-    #             self.chatbox.show(1)
-    #         else:
-    #             self.chatbox.setVisible(False)
-    #             self.chatbox.hide()
-    #         self.keyMap["chat1"] = 0
-    #     elif self.keyMap["chat2"] != 0:
-    #         if self.chatbox.getVisible() is False:
-    #             self.chatbox.setVisible(True)
-    #             self.chatbox.show(2)
-    #         else:
-    #             self.chatbox.setVisible(False)
-    #             self.chatbox.hide()
-    #         self.keyMap["chat2"] = 0
-    #     elif self.keyMap["chat3"] != 0:
-    #         if self.chatbox.getVisible() is False:
-    #             self.chatbox.setVisible(True)
-    #             self.chatbox.show(3)
-    #         else:
-    #             self.chatbox.setVisible(False)
-    #             self.chatbox.hide()
-    #         self.keyMap["chat3"] = 0
-    #     elif self.keyMap["chat4"] != 0:
-    #         if self.chatbox.getVisible() is False:
-    #             self.chatbox.setVisible(True)
-    #             self.chatbox.show(4)
-    #         else:
-    #             self.chatbox.setVisible(False)
-    #             self.chatbox.hide()
-    #         self.keyMap["chat4"] = 0
-    #     elif self.keyMap["chat5"] != 0:
-    #         if self.chatbox.getVisible() is False:
-    #             self.chatbox.setVisible(True)
-    #             self.chatbox.show(5)
-    #         else:
-    #             self.chatbox.setVisible(False)
-    #             self.chatbox.hide()
-    #         self.keyMap["chat5"] = 0
-    #     return task.cont
-
     def updateMove(self, task):
         if self.isMoving == True:
             moving = self.mainChar.getPos() - self.previousPos
@@ -542,7 +376,6 @@ class World(DirectObject):
                                       [moving.getX(), moving.getY(), moving.getZ(), self.mainCharRef.actor.getH(),
                                        self.mainCharRef.actor.getP(),
                                        self.mainCharRef.actor.getR(), " "])
-
 
             # self.cManager.sendRequest(Constants.RAND_FLOAT, 1.0)
             self.previousPos = self.mainChar.getPos()
