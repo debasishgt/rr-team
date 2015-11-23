@@ -11,16 +11,14 @@ class RequestEnterGameLobby(ServerRequest):
 
         try:
             user_data = data.split()
-            username = user_data[0]
-            gameid = int(user_data[1])
-            lobbyid = int(user_data[2])
+            #username = user_data[0]
+            gamelobby = user_data[1]
             pkg = PyDatagram()
-            pkg.addUint16(Constants.CMSG_ENTER_GAME_LOBBY)
-            pkg.addString(username)
-            pkg.addInt32(gameid)
-            pkg.addInt32(lobbyid)
+            pkg.addUint16(Constants.CMSG_ENTER_GAME_NAME)
+            #pkg.addString(username)
+            pkg.addString(gamelobby)
             self.cWriter.send(pkg, self.connection)
 
         except:
-            self.log('Bad [' + str(Constants.CMSG_ENTER_GAME_LOBBY) + '] Request')
+            self.log('Bad [' + str(Constants.CMSG_ENTER_GAME_NAME) + '] Request')
             print_exc()

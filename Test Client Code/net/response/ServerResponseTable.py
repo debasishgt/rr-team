@@ -67,7 +67,7 @@ class ServerResponseTable:
         self.add(Constants.SMSG_SERVER, 'ResponseServer')
 
         self.add(Constants.SMSG_ENTER_LOBBY, 'ResponseEnterLobby')
-        self.add(Constants.SMSG_ENTER_GAME_LOBBY,'ResponseEnterGameLobby')
+        self.add(Constants.SMSG_ENTER_GAME_NAME,'ResponseEnterGameLobby')
         self.add(Constants.SMSG_CREATE_LOBBY, 'ResponseCreateLobby')
 
     def add(self, constant, name):

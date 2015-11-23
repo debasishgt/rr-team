@@ -8,12 +8,12 @@ class ResponseEnterGameLobby(ServerResponse):
     def execute(self, data):
 
         try:
-            print "\nResponseEnterGameLobby - "
+            print "\nResponseEnterGameName - "
             self.username = data.getString()
             self.validate = data.getInt32()
             print self.username
             print self.validate
 
         except:
-            self.log('Bad [' + str(Constants.SMSG_ENTER_GAME_LOBBY) + '] String Response')
+            self.log('Bad [' + str(Constants.SMSG_ENTER_GAME_NAME) + '] String Response')
             print_exc()

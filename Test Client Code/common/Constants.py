@@ -6,7 +6,7 @@ class Constants:
     RAND_SHORT = 3
     RAND_FLOAT = 4
 
-    SERVER_IP = 'csproject.calstatela.edu'
+    SERVER_IP = 'localhost'
     SERVER_PORT = 9252
 
     DEBUG = True
@@ -24,7 +24,7 @@ class Constants:
     CMSG_HEALTH = 110
 
     CMSG_ENTER_LOBBY = 111
-    CMSG_ENTER_GAME_LOBBY = 112
+    CMSG_ENTER_GAME_NAME= 113
     CMSG_CREATE_LOBBY = 114
 
     CMSG_RESULTS = 122
@@ -49,7 +49,7 @@ class Constants:
     SMSG_HEALTH = 210
 
     SMSG_ENTER_LOBBY = 211
-    SMSG_ENTER_GAME_LOBBY = 212
+    SMSG_ENTER_GAME_NAME = 213
     SMSG_CREATE_LOBBY = 214
 
     SMSG_RESULTS = 222
@@ -77,7 +77,7 @@ class Constants:
 #    CMSG_HEALTH                         = 108
 #    CMSG_CONTROL_POINT_STATE            = 111
 #    CMSG_CONTROL_POINT_CAP              = 112
-#    REQ_HEARTBEAT                       = 301
+    REQ_HEARTBEAT                       = 301
     
 #    SMSG_AUTH                           = 201
 #    SMSG_DISCONNECT                     = 202

@@ -43,12 +43,12 @@ class Main(DirectObject):
     
     def menu(self, task):
         # Accept raw_input choice
-        choice = input("\n\n0 - Request Server\n1 - Rand int\n2 - Rand string\n3 - Rand short\n4 - Rand float\n6 - Exit\n101 - login\n102 - Disconnect\n103 - Register\n104 - Forget Password\n105 - Create Character\n106 - Chat\n107 - Move\n108 - Power Up\n109 - Power Pick Up\n110 - Health\n111 - Enter Lobby\n112 - Enter Game Lobby\n114 - Create Lobby\n122 - Results\n123 - Rankings\n124 - Prizes\n125 - Collistion\n126 - Dead\n127 - Ready\n128 - SetPosition\n130 - Set Rank\n")
+        choice = input("\n\n0 - Request Server\n1 - Rand int\n2 - Rand string\n3 - Rand short\n4 - Rand float\n6 - Exit\n101 - login\n102 - Disconnect\n103 - Register\n104 - Forget Password\n105 - Create Character\n106 - Chat\n107 - Move\n108 - Power Up\n109 - Power Pick Up\n110 - Health\n111 - Enter Lobby\n113 - Enter Game Lobby\n114 - Create Lobby\n122 - Results\n123 - Rankings\n124 - Prizes\n125 - Collistion\n126 - Dead\n127 - Ready\n128 - SetPosition\n130 - Set Rank\n")
         
         msg = 0
         username = 0
         password = 0
-        
+        print choice
         if choice is 1: msg = random.randint(-(2**16), 2**16 - 1)
         elif choice is 2: msg = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz') for x in range(7))
         elif choice is 3: msg = random.randint(0, 2**16 - 1)
@@ -59,6 +59,12 @@ class Main(DirectObject):
             username = "vatsal"
             password = "sevak"
             self.cManager.sendRequest(choice, username+" "+password)
+        elif choice is 201:
+            username = "username"
+            password = "password"
+            self.cManager.sendRequest(101, username+" "+password)
+        elif int(choice) is 222:
+            self.cManager.sendRequest(301,"")
         elif choice is 102:
             self.cManager.sendRequest(choice, msg)
         elif choice is 103:
@@ -102,15 +108,14 @@ class Main(DirectObject):
             username="raceroyal"
             lobbyid = 5
             self.cManager.sendRequest(choice, ""+username+" "+str(lobbyid))
-        elif choice is 112:
-            username="raceroyal"
-            gameid = 1
-            lobbyid = 5
-            self.cManager.sendRequest(choice, ""+username+" "+str(gameid)+" "+str(lobbyid))
+        elif choice is 113:
+            username="vatsal"
+            gamelobby="raceroyal"
+            self.cManager.sendRequest(choice, ""+username+" "+gamelobby)
         elif choice is 114:
             groupname="raceroyal"
-            groupmodeid = 5
-            status = 1
+            groupmodeid = 1
+            status = 0
             self.cManager.sendRequest(choice, ""+groupname+" "+str(groupmodeid)+" "+str(status))
 
 
